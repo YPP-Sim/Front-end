@@ -50,7 +50,6 @@ function gameLoop(timeStamp) {
 
 function onKeyUp(event) {
   console.log("Key down");
-  if(event.key)
 }
 
 function onKeyDown(event) {
