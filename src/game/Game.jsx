@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import * as PIXI from "pixi.js";
+import SpriteBody from "./SpriteBody";
 
 // images
 import shiphand from "../assets/ui/shiphand.png";
+
+import cbLarge from "../assets/projectile/cannonball_large.png";
 
 class Game extends Component {
   constructor(props) {
@@ -13,6 +16,8 @@ class Game extends Component {
       width: 600,
       height: 600,
       transparent: false,
+      backgroundColor: 0x6a819c, // A hex color code
+      resolution: window.devicePixelRatio,
     });
 
     this.app = app;
@@ -30,26 +35,51 @@ class Game extends Component {
 
   setup = () => {
     let loader = new PIXI.Loader();
-    loader.add("shiphand", shiphand).load((loader, resources) => {
-      const sh = new PIXI.Sprite(resources.shiphand.texture);
+    loader
+      .add("cbLarge", cbLarge)
+      .add("shiphand", shiphand)
+      .load((loader, resources) => {
+        const sh = new PIXI.Sprite(resources.shiphand.texture);
+        const sh1 = new PIXI.Sprite(resources.cbLarge.texture);
 
-      sh.x = this.app.renderer.width / 2;
-      sh.y = this.app.renderer.height / 2;
+        sh1.anchor.x = 0.5;
+        sh1.anchor.y = 0.5;
+        sh.anchor.x = 0.5;
+        sh.anchor.y = 0.5;
 
-      sh.anchor.x = 0.5;
-      sh.anchor.y = 0.5;
+        const sprBody = new SpriteBody(
+          sh,
+          this.app.renderer.width / 2,
+          this.app.renderer.height / 2
+        );
 
-      this.app.stage.addChild(sh);
-    });
+        sprBody.addSprite(sh1, 50, 0);
+
+        this.app.stage.addChild(sh);
+        this.app.stage.addChild(sh1);
+      });
+
+    // loader.add("shiphand", shiphand).load((loader, resources) => {
+    //   const sh = new PIXI.Sprite(resources.shiphand.texture);
+    //   const sh1 = new PIXI.Sprite(resources.shiphand.texture);
+
+    //   sh1.anchor.x = 0.5;
+    //   sh1.anchor.y = 0.5;
+    //   sh.anchor.x = 0.5;
+    //   sh.anchor.y = 0.5;
+
+    //   const sprBody = new SpriteBody(
+    //     sh,
+    //     this.app.renderer.width / 2,
+    //     this.app.renderer.height / 2
+    //   );
+
+    //   sprBody.addSprite(sh1, 50, 50);
+
+    //   this.app.stage.addChild(sh);
+    //   this.app.stage.addChild(sh1);
+    // });
   };
-
-  //   initialize = () => {
-  //     const sh = new PIXI.Sprite(PIXI.Loader.resources["shiphand"].texture);
-  //     console.log("SH: ", sh);
-  //     this.state.app.stage.addChild(sh);
-  //   };
-
-  //   state = {};
 
   render() {
     return <div ref={this.updatePixiContainer}></div>;
