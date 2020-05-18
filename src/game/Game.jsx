@@ -2,10 +2,30 @@ import React, { Component } from "react";
 import * as PIXI from "pixi.js";
 import SpriteBody from "./SpriteBody";
 
-// images
-import shiphand from "../assets/ui/shiphand.png";
+import resourcePairs from "./resources";
 
-import cbLarge from "../assets/projectile/cannonball_large.png";
+// // --- assets imports ---
+
+// // UI
+// import shiphand from "../assets/ui/shiphand.png";
+// import movesBg from "../assets/ui/moves-background.png";
+// import movesTitle from "../assets/ui/title.png";
+// import autoOn from "../assets/ui/auto-on.png";
+// import autoOff from "../assets/ui/auto-off.png";
+// import radioOn from "../assets/ui/radio-on.png";
+// import radioOff from "../assets/ui/radio-off.png";
+// import hourglass from "../assets/ui/hourglass.png";
+
+// import shipStatusBorder from "../assets/ui/status.png";
+// import shipStatus from "../assets/ui/status-bg.png";
+
+// import bilgeStatus from "../assets/ui/bilge.png";
+// import damageStatus from "../assets/ui/damage.png";
+
+// // Cannonballs
+// import cbSmall from "../assets/projectile/cannonball_small.png";
+// import cbMedium from "../assets/projectile/cannonball.png";
+// import cbLarge from "../assets/projectile/cannonball_large.png";
 
 class Game extends Component {
   constructor(props) {
@@ -22,6 +42,7 @@ class Game extends Component {
 
     this.app = app;
     this.state = { app };
+    this.loader = null;
   }
 
   updatePixiContainer = (el) => {
@@ -33,53 +54,52 @@ class Game extends Component {
     this.setup();
   };
 
+  /**
+   * Loads all the graphics into Pixi.js
+   */
   setup = () => {
     let loader = new PIXI.Loader();
-    loader
-      .add("cbLarge", cbLarge)
-      .add("shiphand", shiphand)
-      .load((loader, resources) => {
-        const sh = new PIXI.Sprite(resources.shiphand.texture);
-        const sh1 = new PIXI.Sprite(resources.cbLarge.texture);
+    this.loader = loader;
 
-        sh1.anchor.x = 0.5;
-        sh1.anchor.y = 0.5;
-        sh.anchor.x = 0.5;
-        sh.anchor.y = 0.5;
+    // Load resources from resources.js
+    let res;
+    for (res of resourcePairs) loader.add(res.name, res.image);
 
-        const sprBody = new SpriteBody(
-          sh,
-          this.app.renderer.width / 2,
-          this.app.renderer.height / 2
-        );
+    loader.load((loader, resources) => {
+      const movesBgSprite = this.createSprite("movesBackground");
+      const shipStatusBgSprite = this.createSprite("shipStatus");
+      const shipStatusBorderSprite = this.createSprite("shipStatusBorder");
+      const shiphandSprite = this.createSprite("shiphand");
+      const hourglassSprite = this.createSprite("hourglass");
 
-        sprBody.addSprite(sh1, 50, 0);
+      const movesBody = new SpriteBody(
+        movesBgSprite,
+        175,
+        this.app.renderer.height - 95
+      );
 
-        this.app.stage.addChild(sh);
-        this.app.stage.addChild(sh1);
-      });
+      movesBody.addSprite(shiphandSprite, 50, -1);
+      movesBody.addSprite(hourglassSprite, 100, 0);
 
-    // loader.add("shiphand", shiphand).load((loader, resources) => {
-    //   const sh = new PIXI.Sprite(resources.shiphand.texture);
-    //   const sh1 = new PIXI.Sprite(resources.shiphand.texture);
+      const stage = this.app.stage;
 
-    //   sh1.anchor.x = 0.5;
-    //   sh1.anchor.y = 0.5;
-    //   sh.anchor.x = 0.5;
-    //   sh.anchor.y = 0.5;
-
-    //   const sprBody = new SpriteBody(
-    //     sh,
-    //     this.app.renderer.width / 2,
-    //     this.app.renderer.height / 2
-    //   );
-
-    //   sprBody.addSprite(sh1, 50, 50);
-
-    //   this.app.stage.addChild(sh);
-    //   this.app.stage.addChild(sh1);
-    // });
+      stage.addChild(movesBgSprite);
+      stage.addChild(shiphandSprite);
+      stage.addChild(hourglassSprite);
+    });
   };
+
+  // A function that helps with readability when making sprites.
+  createSprite(textureName) {
+    const spr = new PIXI.Sprite(this.loader.resources[textureName].texture);
+    this.setCenterAnchor(spr);
+    return spr;
+  }
+
+  setCenterAnchor(sprite) {
+    sprite.anchor.x = 0.5;
+    sprite.anchor.y = 0.5;
+  }
 
   render() {
     return <div ref={this.updatePixiContainer}></div>;
