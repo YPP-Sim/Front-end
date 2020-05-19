@@ -17,6 +17,24 @@ const defaultMap = [
   [0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
+function isRock(cell_id) {
+  switch (cell_id) {
+    case 13:
+    case 14:
+    case 15:
+    case 16:
+      return true;
+    default:
+      return false;
+  }
+}
+
+function calculateGameToSpritePosition(x, y) {
+  const spaceX = (x / 2) * 64 + y * 32;
+  const spaceY = y * 48 + x * -24 - y * 24;
+  return { spaceX, spaceY };
+}
+
 class Game extends Component {
   constructor(props) {
     super(props);
@@ -34,16 +52,12 @@ class Game extends Component {
     this.state = { app };
     this.loader = null;
 
-    this.map = defaultMap;
-
     // Will save some textures from spritesheets for later use.
     this.textures = {};
-
     // Save sprite handles from setup() to edit in game later
     this.sprites = {};
-
     this.shipData = new ShipData(8, true, 0, 0);
-
+    this.map = defaultMap;
     this.mapBody = new SpriteBody(null, 50, 150);
   }
 
@@ -332,8 +346,6 @@ class Game extends Component {
     this.map = mapData;
   }
 
-  reRenderRocks() {}
-
   /**
    * Maps the cell texture by their id's
    * @param {number} cell_id
@@ -403,25 +415,65 @@ class Game extends Component {
     const xSize = this.map[0].length;
     const ySize = this.map.length;
 
-    console.log("YSize: ", ySize, "XSize: ", xSize);
+    const rocks = [];
+
     for (let x = 0; x < xSize; x++) {
       for (let y = 0; y < ySize; y++) {
-        const cell_id = this.map[y][x];
+        let cell_id = this.map[y][x];
+
+        if (isRock(cell_id)) {
+          rocks.push({ id: cell_id, x, y });
+          cell_id = 0;
+        }
 
         const cellSprite = new PIXI.Sprite(this.getCellTexture(cell_id));
-        cellSprite.anchor.x = 0.5;
-        cellSprite.anchor.y = 0.5;
-        // mapBody.addSprite(cellSprite, (x / 2) * 64, y * 48 + x * 24);
+        this.setCenterAnchor(cellSprite);
 
-        const spaceX = (x / 2) * 64 + y * 32;
-        const spaceY = y * 48 + x * -24 - y * 24;
+        const { spaceX, spaceY } = calculateGameToSpritePosition(x, y);
 
         mapBody.addSprite(cellSprite, spaceX, spaceY);
 
         this.app.stage.addChild(cellSprite);
       }
     }
-    for (cell_id of this.map) {
+
+    //Re render our rocks
+    this.reRenderRocks(rocks);
+  }
+
+  reRenderRocks(rocks) {
+    let rockData;
+    for (rockData of rocks) {
+      const { spaceX, spaceY } = calculateGameToSpritePosition(
+        rockData.x,
+        rockData.y
+      );
+      const rockSprite = new PIXI.Sprite(this.getCellTexture(rockData.id));
+
+      // Center rocks onto tiles.
+      switch (rockData.id) {
+        case 13:
+          rockSprite.anchor.x = 0.5;
+          rockSprite.anchor.y = 0.58;
+          break;
+        case 14:
+          rockSprite.anchor.x = 0.45;
+          rockSprite.anchor.y = 0.55;
+          break;
+        case 15:
+          rockSprite.anchor.x = 0.45;
+          rockSprite.anchor.y = 0.55;
+          break;
+        case 16:
+          rockSprite.anchor.x = 0.5;
+          rockSprite.anchor.y = 0.7;
+          break;
+        default:
+          this.setCenterAnchor(rockSprite);
+      }
+
+      this.mapBody.addSprite(rockSprite, spaceX, spaceY);
+      this.app.stage.addChild(rockSprite);
     }
   }
 
