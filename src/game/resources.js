@@ -23,7 +23,49 @@ import cbSmall from "../assets/projectile/cannonball_small.png";
 import cbMedium from "../assets/projectile/cannonball.png";
 import cbLarge from "../assets/projectile/cannonball_large.png";
 
+// Sea/Map
+import cell from "../assets/sea/cell.png";
+import ocean from "../assets/sea/ocean.png";
+import rocks from "../assets/sea/rocks.png";
+import rocksBig from "../assets/sea/rocks_big.png";
+import rocksSmall from "../assets/sea/rocks_small.png";
+import safezone from "../assets/sea/safezone.png";
+import whirl from "../assets/sea/whirl.png";
+import wind from "../assets/sea/wind.png";
+
 const resourcePairs = [
+  {
+    name: "wind",
+    image: wind,
+  },
+  {
+    name: "whirl",
+    image: whirl,
+  },
+  {
+    name: "safezone",
+    image: safezone,
+  },
+  {
+    name: "rocksSmall",
+    image: rocksSmall,
+  },
+  {
+    name: "rocksBig",
+    image: rocksBig,
+  },
+  {
+    name: "rocks",
+    image: rocks,
+  },
+  {
+    name: "ocean",
+    image: ocean,
+  },
+  {
+    name: "cell",
+    image: cell,
+  },
   {
     name: "shiphand",
     image: shiphand,
