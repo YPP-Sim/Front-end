@@ -6,15 +6,15 @@ import ShipData from "./ShipData";
 import resourcePairs from "./resources";
 
 const defaultMap = [
+  [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 2, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 11, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 10, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 6, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
 class Game extends Component {
@@ -90,6 +90,53 @@ class Game extends Component {
     this.textures["cell_2"] = c2_t;
     this.textures["cell_3"] = c3_t;
     this.textures["cell_4"] = c4_t;
+
+    // Winds
+    const windRect = new PIXI.Rectangle(0, 0, 64, 48);
+    const rightWind = new PIXI.Texture(resources["wind"].texture, windRect);
+    windRect.x += 64;
+    const downWind = new PIXI.Texture(resources["wind"].texture, windRect);
+    windRect.x += 64;
+    const leftWind = new PIXI.Texture(resources["wind"].texture, windRect);
+    windRect.x += 64;
+    const upWind = new PIXI.Texture(resources["wind"].texture, windRect);
+
+    this.textures["rightWind"] = rightWind;
+    this.textures["downWind"] = downWind;
+    this.textures["leftWind"] = leftWind;
+    this.textures["upWind"] = upWind;
+
+    // Whirlpools
+
+    const whirlRect = new PIXI.Rectangle(0, 0, 64, 48);
+    const whirl1 = new PIXI.Texture(resources["whirl"].texture, whirlRect);
+    whirlRect.x += 64;
+    const whirl2 = new PIXI.Texture(resources["whirl"].texture, whirlRect);
+    whirlRect.x += 64;
+    const whirl3 = new PIXI.Texture(resources["whirl"].texture, whirlRect);
+    whirlRect.x += 64;
+    const whirl4 = new PIXI.Texture(resources["whirl"].texture, whirlRect);
+    whirlRect.x += 64;
+
+    // Reverse whirlpool
+    const revWhirl1 = new PIXI.Texture(resources["whirl"].texture, whirlRect);
+    whirlRect.x += 64;
+    const revWhirl2 = new PIXI.Texture(resources["whirl"].texture, whirlRect);
+    whirlRect.x += 64;
+    const revWhirl3 = new PIXI.Texture(resources["whirl"].texture, whirlRect);
+    whirlRect.x += 64;
+    const revWhirl4 = new PIXI.Texture(resources["whirl"].texture, whirlRect);
+    whirlRect.x += 64;
+
+    this.textures["whirl1"] = whirl1;
+    this.textures["whirl2"] = whirl2;
+    this.textures["whirl3"] = whirl3;
+    this.textures["whirl4"] = whirl4;
+
+    this.textures["revWhirl1"] = revWhirl1;
+    this.textures["revWhirl2"] = revWhirl2;
+    this.textures["revWhirl3"] = revWhirl3;
+    this.textures["revWhirl4"] = revWhirl4;
   }
 
   loadShipUI(resources) {
@@ -269,11 +316,50 @@ class Game extends Component {
     this.map = mapData;
   }
 
+  /**
+   * Maps the cell texture by their id's
+   * @param {number} cell_id
+   *
+   * @returns The texture of the cell id.
+   */
   getCellTexture(cell_id) {
     switch (cell_id) {
       case 0:
         const rNum = Math.floor(Math.random() * 5);
         return this.textures["cell_" + rNum];
+      case 1:
+        return this.textures["upWind"];
+      case 2:
+        return this.textures["rightWind"];
+      case 3:
+        return this.textures["downWind"];
+      case 4:
+        return this.textures["leftWind"];
+
+      case 5:
+        return this.textures["whirl1"];
+
+      case 6:
+        return this.textures["whirl2"];
+
+      case 7:
+        return this.textures["whirl3"];
+
+      case 8:
+        return this.textures["whirl4"];
+
+      case 12:
+        return this.textures["revWhirl1"];
+
+      case 9:
+        return this.textures["revWhirl2"];
+
+      case 10:
+        return this.textures["revWhirl3"];
+
+      case 11:
+        return this.textures["revWhirl4"];
+
       default:
         return this.loader.resources["ocean"].texture;
     }
