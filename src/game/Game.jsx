@@ -10,10 +10,10 @@ const defaultMap = [
   [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 2, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 11, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 10, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 6, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 13, 0, 11, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 14, 0, 10, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 7, 8, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 6, 5, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
@@ -43,6 +43,8 @@ class Game extends Component {
     this.sprites = {};
 
     this.shipData = new ShipData(8, true, 0, 0);
+
+    this.mapBody = new SpriteBody(null, 50, 150);
   }
 
   updatePixiContainer = (el) => {
@@ -137,6 +139,20 @@ class Game extends Component {
     this.textures["revWhirl2"] = revWhirl2;
     this.textures["revWhirl3"] = revWhirl3;
     this.textures["revWhirl4"] = revWhirl4;
+
+    const rocksRec = new PIXI.Rectangle(0, 0, 58.5, 69);
+    const rocks1 = new PIXI.Texture(resources["rocksBig"].texture, rocksRec);
+    rocksRec.x += 58.5;
+    const rocks2 = new PIXI.Texture(resources["rocksBig"].texture, rocksRec);
+    rocksRec.x += 58.5;
+    const rocks3 = new PIXI.Texture(resources["rocksBig"].texture, rocksRec);
+    rocksRec.x += 58.5;
+    const rocks4 = new PIXI.Texture(resources["rocksBig"].texture, rocksRec);
+
+    this.textures["rocks1"] = rocks1;
+    this.textures["rocks2"] = rocks2;
+    this.textures["rocks3"] = rocks3;
+    this.textures["rocks4"] = rocks4;
   }
 
   loadShipUI(resources) {
@@ -316,13 +332,15 @@ class Game extends Component {
     this.map = mapData;
   }
 
+  reRenderRocks() {}
+
   /**
    * Maps the cell texture by their id's
    * @param {number} cell_id
    *
    * @returns The texture of the cell id.
    */
-  getCellTexture(cell_id) {
+  getCellTexture(cell_id, x, y) {
     switch (cell_id) {
       case 0:
         const rNum = Math.floor(Math.random() * 5);
@@ -348,9 +366,6 @@ class Game extends Component {
       case 8:
         return this.textures["whirl4"];
 
-      case 12:
-        return this.textures["revWhirl1"];
-
       case 9:
         return this.textures["revWhirl2"];
 
@@ -360,6 +375,21 @@ class Game extends Component {
       case 11:
         return this.textures["revWhirl4"];
 
+      case 12:
+        return this.textures["revWhirl1"];
+
+      case 13:
+        return this.textures["rocks1"];
+
+      case 14:
+        return this.textures["rocks2"];
+
+      case 15:
+        return this.textures["rocks3"];
+
+      case 16:
+        return this.textures["rocks4"];
+
       default:
         return this.loader.resources["ocean"].texture;
     }
@@ -368,7 +398,7 @@ class Game extends Component {
   loadMap() {
     let cell_id;
 
-    const mapBody = new SpriteBody(null, 50, 100);
+    const mapBody = this.mapBody;
 
     const xSize = this.map[0].length;
     const ySize = this.map.length;
