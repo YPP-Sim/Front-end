@@ -7,12 +7,16 @@ import autoOff from "../assets/ui/auto-off.png";
 import radioOn from "../assets/ui/radio-on.png";
 import radioOff from "../assets/ui/radio-off.png";
 import hourglass from "../assets/ui/hourglass.png";
-
+import selectBox from "../assets/ui/sel_border_square.png";
 import shipStatusBorder from "../assets/ui/status.png";
 import shipStatus from "../assets/ui/status-bg.png";
 
 import bilgeStatus from "../assets/ui/bilge.png";
 import damageStatus from "../assets/ui/damage.png";
+
+import gunToken from "../assets/ui/grapplecannon.png";
+
+import moves from "../assets/ui/move.png";
 
 // Cannonballs
 import cbSmall from "../assets/projectile/cannonball_small.png";
@@ -57,6 +61,10 @@ const resourcePairs = [
     image: radioOn,
   },
   {
+    name: "radioOff",
+    image: radioOff,
+  },
+  {
     name: "bilgeStatus",
     image: bilgeStatus,
   },
@@ -75,6 +83,18 @@ const resourcePairs = [
   {
     name: "hourglass",
     image: hourglass,
+  },
+  {
+    name: "moves",
+    image: moves,
+  },
+  {
+    name: "selectBox",
+    image: selectBox,
+  },
+  {
+    name: "gunToken",
+    image: gunToken,
   },
 ];
 export default resourcePairs;
