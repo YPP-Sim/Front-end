@@ -5,6 +5,18 @@ import ShipData from "./ShipData";
 
 import resourcePairs from "./resources";
 
+const defaultMap = [
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+];
+
 class Game extends Component {
   constructor(props) {
     super(props);
@@ -22,13 +34,15 @@ class Game extends Component {
     this.state = { app };
     this.loader = null;
 
+    this.map = defaultMap;
+
     // Will save some textures from spritesheets for later use.
     this.textures = {};
 
     // Save sprite handles from setup() to edit in game later
     this.sprites = {};
 
-    this.shipData = new ShipData(8, true);
+    this.shipData = new ShipData(8, true, 0, 0);
   }
 
   updatePixiContainer = (el) => {
@@ -52,11 +66,31 @@ class Game extends Component {
     for (res of resourcePairs) loader.add(res.name, res.image);
 
     loader.load((loader, resources) => {
+      this.loadMapSpritesheets(resources);
+      this.loadMap();
       this.loadShipUI(resources);
     });
   };
 
-  loadMap(resources) {}
+  loadMapSpritesheets(resources) {
+    // Regular cells
+    const cellRect = new PIXI.Rectangle(0, 0, 64, 48);
+    const c0_t = new PIXI.Texture(resources["cell"].texture, cellRect);
+    cellRect.x += 64;
+    const c1_t = new PIXI.Texture(resources["cell"].texture, cellRect);
+    cellRect.x += 64;
+    const c2_t = new PIXI.Texture(resources["cell"].texture, cellRect);
+    cellRect.x += 64;
+    const c3_t = new PIXI.Texture(resources["cell"].texture, cellRect);
+    cellRect.x += 64;
+    const c4_t = new PIXI.Texture(resources["cell"].texture, cellRect);
+
+    this.textures["cell_0"] = c0_t;
+    this.textures["cell_1"] = c1_t;
+    this.textures["cell_2"] = c2_t;
+    this.textures["cell_3"] = c3_t;
+    this.textures["cell_4"] = c4_t;
+  }
 
   loadShipUI(resources) {
     const movesBgSprite = this.createSprite("movesBackground");
@@ -225,6 +259,54 @@ class Game extends Component {
   setCenterAnchor(sprite) {
     sprite.anchor.x = 0.5;
     sprite.anchor.y = 0.5;
+  }
+
+  /**
+   *
+   * @param mapData a 2D array of integers referencing cell data
+   */
+  setMap(mapData) {
+    this.map = mapData;
+  }
+
+  getCellTexture(cell_id) {
+    switch (cell_id) {
+      case 0:
+        const rNum = Math.floor(Math.random() * 5);
+        return this.textures["cell_" + rNum];
+      default:
+        return this.loader.resources["ocean"].texture;
+    }
+  }
+
+  loadMap() {
+    let cell_id;
+
+    const mapBody = new SpriteBody(null, 50, 100);
+
+    const xSize = this.map[0].length;
+    const ySize = this.map.length;
+
+    console.log("YSize: ", ySize, "XSize: ", xSize);
+    for (let x = 0; x < xSize; x++) {
+      for (let y = 0; y < ySize; y++) {
+        const cell_id = this.map[y][x];
+
+        const cellSprite = new PIXI.Sprite(this.getCellTexture(cell_id));
+        cellSprite.anchor.x = 0.5;
+        cellSprite.anchor.y = 0.5;
+        // mapBody.addSprite(cellSprite, (x / 2) * 64, y * 48 + x * 24);
+
+        const spaceX = (x / 2) * 64 + y * 32;
+        const spaceY = y * 48 + x * -24 - y * 24;
+
+        mapBody.addSprite(cellSprite, spaceX, spaceY);
+
+        this.app.stage.addChild(cellSprite);
+      }
+    }
+    for (cell_id of this.map) {
+    }
   }
 
   updateTokens() {}
