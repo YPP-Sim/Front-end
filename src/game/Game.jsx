@@ -2,17 +2,20 @@ import React, { Component } from "react";
 import * as PIXI from "pixi.js";
 import SpriteBody from "./SpriteBody";
 import ShipData from "./ShipData";
+import Ship from "./Ship";
+import ShipType from "./ShipType";
+import Orientation from "./Orientation";
 
 import resourcePairs from "./resources";
 
 const defaultMap = [
-  [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 2, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 13, 0, 11, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 14, 0, 10, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 7, 8, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [15, 0, 14, 0, 10, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [3, 7, 8, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 6, 5, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
@@ -29,7 +32,7 @@ function isRock(cell_id) {
   }
 }
 
-function calculateGameToSpritePosition(x, y) {
+export function calculateGameToSpritePosition(x, y) {
   const spaceX = (x / 2) * 64 + y * 32;
   const spaceY = y * 48 + x * -24 - y * 24;
   return { spaceX, spaceY };
@@ -58,7 +61,9 @@ class Game extends Component {
     this.sprites = {};
     this.shipData = new ShipData(8, true, 0, 0);
     this.map = defaultMap;
-    this.mapBody = new SpriteBody(null, 50, 150);
+    this.mapBody = new SpriteBody(null, 100, 250);
+
+    this.playerShips = [];
   }
 
   updatePixiContainer = (el) => {
@@ -74,7 +79,7 @@ class Game extends Component {
    * Loads all the graphics into Pixi.js
    */
   setup = () => {
-    let loader = new PIXI.Loader();
+    let loader = PIXI.Loader.shared;
     this.loader = loader;
 
     // Load resources from resources.js
@@ -84,6 +89,7 @@ class Game extends Component {
     loader.load((loader, resources) => {
       this.loadMapSpritesheets(resources);
       this.loadMap();
+      this.loadShipSpritesheets(resources);
       this.loadShipUI(resources);
     });
   };
@@ -324,6 +330,23 @@ class Game extends Component {
 
     stage.addChild(gunTokenSprite);
     stage.addChild(autoButtonSprite);
+  }
+
+  loadShipSpritesheets(resources) {
+    //War frig
+    // const textureOrientations = ShipType.warFrig.orientations.orientations;
+
+    // const wfSprite = new PIXI.Sprite(resources[ShipType.warFrig.textureName]);
+
+    const wfExample = new Ship(ShipType.warFrig, this);
+    wfExample.loadSprites();
+    wfExample.setGamePosition(5, 3);
+    wfExample.setOrientation(Orientation.WEST);
+    setInterval(() => {
+      wfExample.moveRight();
+    }, 1000);
+    // wfExample.moveForward();
+    // wfExample.moveForward();
   }
 
   // A function that helps with readability when making sprites.

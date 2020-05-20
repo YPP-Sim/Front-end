@@ -33,7 +33,14 @@ import safezone from "../assets/sea/safezone.png";
 import whirl from "../assets/sea/whirl.png";
 import wind from "../assets/sea/wind.png";
 
+//Ships
+import wfShip from "../assets/vessel/wf/spritesheet.png";
+
 const resourcePairs = [
+  {
+    name: "wfShip",
+    image: wfShip,
+  },
   {
     name: "wind",
     image: wind,

@@ -1,6 +1,10 @@
+import wfOrientations from "../assets/vessel/wf/properties.json";
+
 const shipTypes = {
-  xebec: {
-    name: "Xebec",
+  warFrig: {
+    name: "War Frigate",
+    textureName: "wfShip",
+    orientations: wfOrientations,
   },
 };
 

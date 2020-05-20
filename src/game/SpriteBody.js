@@ -33,6 +33,13 @@ class SpriteBody {
       xOffset,
       yOffset,
     });
+
+    const setSpriteOffset = (offsetX, offsetY) => {
+      sprite.x = this.x + offsetX;
+      sprite.y = this.y + offsetY;
+    };
+
+    return setSpriteOffset;
   }
 
   setPosition(x, y) {
