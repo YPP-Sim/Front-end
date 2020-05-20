@@ -62,9 +62,13 @@ class Game extends Component {
     this.shipData = new ShipData(8, true, 0, 0);
     this.map = defaultMap;
     this.mapBody = new SpriteBody(null, 100, 250);
-
     this.playerShips = [];
   }
+
+  renderLoop = () => {
+    requestAnimationFrame(this.renderLoop);
+    this.app.render();
+  };
 
   updatePixiContainer = (el) => {
     this.pixi_cnt = el;
@@ -88,9 +92,11 @@ class Game extends Component {
 
     loader.load((loader, resources) => {
       this.loadMapSpritesheets(resources);
-      this.loadMap();
+      const rocks = this.loadMap();
       this.loadShipSpritesheets(resources);
+      this.reRenderRocks(rocks);
       this.loadShipUI(resources);
+      this.renderLoop();
     });
   };
 
@@ -334,19 +340,15 @@ class Game extends Component {
 
   loadShipSpritesheets(resources) {
     //War frig
-    // const textureOrientations = ShipType.warFrig.orientations.orientations;
-
-    // const wfSprite = new PIXI.Sprite(resources[ShipType.warFrig.textureName]);
 
     const wfExample = new Ship(ShipType.warFrig, this);
     wfExample.loadSprites();
-    wfExample.setGamePosition(5, 3);
+
     wfExample.setOrientation(Orientation.WEST);
+    // wfExample.moveLeft();
     setInterval(() => {
-      wfExample.moveRight();
-    }, 1000);
-    // wfExample.moveForward();
-    // wfExample.moveForward();
+      wfExample.moveLeft();
+    }, 2000);
   }
 
   // A function that helps with readability when making sprites.
@@ -461,7 +463,8 @@ class Game extends Component {
     }
 
     //Re render our rocks
-    this.reRenderRocks(rocks);
+    // this.reRenderRocks(rocks);
+    return rocks;
   }
 
   reRenderRocks(rocks) {
