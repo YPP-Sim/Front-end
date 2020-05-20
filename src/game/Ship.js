@@ -1,5 +1,7 @@
 import * as PIXI from "pixi.js";
 import orientation from "./Orientation";
+import WebTicker from "./webTicker.worker.js";
+import MyTicker from "./MyTicker";
 
 import { calculateGameToSpritePosition } from "./Game";
 
@@ -22,6 +24,18 @@ class Ship {
     this.animationSpeed = 10; // Lower is faster
     this.textureChangeDelay = 129;
     this.turnThreshold = 0.4;
+
+    // this.textureTicker = new WebTicker();
+    this.movementTicker = new WebTicker();
+
+    this.activeTicker = new MyTicker();
+    // this.forwardMovementTicker = new WebTicker();
+    // this.forwardMovementTicker.addEventListener("message", this.onForwardTick);
+    this.movementTicker.addEventListener("message", () => {
+      console.log("movement tick");
+
+      this.activeTicker.fire();
+    });
   }
 
   loadSprites() {
@@ -44,7 +58,7 @@ class Ship {
 
     this.sprite = shipSprite;
 
-    this.game.app.stage.addChild(shipSprite);
+    this.game.stage.addChild(shipSprite);
 
     this.faceDirection = orientation.SOUTH;
 
@@ -108,17 +122,19 @@ class Ship {
     let xComplete = Math.abs(dX);
     let yComplete = Math.abs(dY);
 
-    const id = setInterval(() => {
+    this.activeTicker = new PIXI.Ticker();
+    this.activeTicker.add(() => {
       this.setGamePosition(this.x + incrementX, this.y + incrementY);
-
       xComplete -= Math.abs(incrementX);
       yComplete -= Math.abs(incrementY);
 
       if (xComplete <= 0 && yComplete <= 0) {
-        clearInterval(id);
-        this.setGamePosition(targetX, targetY);
+        this.setPosition(targetX, targetY);
+        this.movementTicker.postMessage(["stop"]);
       }
-    }, this.animationSpeed);
+    });
+
+    this.movementTicker.postMessage(["start", this.animationSpeed]);
   }
 
   moveRight() {
@@ -197,21 +213,8 @@ class Ship {
     let xComplete = Math.abs(dX);
     let yComplete = Math.abs(dY);
 
-    let time = Date.now();
-    let prevTime = time;
-    const id = setInterval(() => {
-      time = Date.now();
-      // console.log("Elapsed time: " + (time - prevTime));
-
-      if (time - prevTime > 100) {
-        console.log("Spike: ", time - prevTime);
-        clearInterval(id);
-        this.setGamePosition(targetX, targetY);
-        this.setVirtualPosition(targetX, targetY);
-        this.setPosition(targetX, targetY);
-        console.log("Setting game pos: ", targetX, targetY);
-      }
-
+    this.activeTicker = new MyTicker();
+    this.activeTicker.add(() => {
       let toX = this.x;
       let toY = this.y;
 
@@ -227,15 +230,15 @@ class Ship {
 
       this.setGamePosition(toX, toY);
 
-      prevTime = time;
-
       if (xComplete <= 0 && yComplete <= 0) {
-        clearInterval(id);
+        this.movementTicker.postMessage(["stop"]);
         this.setGamePosition(targetX, targetY);
         this.setVirtualPosition(targetX, targetY);
         this.setPosition(targetX, targetY);
       }
-    }, this.animationSpeed);
+    });
+
+    this.movementTicker.postMessage(["start", this.animationSpeed]);
   }
 
   moveLeft() {

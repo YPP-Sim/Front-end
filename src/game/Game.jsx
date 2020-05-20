@@ -43,7 +43,7 @@ class Game extends Component {
     super(props);
 
     this.pixi_cnt = null;
-    const app = new PIXI.Application({
+    const renderer = new PIXI.Renderer({
       width: 600,
       height: 600,
       transparent: false,
@@ -51,8 +51,9 @@ class Game extends Component {
       resolution: window.devicePixelRatio,
     });
 
-    this.app = app;
-    this.state = { app };
+    this.stage = new PIXI.Container();
+    this.app = renderer;
+    this.state = { app: this.app };
     this.loader = null;
 
     // Will save some textures from spritesheets for later use.
@@ -64,11 +65,6 @@ class Game extends Component {
     this.mapBody = new SpriteBody(null, 100, 250);
     this.playerShips = [];
   }
-
-  renderLoop = () => {
-    requestAnimationFrame(this.renderLoop);
-    this.app.render();
-  };
 
   updatePixiContainer = (el) => {
     this.pixi_cnt = el;
@@ -96,9 +92,29 @@ class Game extends Component {
       this.loadShipSpritesheets(resources);
       this.reRenderRocks(rocks);
       this.loadShipUI(resources);
-      this.renderLoop();
+      this.oldTime = Date.now();
+
+      // this.renderLoop();
+
+      requestAnimationFrame(this.animate.bind(this));
     });
   };
+
+  animate() {
+    var newTime = Date.now();
+    var deltaTime = newTime - this.oldTime;
+    this.oldTime = newTime;
+    if (deltaTime < 0) deltaTime = 0;
+    if (deltaTime > 1000) deltaTime = 1000;
+    var deltaFrame = (deltaTime * 60) / 1000; //1.0 is for single frame
+
+    // update your game there
+    // sprite.rotation += 0.1 * deltaFrame;
+
+    this.app.render(this.stage);
+
+    requestAnimationFrame(this.animate.bind(this));
+  }
 
   loadMapSpritesheets(resources) {
     // Regular cells
@@ -283,11 +299,7 @@ class Game extends Component {
     this.setCenterAnchor(rightSprite);
     this.sprites["rightTokens"] = rightSprite;
 
-    const movesBody = new SpriteBody(
-      movesBgSprite,
-      175,
-      this.app.renderer.height - 95
-    );
+    const movesBody = new SpriteBody(movesBgSprite, 175, this.app.height - 95);
 
     movesBody.addSprite(shiphandSprite, 55, -1);
     movesBody.addSprite(hourglassSprite, 130, 25);
@@ -310,7 +322,7 @@ class Game extends Component {
 
     movesBody.addSprite(autoButtonSprite, -100, -23);
 
-    const stage = this.app.stage;
+    const stage = this.stage;
 
     stage.addChild(movesBgSprite);
     stage.addChild(shiphandSprite);
@@ -344,8 +356,8 @@ class Game extends Component {
     const wfExample = new Ship(ShipType.warFrig, this);
     wfExample.loadSprites();
 
-    wfExample.setOrientation(Orientation.WEST);
-    // wfExample.moveLeft();
+    wfExample.setOrientation(Orientation.NORTH);
+    // wfExample.moveForward();
     setInterval(() => {
       wfExample.moveLeft();
     }, 2000);
@@ -458,7 +470,7 @@ class Game extends Component {
 
         mapBody.addSprite(cellSprite, spaceX, spaceY);
 
-        this.app.stage.addChild(cellSprite);
+        this.stage.addChild(cellSprite);
       }
     }
 
@@ -499,7 +511,7 @@ class Game extends Component {
       }
 
       this.mapBody.addSprite(rockSprite, spaceX, spaceY);
-      this.app.stage.addChild(rockSprite);
+      this.stage.addChild(rockSprite);
     }
   }
 
