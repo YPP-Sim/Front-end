@@ -8,6 +8,12 @@ import Orientation from "./Orientation";
 
 import resourcePairs from "./resources";
 
+import io from "socket.io-client";
+
+const ENDPOINT = "http://127.0.0.1:4000";
+
+const socket = io(ENDPOINT);
+
 const defaultMap = [
   [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -64,6 +70,21 @@ class Game extends Component {
     this.map = defaultMap;
     this.mapBody = new SpriteBody(null, 100, 250);
     this.playerShips = [];
+  }
+
+  componentDidMount() {
+    socket.on("test", (e) => {
+      console.log("Hey!", e);
+    });
+
+    socket.on("message", (e) => {
+      console.log("Received message: ", e);
+    });
+  }
+
+  componentWillUnmount() {
+    socket.off("message");
+    socket.off("test");
   }
 
   updatePixiContainer = (el) => {
