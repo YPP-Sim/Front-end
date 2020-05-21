@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import * as PIXI from "pixi.js";
 import SpriteBody from "./SpriteBody";
-import ShipData from "./ShipData";
 import Ship from "./Ship";
 import ShipType from "./ShipType";
 import Orientation from "./Orientation";
@@ -9,6 +8,7 @@ import Orientation from "./Orientation";
 import resourcePairs from "./resources";
 
 import io from "socket.io-client";
+import SocketController from "./SocketController";
 
 const ENDPOINT = "http://127.0.0.1:4000";
 
@@ -22,8 +22,8 @@ const defaultMap = [
   [0, 0, 13, 0, 11, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [15, 0, 14, 0, 10, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [3, 7, 8, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 6, 5, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+  [15, 6, 5, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [15, 0, 0, 0, 4, 4, 4, 4, 4, 4, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
 function isRock(cell_id) {
@@ -58,6 +58,7 @@ class Game extends Component {
     });
 
     this.stage = new PIXI.Container();
+    this.stage.sortableChildren = true;
     this.app = renderer;
     this.state = { app: this.app };
     this.loader = null;
@@ -66,25 +67,22 @@ class Game extends Component {
     this.textures = {};
     // Save sprite handles from setup() to edit in game later
     this.sprites = {};
-    this.shipData = new ShipData(8, true, 0, 0);
+
     this.map = defaultMap;
     this.mapBody = new SpriteBody(null, 100, 250);
-    this.playerShips = [];
+    this.ships = {};
+
+    this.socketController = new SocketController(socket, this);
+
+    this.setupLoaded = false;
   }
 
   componentDidMount() {
-    socket.on("test", (e) => {
-      console.log("Hey!", e);
-    });
-
-    socket.on("message", (e) => {
-      console.log("Received message: ", e);
-    });
+    this.socketController.registerEvents();
   }
 
   componentWillUnmount() {
-    socket.off("message");
-    socket.off("test");
+    this.socketController.unregisterEvents();
   }
 
   updatePixiContainer = (el) => {
@@ -108,14 +106,12 @@ class Game extends Component {
     for (res of resourcePairs) loader.add(res.name, res.image);
 
     loader.load((loader, resources) => {
+      this.setupLoaded = true;
       this.loadMapSpritesheets(resources);
       const rocks = this.loadMap();
-      this.loadShipSpritesheets(resources);
       this.reRenderRocks(rocks);
       this.loadShipUI(resources);
       this.oldTime = Date.now();
-
-      // this.renderLoop();
 
       requestAnimationFrame(this.animate.bind(this));
     });
@@ -127,7 +123,7 @@ class Game extends Component {
     this.oldTime = newTime;
     if (deltaTime < 0) deltaTime = 0;
     if (deltaTime > 1000) deltaTime = 1000;
-    var deltaFrame = (deltaTime * 60) / 1000; //1.0 is for single frame
+    // var deltaFrame = (deltaTime * 60) / 1000; //1.0 is for single frame
 
     // update your game there
     // sprite.rotation += 0.1 * deltaFrame;
@@ -135,6 +131,36 @@ class Game extends Component {
     this.app.render(this.stage);
 
     requestAnimationFrame(this.animate.bind(this));
+  }
+
+  /**
+   *
+   * @param {string} shipId  Usually the name of the player that owns the ship
+   * @param {ShipType} type   The type of the ship, e.g, war frig, xebec.
+   * @param {Orientation} orientation   The starting orientation the ship will face, Default is SOUTH
+   * @param {number} boardX   The x position on the map board.
+   * @param {number} boardY   The y position on the map boar
+   */
+  addShip(shipId, type, boardX, boardY, orientation = Orientation.SOUTH) {
+    if (!this.setupLoaded) {
+      console.log("Tried to add ship before textures were loaded...");
+      return;
+    }
+
+    const ship = new Ship(ShipType.warFrig, this);
+    ship.loadSprites();
+    ship.setOrientation(orientation);
+    ship.setPosition(boardX, boardY);
+    this.ships[shipId] = ship;
+  }
+
+  /**
+   *
+   * @param {string} shipId  The id of the ship to get.
+   * @returns {Ship} The ship retrieved, or null if no ship recognized with that name.
+   */
+  getShip(shipId) {
+    return this.ships[shipId];
   }
 
   loadMapSpritesheets(resources) {
@@ -226,6 +252,13 @@ class Game extends Component {
     const hourglassSprite = this.createSprite("hourglass");
     const movesTitle = this.createSprite("movesTitle");
 
+    movesBgSprite.zIndex = 51;
+    shipStatusBgSprite.zIndex = 52;
+    shipStatusBorderSprite.zIndex = 52;
+    shiphandSprite.zIndex = 52;
+    hourglassSprite.zIndex = 52;
+    movesTitle.zIndex = 52;
+
     const gunTokenTexture = new PIXI.Texture(
       resources["gunToken"].texture,
       new PIXI.Rectangle(25, 0, 25, 25)
@@ -233,6 +266,7 @@ class Game extends Component {
 
     const autoButtonSprite = this.createSprite("autoOn");
     autoButtonSprite.interactive = true;
+    autoButtonSprite.zIndex = 52;
     autoButtonSprite.buttonMode = true;
     autoButtonSprite.on("pointerdown", () => {
       //Toggle
@@ -251,6 +285,7 @@ class Game extends Component {
     this.sprites["autoButton"] = autoButtonSprite;
 
     const gunTokenSprite = new PIXI.Sprite(gunTokenTexture);
+    gunTokenSprite.zIndex = 52;
     this.setCenterAnchor(gunTokenSprite);
 
     // Texts ---------------------
@@ -269,6 +304,12 @@ class Game extends Component {
     this.setCenterAnchor(forwardTokenAmount);
     const gunTokenAmount = new PIXI.Text("x1", textStyle);
     this.setCenterAnchor(gunTokenAmount);
+
+    autoText.zIndex = 52;
+    gunTokenAmount.zIndex = 52;
+    forwardTokenAmount.zIndex = 52;
+    rightTokenAmount.zIndex = 52;
+    leftTokenAmount.zIndex = 52;
 
     this.sprites["forwardTokenAmount"] = forwardTokenAmount;
     this.sprites["rightTokenAmount"] = rightTokenAmount;
@@ -290,6 +331,7 @@ class Game extends Component {
     this.textures["brightSelectToken"] = brightSelectTexture;
 
     const selectTokenSprite = new PIXI.Sprite(graySelectTexture);
+    selectTokenSprite.zIndex = 52;
     this.setCenterAnchor(selectTokenSprite);
     this.sprites["selectToken"] = selectTokenSprite;
 
@@ -321,6 +363,10 @@ class Game extends Component {
     this.sprites["rightTokens"] = rightSprite;
 
     const movesBody = new SpriteBody(movesBgSprite, 175, this.app.height - 95);
+
+    leftSprite.zIndex = 52;
+    rightSprite.zIndex = 52;
+    forwardSprite.zIndex = 52;
 
     movesBody.addSprite(shiphandSprite, 55, -1);
     movesBody.addSprite(hourglassSprite, 130, 25);
@@ -371,19 +417,6 @@ class Game extends Component {
     stage.addChild(autoButtonSprite);
   }
 
-  loadShipSpritesheets(resources) {
-    //War frig
-
-    const wfExample = new Ship(ShipType.warFrig, this);
-    wfExample.loadSprites();
-
-    wfExample.setOrientation(Orientation.NORTH);
-    // wfExample.moveForward();
-    setInterval(() => {
-      wfExample.moveLeft();
-    }, 2000);
-  }
-
   // A function that helps with readability when making sprites.
   createSprite(textureName) {
     const spr = new PIXI.Sprite(this.loader.resources[textureName].texture);
@@ -413,8 +446,8 @@ class Game extends Component {
   getCellTexture(cell_id, x, y) {
     switch (cell_id) {
       case 0:
-        const rNum = Math.floor(Math.random() * 5);
-        return this.textures["cell_" + rNum];
+        // const rNum = Math.floor(Math.random() * 5);
+        return this.textures["cell_3"];
       case 1:
         return this.textures["upWind"];
       case 2:
@@ -495,8 +528,6 @@ class Game extends Component {
       }
     }
 
-    //Re render our rocks
-    // this.reRenderRocks(rocks);
     return rocks;
   }
 
@@ -508,7 +539,7 @@ class Game extends Component {
         rockData.y
       );
       const rockSprite = new PIXI.Sprite(this.getCellTexture(rockData.id));
-
+      rockSprite.zIndex = 50;
       // Center rocks onto tiles.
       switch (rockData.id) {
         case 13:

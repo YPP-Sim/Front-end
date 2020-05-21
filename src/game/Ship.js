@@ -4,6 +4,7 @@ import WebTicker from "./webTicker.worker.js";
 import MyTicker from "./MyTicker";
 
 import { calculateGameToSpritePosition } from "./Game";
+import Orientation from "./Orientation";
 
 class Ship {
   constructor(shipType, game) {
@@ -48,7 +49,6 @@ class Ship {
     shipSprite.x = 100;
     shipSprite.y = 100;
 
-    this.setVirtualPosition(4, 5);
     const { spaceX, spaceY } = calculateGameToSpritePosition(this.vX, this.vY);
     this.setSpritePosition = this.game.mapBody.addSprite(
       shipSprite,
@@ -358,7 +358,7 @@ class Ship {
     }, this.animationSpeed);
   }
 
-  setTextureFromOrientation(orient) {
+  setTextureFromOrientation(orient = Orientation.SOUTH) {
     let orientationNumber = this.getFrameByOrientation(orient);
 
     const {
@@ -369,7 +369,6 @@ class Ship {
       anchorx,
       anchory,
     } = this.type.orientations.orientations[orientationNumber];
-
     const shipRect = new PIXI.Rectangle(x, y, width, height);
     this.sprite.texture.frame = shipRect;
     this.sprite.anchor.x = anchorx;
