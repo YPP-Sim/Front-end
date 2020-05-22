@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Game from "./game/Game";
+import SocketTestForm from "./components/SocketTestForm";
 
 const Root = styled.div`
   width: ${(props) => props.width}px;
@@ -16,6 +17,7 @@ const App = () => {
   return (
     <Root width={canvasWidth} height={canvasHeight}>
       <Game width={canvasWidth} height={canvasHeight} />
+      <SocketTestForm />
     </Root>
   );
 };

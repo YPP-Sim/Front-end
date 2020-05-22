@@ -443,7 +443,7 @@ class Game extends Component {
    *
    * @returns The texture of the cell id.
    */
-  getCellTexture(cell_id, x, y) {
+  getCellTexture(cell_id) {
     switch (cell_id) {
       case 0:
         // const rNum = Math.floor(Math.random() * 5);
