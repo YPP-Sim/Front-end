@@ -499,8 +499,6 @@ class Game extends Component {
   }
 
   loadMap() {
-    let cell_id;
-
     const mapBody = this.mapBody;
 
     const xSize = this.map[0].length;
@@ -518,6 +516,7 @@ class Game extends Component {
         }
 
         const cellSprite = new PIXI.Sprite(this.getCellTexture(cell_id));
+        cellSprite.zIndex = 1;
         this.setCenterAnchor(cellSprite);
 
         const { spaceX, spaceY } = calculateGameToSpritePosition(x, y);

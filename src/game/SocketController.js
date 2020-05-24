@@ -23,6 +23,30 @@ class SocketController {
       ship.setOrientation(orientation);
     });
 
+    socket.on("moveShip", (data) => {
+      console.log("MOVE DATA: ", data);
+      const { shipId, moveType } = data;
+
+      const ship = this.game.getShip(shipId);
+      const move = moveType.toUpperCase();
+
+      switch (move) {
+        case "LEFT":
+          ship.moveLeft();
+          break;
+        case "RIGHT":
+          ship.moveRight();
+          break;
+        case "FORWARD":
+          ship.moveForward();
+          break;
+
+        default:
+          console.log("Unknown movement type: " + move);
+          break;
+      }
+    });
+
     socket.on("addShip", (data) => {
       const { shipId, type, boardX, boardY, orientation } = JSON.parse(data);
       console.log("Adding ship with id: " + shipId);

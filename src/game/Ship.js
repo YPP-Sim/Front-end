@@ -26,15 +26,10 @@ class Ship {
     this.textureChangeDelay = 129;
     this.turnThreshold = 0.4;
 
-    // this.textureTicker = new WebTicker();
     this.movementTicker = new WebTicker();
 
     this.activeTicker = new MyTicker();
-    // this.forwardMovementTicker = new WebTicker();
-    // this.forwardMovementTicker.addEventListener("message", this.onForwardTick);
     this.movementTicker.addEventListener("message", () => {
-      console.log("movement tick");
-
       this.activeTicker.fire();
     });
   }
@@ -46,8 +41,7 @@ class Ship {
       new PIXI.Texture(loader.resources[this.type.textureName].texture)
     );
 
-    shipSprite.x = 100;
-    shipSprite.y = 100;
+    shipSprite.zIndex = 2;
 
     const { spaceX, spaceY } = calculateGameToSpritePosition(this.vX, this.vY);
     this.setSpritePosition = this.game.mapBody.addSprite(
@@ -122,7 +116,9 @@ class Ship {
     let xComplete = Math.abs(dX);
     let yComplete = Math.abs(dY);
 
-    this.activeTicker = new PIXI.Ticker();
+    console.log("this: ", this.x, this.y);
+
+    this.activeTicker = new MyTicker();
     this.activeTicker.add(() => {
       this.setGamePosition(this.x + incrementX, this.y + incrementY);
       xComplete -= Math.abs(incrementX);
