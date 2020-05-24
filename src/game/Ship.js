@@ -43,7 +43,7 @@ class Ship {
     const loader = PIXI.Loader.shared;
 
     const shipSprite = new PIXI.Sprite(
-      loader.resources[this.type.textureName].texture
+      new PIXI.Texture(loader.resources[this.type.textureName].texture)
     );
 
     shipSprite.x = 100;
