@@ -28,6 +28,16 @@ class SocketController {
       const { shipId, moveType } = data;
 
       const ship = this.game.getShip(shipId);
+
+      if (!ship) {
+        console.error(
+          "Server sent movement type for ship with id: " +
+            shipId +
+            ", but there is no ship with that Id"
+        );
+        return;
+      }
+
       const move = moveType.toUpperCase();
 
       switch (move) {
@@ -50,7 +60,13 @@ class SocketController {
     socket.on("addShip", (data) => {
       const { shipId, type, boardX, boardY, orientation } = JSON.parse(data);
       console.log("Adding ship with id: " + shipId);
-      this.game.addShip(shipId, ShipType[type], boardX, boardY, orientation);
+      this.game.addShip(
+        shipId,
+        ShipType[type],
+        parseInt(boardX),
+        parseInt(boardY),
+        orientation
+      );
     });
   }
 

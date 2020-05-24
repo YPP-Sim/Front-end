@@ -49,6 +49,9 @@ class Game extends Component {
     super(props);
 
     this.pixi_cnt = null;
+    // PIXI.settings.GC_MODE = PIXI.GC_MODES.MANUAL; // Set garbage collection off to fix a visual bug?
+    // PIXI.settings.CREATE_IMAGE_BITMAP = false;
+
     const renderer = new PIXI.Renderer({
       width: 600,
       height: 600,

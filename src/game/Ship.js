@@ -54,6 +54,7 @@ class Ship {
 
     this.game.stage.addChild(shipSprite);
 
+    console.log("Stage: ", this.game.stage);
     this.faceDirection = orientation.SOUTH;
 
     this.setTextureFromOrientation(this.faceDirection);
