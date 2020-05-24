@@ -8,42 +8,46 @@ import Orientation from "./Orientation";
 
 class Ship {
   constructor(shipType, game) {
-    this.x = 0;
-    this.y = 0;
     this.type = shipType;
     this.game = game;
 
-    //Virtual position
+    //Graphical position of the ship (in terms for the sprite)
+    this.x = 0;
+    this.y = 0;
+
+    //Virtual position (e.g, board position)
     this.vX = 0;
     this.vY = 0;
 
     // this.bilge = 0;
     // this.damage = 0;
 
-    // Timings
+    // Timings -- Try not to touch unless you really understand.
     this.animationSmoothness = 50; // Bigger is smoother
     this.animationSpeed = 10; // Lower is faster
     this.textureChangeDelay = 129;
     this.turnThreshold = 0.4;
 
+    //
     this.movementTicker = new WebTicker();
-
     this.activeTicker = new MyTicker();
     this.movementTicker.addEventListener("message", () => {
       this.activeTicker.fire();
     });
+
+    // Will buffer movements so animations won't collide.
+    this.movementStack = [];
   }
 
   loadSprites() {
     const loader = PIXI.Loader.shared;
-
     const shipSprite = new PIXI.Sprite(
       new PIXI.Texture(loader.resources[this.type.textureName].texture)
     );
 
     shipSprite.zIndex = 2;
-
     const { spaceX, spaceY } = calculateGameToSpritePosition(this.vX, this.vY);
+
     this.setSpritePosition = this.game.mapBody.addSprite(
       shipSprite,
       spaceX,
@@ -51,15 +55,18 @@ class Ship {
     );
 
     this.sprite = shipSprite;
-
     this.game.stage.addChild(shipSprite);
-
-    console.log("Stage: ", this.game.stage);
     this.faceDirection = orientation.SOUTH;
-
     this.setTextureFromOrientation(this.faceDirection);
   }
 
+  /**
+   *  Set's the sprites position, used mainly for animations.
+   * This does not set the actual board position and is purely for
+   * graphics
+   * @param {number} x
+   * @param {number} y
+   */
   setGamePosition(x, y) {
     this.x = x;
     this.y = y;
@@ -67,6 +74,12 @@ class Ship {
     this.setSpritePosition(spaceX, spaceY);
   }
 
+  /**
+   * Set's the board position as well as setting the regular x,y fields for the
+   * starting reference needed for animations.
+   * @param {number} x
+   * @param {number} y
+   */
   setVirtualPosition(x, y) {
     this.vX = x;
     this.vY = y;
@@ -75,6 +88,13 @@ class Ship {
     this.y = y;
   }
 
+  /**
+   * Will set an absolute position. This will set the sprite position and
+   * the board position. Used mainly for spawning ships and doing any sort of hard
+   * position setting (like switching sides from defender-side to attacking-side)
+   * @param {number} x
+   * @param {number} y
+   */
   setPosition(x, y) {
     this.setGamePosition(x, y);
     this.setVirtualPosition(x, y);
