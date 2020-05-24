@@ -24,7 +24,6 @@ class SocketController {
     });
 
     socket.on("addShip", (data) => {
-      console.log("Incomming data: ", data);
       const { shipId, type, boardX, boardY, orientation } = JSON.parse(data);
       console.log("Adding ship with id: " + shipId);
       this.game.addShip(shipId, ShipType[type], boardX, boardY, orientation);

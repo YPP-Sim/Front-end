@@ -12,6 +12,23 @@ const Button = styled.button`
   padding: 15px;
 `;
 
+function stringToArgs(argString) {
+  const argArray = argString.split(", ");
+
+  const argObj = {};
+  let argStr;
+  for (argStr of argArray) {
+    const pairArray = argStr.split(": ");
+
+    const key = pairArray[0];
+    const value = pairArray[1];
+
+    argObj[key] = value;
+  }
+
+  return argObj;
+}
+
 const SocketTestForm = () => {
   const [inputValue, setInputValue] = useState("");
   const [argValue, setArgValue] = useState("");
@@ -30,9 +47,8 @@ const SocketTestForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    socket.emit("clientCommand", inputValue, argValue, (data) => {
-      console.log(data);
-    });
+    console.log(stringToArgs(argValue));
+    socket.emit("clientCommand", inputValue, stringToArgs(argValue));
   };
 
   return (
