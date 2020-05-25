@@ -6,6 +6,10 @@ import MyTicker from "./MyTicker";
 import { calculateGameToSpritePosition } from "./Game";
 import Orientation from "./Orientation";
 
+// TESTING COMMANDS:
+// addShip -- shipId: art, boardX: 1, boardY: 1, shipType: warFrig, orientation: SOUTH
+// moveShip -- shipId: art, moveType: SOUTH
+
 class Ship {
   constructor(shipType, game) {
     this.type = shipType;
@@ -34,9 +38,6 @@ class Ship {
     this.movementTicker.addEventListener("message", () => {
       this.activeTicker.fire();
     });
-
-    // Will buffer movements so animations won't collide.
-    this.movementStack = [];
   }
 
   loadSprites() {
@@ -127,17 +128,12 @@ class Ship {
         break;
     }
 
-    // Animation
-    let dX = targetX - this.x;
-    let dY = targetY - this.y;
-
-    const incrementX = dX / this.animationSmoothness;
-    const incrementY = dY / this.animationSmoothness;
-
-    let xComplete = Math.abs(dX);
-    let yComplete = Math.abs(dY);
-
-    console.log("this: ", this.x, this.y);
+    let {
+      incrementX,
+      incrementY,
+      xComplete,
+      yComplete,
+    } = this._getMovementAnimData(targetX, targetY);
 
     this.activeTicker = new MyTicker();
     this.activeTicker.add(() => {
@@ -192,13 +188,20 @@ class Ship {
     }
 
     // Animation
+    this._startTextureAnim(toOrientation, "RIGHT");
+    // Movement
+    this._startMovementAnim(xFirst, yFirst, targetX, targetY);
+  }
 
+  _startTextureAnim(toOrientation, toDirection) {
     let currentFrameId = this.getFrameByOrientation(this.faceDirection);
     const shipRect = new PIXI.Rectangle(0, 0, 0, 0);
 
     let frameCounter = 0;
     const textureAnimId = setInterval(() => {
-      if (currentFrameId === 15) currentFrameId = 0;
+      if (toDirection == "RIGHT" && currentFrameId === 15) currentFrameId = 0;
+      else if (toDirection == "LEFT" && currentFrameId === 0)
+        currentFrameId = 15;
 
       const { x, y, width, height } = this.type.orientations.orientations[
         currentFrameId
@@ -210,8 +213,9 @@ class Ship {
       shipRect.height = height;
 
       this.sprite.texture.frame = shipRect;
+      if (toDirection == "RIGHT") currentFrameId++;
+      else if (toDirection == "LEFT") currentFrameId--;
 
-      currentFrameId++;
       frameCounter++;
 
       if (frameCounter > 4) {
@@ -219,8 +223,9 @@ class Ship {
         this.setOrientation(toOrientation);
       }
     }, this.textureChangeDelay);
+  }
 
-    // Movement
+  _getMovementAnimData(targetX, targetY) {
     let dX = targetX - this.x;
     let dY = targetY - this.y;
 
@@ -229,6 +234,17 @@ class Ship {
 
     let xComplete = Math.abs(dX);
     let yComplete = Math.abs(dY);
+
+    return { incrementX, incrementY, xComplete, yComplete };
+  }
+
+  _startMovementAnim(xFirst, yFirst, targetX, targetY) {
+    let {
+      incrementX,
+      incrementY,
+      xComplete,
+      yComplete,
+    } = this._getMovementAnimData(targetX, targetY);
 
     this.activeTicker = new MyTicker();
     this.activeTicker.add(() => {
@@ -249,8 +265,6 @@ class Ship {
 
       if (xComplete <= 0 && yComplete <= 0) {
         this.movementTicker.postMessage(["stop"]);
-        this.setGamePosition(targetX, targetY);
-        this.setVirtualPosition(targetX, targetY);
         this.setPosition(targetX, targetY);
       }
     });
@@ -296,83 +310,9 @@ class Ship {
     }
 
     // Animation
-
-    let currentFrameId = this.getFrameByOrientation(this.faceDirection);
-    const shipRect = new PIXI.Rectangle(0, 0, 0, 0);
-
-    let frameCounter = 0;
-    const textureAnimId = setInterval(() => {
-      if (currentFrameId === 0) currentFrameId = 15;
-
-      const { x, y, width, height } = this.type.orientations.orientations[
-        currentFrameId
-      ];
-
-      shipRect.x = x;
-      shipRect.y = y;
-      shipRect.width = width;
-      shipRect.height = height;
-
-      this.sprite.texture.frame = shipRect;
-
-      currentFrameId--;
-      frameCounter++;
-
-      if (frameCounter > 4) {
-        clearInterval(textureAnimId);
-        this.setOrientation(toOrientation);
-      }
-    }, this.textureChangeDelay);
-
+    this._startTextureAnim(toOrientation, "LEFT");
     // Movement
-    let dX = targetX - this.x;
-    let dY = targetY - this.y;
-
-    const incrementX = dX / this.animationSmoothness;
-    const incrementY = dY / this.animationSmoothness;
-
-    let xComplete = Math.abs(dX);
-    let yComplete = Math.abs(dY);
-
-    let time = Date.now();
-    let prevTime = time;
-    const id = setInterval(() => {
-      time = Date.now();
-      // console.log("Elapsed time: " + (time - prevTime));
-
-      if (time - prevTime > 100) {
-        console.log("Spike: ", time - prevTime);
-        clearInterval(id);
-        this.setGamePosition(targetX, targetY);
-        this.setVirtualPosition(targetX, targetY);
-        this.setPosition(targetX, targetY);
-        console.log("Setting game pos: ", targetX, targetY);
-      }
-
-      let toX = this.x;
-      let toY = this.y;
-
-      if ((xFirst || yComplete <= this.turnThreshold) && xComplete > 0) {
-        toX += incrementX;
-        xComplete -= Math.abs(incrementX);
-      }
-
-      if ((yFirst || xComplete <= this.turnThreshold) && yComplete > 0) {
-        toY += incrementY;
-        yComplete -= Math.abs(incrementY);
-      }
-
-      this.setGamePosition(toX, toY);
-
-      prevTime = time;
-
-      if (xComplete <= 0 && yComplete <= 0) {
-        clearInterval(id);
-        this.setGamePosition(targetX, targetY);
-        this.setVirtualPosition(targetX, targetY);
-        this.setPosition(targetX, targetY);
-      }
-    }, this.animationSpeed);
+    this._startMovementAnim(xFirst, yFirst, targetX, targetY);
   }
 
   setTextureFromOrientation(orient = Orientation.SOUTH) {
