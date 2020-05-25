@@ -49,9 +49,6 @@ class Game extends Component {
     super(props);
 
     this.pixi_cnt = null;
-    // PIXI.settings.GC_MODE = PIXI.GC_MODES.MANUAL; // Set garbage collection off to fix a visual bug?
-    // PIXI.settings.CREATE_IMAGE_BITMAP = false;
-
     const renderer = new PIXI.Renderer({
       width: 600,
       height: 600,
@@ -254,6 +251,11 @@ class Game extends Component {
     const shiphandSprite = this.createSprite("shiphand");
     const hourglassSprite = this.createSprite("hourglass");
     const movesTitle = this.createSprite("movesTitle");
+
+    movesBgSprite.interactive = true;
+    movesBgSprite.on("pointerdown", () => {
+      this.bgClicked = true;
+    });
 
     movesBgSprite.zIndex = 51;
     shipStatusBgSprite.zIndex = 52;
@@ -530,7 +532,49 @@ class Game extends Component {
       }
     }
 
+    // Adding draggable map feature
+
+    this._addDraggableMap();
     return rocks;
+  }
+
+  _addDraggableMap() {
+    let dragging = false;
+
+    let dX = 0;
+    let dY = 0;
+
+    let startingX = 0;
+    let startingY = 0;
+
+    this.app.interactive = true;
+    this.app.plugins.interaction.on("pointerdown", (e) => {
+      // Check if clicked on map and NOT ship UI
+      if (this.bgClicked) return;
+
+      dragging = true;
+
+      startingX = e.data.global.x;
+      startingY = e.data.global.y;
+    });
+
+    this.app.plugins.interaction.on("pointerup", () => {
+      this.bgClicked = false;
+      dragging = false;
+    });
+
+    this.app.plugins.interaction.on("pointermove", (e) => {
+      if (!dragging) return;
+
+      dX = e.data.global.x - startingX;
+      dY = e.data.global.y - startingY;
+
+      // Move map
+      this.mapBody.moveRelative(dX, dY);
+
+      startingX = e.data.global.x;
+      startingY = e.data.global.y;
+    });
   }
 
   reRenderRocks(rocks) {

@@ -22,6 +22,7 @@ class SpriteBody {
       this.mainSprite.y = y;
     }
     this.children = [];
+    this.spriteCounter = 0;
   }
 
   addSprite(sprite, xOffset, yOffset) {
@@ -33,10 +34,17 @@ class SpriteBody {
       xOffset,
       yOffset,
     });
+    this.spriteCounter++;
+
+    const index = this.spriteCounter - 1;
 
     const setSpriteOffset = (offsetX, offsetY) => {
       sprite.x = this.x + offsetX;
       sprite.y = this.y + offsetY;
+
+      const spriteObj = this.children[index];
+      spriteObj.xOffset = offsetX;
+      spriteObj.yOffset = offsetY;
     };
 
     return setSpriteOffset;
@@ -55,9 +63,13 @@ class SpriteBody {
     let spriteChild;
     //Change position of children to stick with body
     for (spriteChild of this.children) {
-      spriteChild.x = this.x + spriteChild.xOffset;
-      spriteChild.y = this.y + spriteChild.yOffset;
+      spriteChild.sprite.x = this.x + spriteChild.xOffset;
+      spriteChild.sprite.y = this.y + spriteChild.yOffset;
     }
+  }
+
+  moveRelative(x, y) {
+    this.setPosition(this.x + x, this.y + y);
   }
 }
 
