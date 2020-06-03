@@ -40,15 +40,21 @@ const SocketTestForm = () => {
     socket.on("message", (data) => {
       console.log("Server message: ", data);
     });
+
+    socket.on("gameTick", (tick) => {
+      console.log("Game tick: ", tick);
+    });
     setSocket(socket);
     return () => socket.close();
   }, []);
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
 
-    console.log(stringToArgs(argValue));
-    socket.emit("clientCommand", inputValue, stringToArgs(argValue));
+    // console.log(stringToArgs(argValue));
+    // socket.emit("clientCommand", inputValue, stringToArgs(argValue));
+    socket.emit("joinGame", "test");
+    console.log("Joining test...");
   };
 
   return (
