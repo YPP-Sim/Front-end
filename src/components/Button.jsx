@@ -16,15 +16,10 @@ const Container = styled.button`
 
   font-size: 17.5px;
 
-  // font-family: "Josefin Sans", sans-serif;
-  // font-family: "Montserrat";
-  // font-family: "Quicksand", sans-serif;
-  // font-weight: 300;
-
   margin: ${(props) => props.margin};
   padding: ${(props) => props.padding};
   width: ${(props) => props.width || "100%"};
-  height: ${(props) => props.height || "50px"};
+  height: ${(props) => props.height || "40px"};
 
   border-radius: ${(props) => props.borderRadius || "3px"};
   cursor: pointer;

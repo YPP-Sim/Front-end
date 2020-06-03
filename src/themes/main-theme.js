@@ -9,6 +9,7 @@ const theme = {
   textColor: "#13022C",
 
   pageMargins: "0px 100px",
+  pageMaxWidth: "2000px",
 };
 
 export default theme;
