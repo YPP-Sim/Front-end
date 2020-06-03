@@ -8,9 +8,6 @@ class SocketController {
 
   registerEvents() {
     const socket = this.socket;
-    socket.on("test", (e) => {
-      console.log("Hey!", e);
-    });
 
     socket.on("message", (e) => {
       console.log("Received message from server: ", e);
@@ -67,6 +64,14 @@ class SocketController {
         parseInt(boardY),
         orientation
       );
+    });
+
+    socket.on("gameTick", (tick) => {
+      console.log("Tick: ", tick);
+    });
+
+    socket.on("gameTurn", (data) => {
+      console.log("Game Turn: ", data);
     });
   }
 
