@@ -9,12 +9,13 @@ const Root = styled.div`
   //   background-color: rgba(0, 0, 0, 0);
   z-index: 100;
   transition: background-color 0.35s ease 0s;
-  background-color: white;
-  height: 60px;
+  background-color: #fbfbfb;
+  height: 55px;
 
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0px 0px 1px 1px #4242422f;
 `;
 
 const Container = styled.div`
@@ -32,13 +33,18 @@ const TitleContainer = styled.div`
   font-size: 23px;
 `;
 
+const SimContainer = styled.span``;
+
 const LinksContainer = styled.nav`
   display: flex;
 
   a {
     text-decoration: none;
-    margin-left: 15px;
-    font-size: 17.5px;
+    // margin-left: 15px;
+    // font-size: 17.5px;
+    padding: 8px;
+    margin: 8px;
+
     color: #333;
   }
 `;
@@ -47,7 +53,9 @@ const NavBar = () => {
   return (
     <Root>
       <Container>
-        <TitleContainer>YPPSim</TitleContainer>
+        <TitleContainer>
+          YPP-<SimContainer>SIM</SimContainer>
+        </TitleContainer>
         <LinksContainer>
           <a href="">Play Now</a>
           <a href="">About</a>
