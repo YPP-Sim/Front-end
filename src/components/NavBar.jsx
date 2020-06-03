@@ -2,35 +2,40 @@ import React from "react";
 import styled from "styled-components";
 
 const Root = styled.div`
-  position: fixed;
-  top: 0px;
   width: 100%;
-  color: rgb(34, 34, 34);
-  //   background-color: rgba(0, 0, 0, 0);
+  color: white;
+  background-color: rgba(0, 0, 0, 0);
   z-index: 100;
   transition: background-color 0.35s ease 0s;
-  background-color: #fbfbfb;
+  // background-color: #fbfbfb;
   height: 55px;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 0px 1px 1px #4242422f;
 `;
 
 const Container = styled.div`
-  margin: 0px 35px;
+  margin: ${({ theme }) => theme.pageMargins};
 
   display: flex;
   justify-content: space-between;
 
   align-items: baseline;
-  padding: 20px 15px;
+  // padding: 20px 15px;
   width: 100%;
+  max-width: 2000px;
+
+  font-family: ${(props) => props.theme.textFont};
+
+  margin-top: 130px;
 `;
 
 const TitleContainer = styled.div`
-  font-size: 23px;
+  font-size: 30px;
+  font-weight: bold;
+  text-shadow: 1px 2px #00000066;
+};
 `;
 
 const SimContainer = styled.span``;
@@ -41,11 +46,18 @@ const LinksContainer = styled.nav`
   a {
     text-decoration: none;
     // margin-left: 15px;
-    // font-size: 17.5px;
-    padding: 8px;
-    margin: 8px;
+    font-size: 16px;
+    padding: 7px;
+    margin: 7px;
 
-    color: #333;
+    color: #ffffffb0;
+    text-transform: uppercase;
+
+    &:hover {
+      color: white;
+
+      text-shadow: 1px 2px #00000066;
+    }
   }
 `;
 
@@ -53,9 +65,9 @@ const NavBar = () => {
   return (
     <Root>
       <Container>
-        <TitleContainer>
+        {/* <TitleContainer>
           YPP-<SimContainer>SIM</SimContainer>
-        </TitleContainer>
+        </TitleContainer> */}
         <LinksContainer>
           <a href="">Play Now</a>
           <a href="">About</a>

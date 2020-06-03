@@ -12,7 +12,6 @@ const Root = styled.div`
 const App = () => {
   return (
     <Root>
-      <NavBar />
       {/* <Game width={canvasWidth} height={canvasHeight} />
       <SocketTestForm /> */}
       <HomePage />

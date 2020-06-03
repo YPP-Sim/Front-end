@@ -1,12 +1,14 @@
 const theme = {
   bgColor: "#f4f4f4",
-  titleFont: "",
-  textFont: "",
-  accentColor: "",
-  color1: "",
-  color2: "",
-  color3: "",
-  textColor: "#ffffff",
+  titleFont: "'Rubik', sans-serif;",
+  textFont: "'Karla', sans-serif;",
+  accentColor: "#4663ac",
+  color1: "#d2deeb",
+  color2: "#c1d8f0",
+  color3: "#e1f1fd",
+  textColor: "#13022C",
+
+  pageMargins: "0px 100px",
 };
 
 export default theme;
