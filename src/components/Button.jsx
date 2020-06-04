@@ -9,12 +9,18 @@ const Container = styled.button`
   text-decoration: none;
 
   background-color: ${(props) =>
-    props.backgroundColor || props.theme.buttonBackgroundColor};
+    props.backgroundColor || props.theme.accentColor};
   color: ${(props) => props.color || props.theme.buttonTextColor};
 
-  // background-image: linear-gradient(0.40turn, #ffa500, #ffcba4);
+  &:hover {
+    background-color: ${(props) => {
+      const val = new Values(props.theme.accentColor).shade(23);
+      return `#${val.hex}`;
+    }};
+  }
 
-  font-size: 17.5px;
+  font-size: 18.5px;
+  font-family: ${({ theme }) => theme.textFont};
 
   margin: ${(props) => props.margin};
   padding: ${(props) => props.padding};
@@ -25,17 +31,18 @@ const Container = styled.button`
   cursor: pointer;
 
   transition: background-color linear 0.08s;
-  &:hover {
-    background-color: ${(props) => {
-      const val = new Values(
-        props.backgroundColor || props.theme.buttonBackgroundColor
-      ).shade(23);
-      return `#${val.hex}`;
-    }};
-  }
+`;
+
+const InvertedButton = styled(Container)`
+  background-color: #00000000;
+  border: 1px solid
+    ${(props) => props.backgroundColor || props.theme.accentColor};
 `;
 
 const Button = (props) => {
+  if (props.inverted)
+    return <InvertedButton {...props}>{props.children}</InvertedButton>;
+
   return <Container {...props}>{props.children}</Container>;
 };
 

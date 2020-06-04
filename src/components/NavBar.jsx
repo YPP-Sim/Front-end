@@ -49,7 +49,6 @@ const NavBar = () => {
           <a href="">About</a>
           <a href="">Github</a>
         </LinksContainer>
-        {/* <div>Test test 1</div> */}
       </Container>
     </Root>
   );

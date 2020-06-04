@@ -3,7 +3,6 @@ import styled from "styled-components";
 import bgImage from "../../images/filler2.jpg";
 import NavBar from "../NavBar";
 import Button from "../Button";
-import Values from "values.js";
 
 const Root = styled.div`
   background: radial-gradient(
@@ -53,40 +52,16 @@ const ButtonsContainer = styled.div`
   width: 100%;
 `;
 
-const PrimaryButton = styled(Button)`
-  background-color: ${({ theme }) => theme.accentColor};
-  &:hover {
-    background-color: ${(props) => {
-      const val = new Values(props.theme.accentColor).shade(23);
-      return `#${val.hex}`;
-    }};
-  }
+const SecondaryButton = styled(Button)`
   color: white;
-
-  margin: 10px 15px 10px 0px;
-
-  font-size: 18.5px;
-  font-family: ${({ theme }) => theme.textFont};
-`;
-
-const SecondaryButton = styled.a`
-  color: white;
+  background-color: #00000000;
   border: 1px solid white;
-  border-radius: 2px;
-  text-decoration: none;
-  width: 100%;
-  height: 40px;
   margin: 10px 15px 10px 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
-  font-size: 18.5px;
   &:hover {
     background-color: white;
     color: black;
   }
-  font-family: ${({ theme }) => theme.textFont};
 `;
 
 const MaxWidthContainer = styled.div`
@@ -118,8 +93,8 @@ const HeroHeader = () => {
             </TitleDescription>
 
             <ButtonsContainer>
-              <PrimaryButton>Play</PrimaryButton>
-              <SecondaryButton href="">Learn more</SecondaryButton>
+              <Button margin="10px 15px 10px 0px">Play</Button>
+              <SecondaryButton>Learn more</SecondaryButton>
             </ButtonsContainer>
           </CTAContainer>
         </CenterContainer>

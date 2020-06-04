@@ -10,6 +10,8 @@ const theme = {
 
   pageMargins: "0px 100px",
   pageMaxWidth: "2000px",
+
+  buttonTextColor: "#ffffff",
 };
 
 export default theme;
