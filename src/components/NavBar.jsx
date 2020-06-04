@@ -5,7 +5,6 @@ const Root = styled.div`
   width: 100%;
   color: white;
   background-color: rgba(0, 0, 0, 0);
-
   display: flex;
   height: fit-content;
   align-items: center;
@@ -14,17 +13,12 @@ const Root = styled.div`
 
 const Container = styled.div`
   margin: ${({ theme }) => theme.pageMargins};
-
   display: flex;
   justify-content: space-between;
-
   align-items: baseline;
-  // padding: 20px 15px;
   width: 100%;
   max-width: ${({ theme }) => theme.pageMaxWidth};
-
   font-family: ${(props) => props.theme.textFont};
-
   margin-top: 80px;
 `;
 
@@ -36,13 +30,11 @@ const LinksContainer = styled.div`
     font-size: 16px;
     padding: 7px;
     margin: 7px;
-
     color: #ffffffb0;
     text-transform: uppercase;
 
     &:hover {
       color: white;
-
       text-shadow: 1px 2px #00000066;
     }
   }
