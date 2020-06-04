@@ -77,7 +77,7 @@ const MaxWidthContainer = styled.div`
 `;
 
 const CTAContainer = styled.div`
-  margin-left: 80px;
+  // margin-left: 20px;
   max-width: 450px;
   border-radius: 5px;
 `;
