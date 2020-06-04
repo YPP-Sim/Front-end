@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import bgImage from "../../images/filler2.jpg";
-import NavBar from "../NavBar";
+import { useHistory } from "react-router-dom";
+import NavBar from "../HeroNavBar";
 import Button from "../Button";
 
 const Root = styled.div`
@@ -39,7 +40,7 @@ const Title = styled.h1`
 `;
 
 const TitleDescription = styled.p`
-  font-size: 19px;
+  font-size: 17.5px;
   margin: 0;
   margin-top: 20px;
   margin-left: 2px;
@@ -82,6 +83,12 @@ const CTAContainer = styled.div`
 `;
 
 const HeroHeader = () => {
+  const history = useHistory();
+
+  const handlePlayClick = () => {
+    history.push("/games");
+  };
+
   return (
     <Root>
       <MaxWidthContainer>
@@ -96,7 +103,9 @@ const HeroHeader = () => {
             </TitleDescription>
 
             <ButtonsContainer>
-              <Button margin="10px 15px 10px 0px">Play</Button>
+              <Button margin="10px 15px 10px 0px" onClick={handlePlayClick}>
+                Play
+              </Button>
               <SecondaryButton>Learn more</SecondaryButton>
             </ButtonsContainer>
           </CTAContainer>
