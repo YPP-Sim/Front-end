@@ -8,13 +8,15 @@ import battlePic from "../../images/battle_nav.jpg";
 const Root = styled.div`
   min-width: 200px;
   width: 100%;
-  //   height: 250px;
   background-color: #ffffff;
   border-radius: 5px;
-  //   margin: 100px;
   box-sizing: border-box;
 
   overflow: hidden;
+
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 `;
 
 const StatusBar = styled.div`
@@ -123,12 +125,10 @@ const GameCard = ({
           <Icon src={mapIcon} />
           <InfoText>{map}</InfoText>
         </FlexContainer>
-        {hasPassword && (
-          <FlexContainer>
-            <Icon src={passwordIcon} />
-            <InfoText>Password</InfoText>
-          </FlexContainer>
-        )}
+        <FlexContainer>
+          <Icon src={passwordIcon} />
+          <InfoText>{hasPassword ? "Locked" : "Unlocked"}</InfoText>
+        </FlexContainer>
       </InfoContainer>
       <StatusBar status={status}>{getStatusDescription(status)}</StatusBar>
     </Root>
