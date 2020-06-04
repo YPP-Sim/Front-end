@@ -25,7 +25,7 @@ const Container = styled.div`
 
   font-family: ${(props) => props.theme.textFont};
 
-  margin-top: 130px;
+  margin-top: 80px;
 `;
 
 const LinksContainer = styled.div`

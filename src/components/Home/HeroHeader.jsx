@@ -28,11 +28,7 @@ const CenterContainer = styled.div`
   margin: ${({ theme }) => theme.pageMargins};
   justify-content: center;
   height: 80%;
-  // transform: translateY(-80px);
   color: white;
-
-  width: 100%;
-  max-width: 450px;
 `;
 
 const Title = styled.h1`
@@ -75,9 +71,7 @@ const PrimaryButton = styled(Button)`
 
 const SecondaryButton = styled.a`
   color: white;
-
   border: 1px solid white;
-
   border-radius: 2px;
   text-decoration: none;
   width: 100%;
@@ -95,24 +89,41 @@ const SecondaryButton = styled.a`
   font-family: ${({ theme }) => theme.textFont};
 `;
 
+const MaxWidthContainer = styled.div`
+  max-width: ${({ theme }) => theme.pageMaxWidth};
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+`;
+
+const CTAContainer = styled.div`
+  margin-left: 80px;
+  max-width: 450px;
+`;
+
 const HeroHeader = () => {
   return (
     <Root>
-      <NavBar />
-      <CenterContainer>
-        <div>
-          <Title>YPP-Sim</Title>
-          <TitleDescription>
-            A free, better, Puzzle Pirates blockade simulator made for the Y!PP
-            Community
-          </TitleDescription>
+      <MaxWidthContainer>
+        <NavBar />
+        <CenterContainer>
+          <CTAContainer>
+            <Title>YPP-Sim</Title>
+            <TitleDescription>
+              A better, free, Puzzle Pirates blockade simulator that aims to
+              give a better user experience without a need to download any sort
+              of client.
+            </TitleDescription>
 
-          <ButtonsContainer>
-            <PrimaryButton>Play</PrimaryButton>
-            <SecondaryButton href="">Learn more</SecondaryButton>
-          </ButtonsContainer>
-        </div>
-      </CenterContainer>
+            <ButtonsContainer>
+              <PrimaryButton>Play</PrimaryButton>
+              <SecondaryButton href="">Learn more</SecondaryButton>
+            </ButtonsContainer>
+          </CTAContainer>
+        </CenterContainer>
+      </MaxWidthContainer>
     </Root>
   );
 };
