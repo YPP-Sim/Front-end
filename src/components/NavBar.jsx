@@ -45,9 +45,9 @@ const NavBar = () => {
     <Root>
       <Container>
         <LinksContainer>
-          <a href="">Play Now</a>
+          <a href="">Play</a>
           <a href="">About</a>
-          <a href="">Github</a>
+          <a href="https://github.com/YPP-Sim">Github</a>
         </LinksContainer>
       </Container>
     </Root>
