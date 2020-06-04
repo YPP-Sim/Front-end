@@ -27,7 +27,7 @@ const HomePage = ({ theme }) => {
           nisi. Quis, ullam.
         </SectionDescription>
       </Section>
-      <Section backgroundColor={theme.color3}>
+      <Section dark backgroundColor={theme.color3}>
         <SectionTitle>Latest News</SectionTitle>
         <SectionDescription>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
@@ -39,7 +39,7 @@ const HomePage = ({ theme }) => {
           voluptatem minima suscipit iste velit!
         </SectionDescription>
       </Section>
-      <Section dark backgroundColor={theme.color2}>
+      <Section backgroundColor={theme.color2}>
         <SectionTitle>About</SectionTitle>
         <SectionDescription>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem

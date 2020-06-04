@@ -15,9 +15,9 @@ const Root = styled.div`
 
   ${(props) =>
     props.dark
-      ? `color: white;
+      ? `color: #eee;
     h2 {
-        color: white;
+        color: #eee;
         font-weight: 400;
     }
 `
