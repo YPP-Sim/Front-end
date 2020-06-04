@@ -34,6 +34,7 @@ const Title = styled.h1`
   font-family: ${({ theme }) => theme.titleFont};
   text-transform: uppercase;
   font-size: 70px;
+  font-weight: 400;
   margin: 0;
 `;
 
@@ -43,6 +44,7 @@ const TitleDescription = styled.p`
   margin-top: 20px;
   margin-left: 2px;
   margin-bottom: 20px;
+  text-shadow: 1px 2px #00000066;
 
   font-family: ${({ theme }) => theme.textFont};
 `;
@@ -76,6 +78,7 @@ const MaxWidthContainer = styled.div`
 const CTAContainer = styled.div`
   margin-left: 80px;
   max-width: 450px;
+  border-radius: 5px;
 `;
 
 const HeroHeader = () => {
@@ -87,9 +90,9 @@ const HeroHeader = () => {
           <CTAContainer>
             <Title>YPP-Sim</Title>
             <TitleDescription>
-              A better, free, Puzzle Pirates blockade simulator that aims to
-              give a better user experience without a need to download any sort
-              of client.
+              A better, free, Puzzle Pirates blockade simulator that is
+              web-based and aims to give a better user experience. All without
+              the need to download a client.
             </TitleDescription>
 
             <ButtonsContainer>

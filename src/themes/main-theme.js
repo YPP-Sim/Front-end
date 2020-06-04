@@ -4,7 +4,7 @@ const theme = {
   textFont: "'Karla', sans-serif;",
   accentColor: "#4663ac",
   color1: "#d2deeb",
-  color2: "#c1d8f0",
+  color2: "#1d3557",
   color3: "#e1f1fd",
   textColor: "#13022C",
 
