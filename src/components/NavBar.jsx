@@ -19,6 +19,10 @@ const LinksContainer = styled.nav`
 
     padding: 7px;
     margin: 7px;
+
+    &:hover {
+      border-bottom: 1px solid black;
+    }
   }
 `;
 
