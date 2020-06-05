@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import GameCard from "./GameCard";
+import axios from "../../axios-config";
 
 const Root = styled.div`
   width: 100%;
@@ -22,6 +23,19 @@ const GridContainer = styled.div`
 `;
 
 const GameList = () => {
+  const [games, setGames] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:4000/games/game-list")
+      .then((res) => {
+        console.log("Data: ", res);
+      })
+      .catch((err) => {
+        console.log("Error: ", err);
+      });
+  }, []);
+
   return (
     <Root>
       <GridContainer>
