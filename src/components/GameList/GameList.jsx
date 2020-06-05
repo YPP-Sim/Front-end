@@ -29,7 +29,7 @@ const GameList = () => {
     axios
       .get("http://localhost:4000/games/game-list")
       .then((res) => {
-        console.log("Data: ", res);
+        setGames(res.data);
       })
       .catch((err) => {
         console.log("Error: ", err);
@@ -39,58 +39,17 @@ const GameList = () => {
   return (
     <Root>
       <GridContainer>
-        <GameCard
-          title="Artysh's Game"
-          status="WAITING"
-          map="Aimuari Round I"
-          currentPlayers={5}
-          maxPlayers={12}
-          hasPassword
-        />
-
-        <GameCard
-          title="Artysh's Game"
-          status="INGAME"
-          map="Aimuari Round I"
-          currentPlayers={2}
-          maxPlayers={12}
-        />
-        <GameCard
-          title="Artysh's Game"
-          status="WAITING"
-          map="Aimuari Round I"
-          currentPlayers={5}
-          maxPlayers={12}
-        />
-        <GameCard
-          title="Artysh's Game"
-          status="WAITING"
-          map="Aimuari Round I"
-          currentPlayers={1}
-          maxPlayers={6}
-          hasPassword
-        />
-        <GameCard
-          title="Artysh's Game"
-          status="INGAME"
-          map="Aimuari Round I"
-          currentPlayers={5}
-          maxPlayers={12}
-        />
-        <GameCard
-          title="Artysh's Game"
-          status="ENDING"
-          map="Aimuari Round I"
-          currentPlayers={5}
-          maxPlayers={12}
-        />
-        <GameCard
-          title="Artysh's Game"
-          status="WAITING"
-          map="Aimuari Round I"
-          currentPlayers={5}
-          maxPlayers={12}
-        />
+        {games.map((game, key) => (
+          <GameCard
+            title={game.name}
+            status={game.status}
+            map={game.mapName}
+            currentPlayers={game.currentPlayers}
+            maxPlayers={game.maxPlayers}
+            hasPassword={game.locked}
+            key={key}
+          />
+        ))}
       </GridContainer>
     </Root>
   );
