@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import GameCard from "./GameCard";
+import plusIconImg from "../../SVGs/plus-solid.svg";
 import axios from "../../axios-config";
+import FAB from "./FAB";
 
 const Root = styled.div`
   width: 100%;
@@ -22,6 +24,12 @@ const GridContainer = styled.div`
   width: 100%;
 `;
 
+const IconContainer = styled.img`
+  width: 45%;
+  height: 45%;
+  color: white;
+`;
+
 const GameList = () => {
   const [games, setGames] = useState([]);
 
@@ -38,6 +46,9 @@ const GameList = () => {
 
   return (
     <Root>
+      <FAB>
+        <IconContainer src={plusIconImg} />
+      </FAB>
       <GridContainer>
         {games.map((game, key) => (
           <GameCard
