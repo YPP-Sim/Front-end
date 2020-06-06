@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const Root = styled.div`
+const Root = styled.button`
   position: fixed;
   bottom: ${(props) => props.bottom || "50px"};
   width: ${(props) => props.width || "70px"};
@@ -29,6 +29,10 @@ const Root = styled.div`
 
         background-color: #222;
     }
+
+    outline: none;
+    text-decoration: none;
+    border: none;
 `;
 
 const FAB = ({ onClick, children }) => {
