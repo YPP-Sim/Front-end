@@ -4,6 +4,8 @@ import GameCard from "./GameCard";
 import plusIconImg from "../../SVGs/plus-solid.svg";
 import axios from "../../axios-config";
 import FAB from "./FAB";
+import CreateGameForm from "./CreateGameForm";
+import Backdrop from "../Backdrop";
 
 const Root = styled.div`
   width: 100%;
@@ -32,6 +34,7 @@ const IconContainer = styled.img`
 
 const GameList = () => {
   const [games, setGames] = useState([]);
+  const [formOpen, setFormOpen] = useState(false);
 
   useEffect(() => {
     axios
@@ -44,11 +47,12 @@ const GameList = () => {
       });
   }, []);
 
+  const handleCreateGameClick = () => {
+    setFormOpen(true);
+  };
+
   return (
     <Root>
-      <FAB>
-        <IconContainer src={plusIconImg} />
-      </FAB>
       <GridContainer>
         {games.map((game, key) => (
           <GameCard
@@ -62,6 +66,15 @@ const GameList = () => {
           />
         ))}
       </GridContainer>
+      {formOpen && (
+        <Backdrop>
+          <CreateGameForm />
+        </Backdrop>
+      )}
+
+      <FAB onClick={handleCreateGameClick}>
+        <IconContainer src={plusIconImg} />
+      </FAB>
     </Root>
   );
 };

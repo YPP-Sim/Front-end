@@ -6,7 +6,7 @@ const Root = styled.button`
   bottom: ${(props) => props.bottom || "50px"};
   width: ${(props) => props.width || "70px"};
   height: ${(props) => props.height || "70px"};
-  background-color: ${(props) => props.backgroundColor || "#000000"};
+  background-color: ${(props) => props.backgroundColor || "#222"};
 
   border-radius: 100%;
   box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2),
@@ -27,7 +27,7 @@ const Root = styled.button`
         0 8px 10px 1px rgba(9,0,0,0.21),
         0 3px 14px 2px rgba(0,0,0,0.19);
 
-        background-color: #222;
+        background-color: #000;
     }
 
     outline: none;
