@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import values from "values.js";
 
 const Root = styled.div`
   position: fixed;
@@ -21,13 +20,14 @@ const Root = styled.div`
     text-align: center;
 
     cursor: pointer;
-    transition: box-shadow .28s cubic-bezier(.4,0,.2,1),opacity 15ms linear 30ms,transform .27s cubic-bezier(0,0,.2,1) 0ms,-webkit-box-shadow .28s cubic-bezier(.4,0,.2,1),-webkit-transform .27s cubic-bezier(0,0,.2,1) 0ms;
+    transition: all .28s cubic-bezier(.4,0,.2,1),opacity 15ms linear 30ms,transform .27s cubic-bezier(0,0,.2,1) 0ms,-webkit-box-shadow .28s cubic-bezier(.4,0,.2,1),-webkit-transform .27s cubic-bezier(0,0,.2,1) 0ms;
+    
     &: hover {
         box-shadow: 0 5px 5px -3px rgba(0,0,0,0.25),
         0 8px 10px 1px rgba(9,0,0,0.21),
         0 3px 14px 2px rgba(0,0,0,0.19);
 
-        background-color: ${() => new values("#000000").tint(20)};
+        background-color: #222;
     }
 `;
 
