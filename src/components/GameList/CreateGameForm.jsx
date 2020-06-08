@@ -72,6 +72,7 @@ const CreateGameForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  console.log("Form: ", formData);
   return (
     <Root>
       <Title>Create New Game</Title>
@@ -82,6 +83,7 @@ const CreateGameForm = () => {
             name="roomName"
             placeholder="Room Name"
             onChange={handleFormChange}
+            value={formData.roomName}
           />
         </InputContainer>
         <InputContainer>
@@ -91,6 +93,7 @@ const CreateGameForm = () => {
             type="number"
             placeholder="Max Players"
             onChange={handleFormChange}
+            value={formData.maxPlayers}
           />
         </InputContainer>
         <InputContainer>
@@ -98,6 +101,7 @@ const CreateGameForm = () => {
           <InputField
             name="mapName"
             type="text"
+            value={formData.mapName}
             placeholder="Map Name"
             onChange={handleFormChange}
           />
@@ -120,6 +124,7 @@ const CreateGameForm = () => {
             <InputField
               name="password"
               type="password"
+              value={formData.password}
               placeholder="Password"
               onChange={handleFormChange}
             />
