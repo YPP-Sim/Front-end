@@ -48,6 +48,23 @@ const InputLabel = styled.label`
   color: ${({ theme }) => theme.textColor};
 `;
 
+const SelectField = styled.select`
+  border: none;
+
+  border-radius: 3px;
+  height: 30px;
+
+  font-size: 16px;
+  font-family: ${({ theme }) => theme.textFont};
+
+  padding: 5px 10px;
+  color: ${(props) => props.color || "#535353"};
+  background-color: ${(props) => props.backgroundColor || "#eee"};
+  outline: none;
+
+  min-width: 188px;
+`;
+
 const InputContainer = styled.div`
   display: flex;
   align-items: center;
@@ -95,14 +112,19 @@ const CreateGameForm = () => {
         </InputContainer>
         <InputContainer>
           <InputLabel htmlFor="mapName">Map Name: </InputLabel>
-          <InputField
+          <SelectField
             name="mapName"
             id="mapName"
             type="text"
             value={formData.mapName}
             placeholder="Map Name"
             onChange={handleFormChange}
-          />
+          >
+            <option>Test</option>
+            <option>Map1</option>
+            <option>Arts</option>
+            <option>Cool</option>
+          </SelectField>
         </InputContainer>
 
         <InputContainer>
