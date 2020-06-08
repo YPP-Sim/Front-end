@@ -17,8 +17,6 @@ const Root = styled.div`
 
   border-radius: 8px;
   background-color: white;
-  //   box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2),
-  //     0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
   z-index: 100;
 
   display: flex;
@@ -40,7 +38,6 @@ const ButtonsContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  // margin-bottom: 10px;
 `;
 
 const InputLabel = styled.label`
@@ -55,7 +52,6 @@ const InputContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  // flex-direction: column;
   margin-bottom: 10px;
 `;
 
@@ -72,7 +68,6 @@ const CreateGameForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  console.log("Form: ", formData);
   return (
     <Root>
       <Title>Create New Game</Title>
