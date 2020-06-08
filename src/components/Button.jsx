@@ -14,7 +14,9 @@ const Container = styled.button`
 
   &:hover {
     background-color: ${(props) => {
-      const val = new Values(props.theme.accentColor).shade(23);
+      const val = new Values(
+        props.backgroundColor ? props.backgroundColor : props.theme.accentColor
+      ).shade(15);
       return `#${val.hex}`;
     }};
   }
