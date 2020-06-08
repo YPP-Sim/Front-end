@@ -73,18 +73,20 @@ const CreateGameForm = () => {
       <Title>Create New Game</Title>
       <FormContainer>
         <InputContainer>
-          <InputLabel>Room Name: </InputLabel>
+          <InputLabel htmlFor="roomName">Room Name: </InputLabel>
           <InputField
             name="roomName"
+            id="roomName"
             placeholder="Room Name"
             onChange={handleFormChange}
             value={formData.roomName}
           />
         </InputContainer>
         <InputContainer>
-          <InputLabel>Max Players: </InputLabel>
+          <InputLabel htmlFor="maxPlayers">Max Players: </InputLabel>
           <InputField
             name="maxPlayers"
+            id="maxPlayers"
             type="number"
             placeholder="Max Players"
             onChange={handleFormChange}
@@ -92,9 +94,10 @@ const CreateGameForm = () => {
           />
         </InputContainer>
         <InputContainer>
-          <InputLabel>Map Name: </InputLabel>
+          <InputLabel htmlFor="mapName">Map Name: </InputLabel>
           <InputField
             name="mapName"
+            id="mapName"
             type="text"
             value={formData.mapName}
             placeholder="Map Name"
@@ -103,11 +106,12 @@ const CreateGameForm = () => {
         </InputContainer>
 
         <InputContainer>
-          <InputLabel>Locked: </InputLabel>
+          <InputLabel htmlFor="locked">Locked: </InputLabel>
           <InputField
             type="checkbox"
             onChange={() => setLocked(!locked)}
             name="locked"
+            id="locked"
             placeholder="Locked"
             checked={locked}
           />
@@ -115,9 +119,10 @@ const CreateGameForm = () => {
 
         {locked && (
           <InputContainer>
-            <InputLabel>Password: </InputLabel>
+            <InputLabel htmlFor="password">Password: </InputLabel>
             <InputField
               name="password"
+              id="password"
               type="password"
               value={formData.password}
               placeholder="Password"
