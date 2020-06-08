@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import InputField from "../InputField";
 import Button from "../Button";
@@ -39,20 +39,102 @@ const FormContainer = styled.div``;
 const ButtonsContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 50%;
+  width: 100%;
+  // margin-bottom: 10px;
+`;
+
+const InputLabel = styled.label`
+  font-size: 16px;
+  margin-right: 9px;
+  font-family: ${({ theme }) => theme.textFont};
+
+  color: ${({ theme }) => theme.textColor};
+`;
+
+const InputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  // flex-direction: column;
   margin-bottom: 10px;
 `;
 
 const CreateGameForm = () => {
+  const [formData, setFormData] = useState({
+    roomName: "",
+    maxPlayers: 0,
+    mapName: "",
+    password: "",
+  });
+  const [locked, setLocked] = useState(false);
+
+  const handleFormChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   return (
     <Root>
       <Title>Create New Game</Title>
       <FormContainer>
-        <InputField></InputField>
+        <InputContainer>
+          <InputLabel>Room Name: </InputLabel>
+          <InputField
+            name="roomName"
+            placeholder="Room Name"
+            onChange={handleFormChange}
+          />
+        </InputContainer>
+        <InputContainer>
+          <InputLabel>Max Players: </InputLabel>
+          <InputField
+            name="maxPlayers"
+            type="number"
+            placeholder="Max Players"
+            onChange={handleFormChange}
+          />
+        </InputContainer>
+        <InputContainer>
+          <InputLabel>Map Name: </InputLabel>
+          <InputField
+            name="mapName"
+            type="text"
+            placeholder="Map Name"
+            onChange={handleFormChange}
+          />
+        </InputContainer>
+
+        <InputContainer>
+          <InputLabel>Locked: </InputLabel>
+          <InputField
+            type="checkbox"
+            onChange={() => setLocked(!locked)}
+            name="locked"
+            placeholder="Locked"
+            checked={locked}
+          />
+        </InputContainer>
+
+        {locked && (
+          <InputContainer>
+            <InputLabel>Password: </InputLabel>
+            <InputField
+              name="password"
+              type="password"
+              placeholder="Password"
+              onChange={handleFormChange}
+            />
+          </InputContainer>
+        )}
       </FormContainer>
       <ButtonsContainer>
-        <Button margin="0px 10px 0px 0px">Create Game</Button>
-        <Button backgroundColor="#D65252" margin="0px 0px 0px 10px">
+        <Button height="45px" margin="0px 10px 10px 10px">
+          Create Game
+        </Button>
+        <Button
+          height="45px"
+          backgroundColor="#D65252"
+          margin="0px 10px 0px 10px"
+        >
           Cancel
         </Button>
       </ButtonsContainer>

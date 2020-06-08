@@ -5,12 +5,22 @@ const Root = styled.input`
   border: none;
 
   background-color: white;
-  border: 1px solid black;
+  // border: 1px solid black;
   border-radius: 3px;
+  height: ${(props) => props.height || "30px"};
+
+  font-size: 16px;
+  font-family: ${({ theme }) => theme.textFont};
+
+  padding: 5px 10px;
+  color: ${(props) => props.color || "#535353"};
+  background-color: ${(props) => props.backgroundColor || "#eee"};
+
+  outline: none;
 `;
 
-const InputField = () => {
-  return <Root></Root>;
+const InputField = (props) => {
+  return <Root {...props}></Root>;
 };
 
 export default InputField;
