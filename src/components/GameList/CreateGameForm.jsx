@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import InputField from "../InputField";
 import Button from "../Button";
@@ -81,6 +81,19 @@ const CreateGameForm = (props) => {
     password: "",
   });
   const [locked, setLocked] = useState(false);
+  const [availableMaps, setAvailableMaps] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("/maps")
+      .then((res) => {
+        setFormData({ ...formData, mapName: res.data[0] });
+        setAvailableMaps(res.data);
+      })
+      .catch((err) => {
+        console.error(err.response);
+      });
+  }, []);
 
   const handleFormChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -92,8 +105,8 @@ const CreateGameForm = (props) => {
     const { roomName, mapName, maxPlayers, password } = formData;
     const body = {
       id: roomName,
-      mapName,
       maxPlayers,
+      mapName,
       locked,
       password,
     };
@@ -141,10 +154,10 @@ const CreateGameForm = (props) => {
             placeholder="Map"
             onChange={handleFormChange}
           >
-            <option>Test</option>
-            <option>Map1</option>
-            <option>Arts</option>
-            <option>Cool</option>
+            {availableMaps.map((map, key) => (
+              <option key={key}>{map}</option>
+            ))}
+            <option>test</option>
           </SelectField>
         </InputContainer>
 
