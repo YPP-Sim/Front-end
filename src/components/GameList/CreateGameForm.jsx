@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import InputField from "../InputField";
 import Button from "../Button";
+import axios from "../../axios-config";
 
 const Root = styled.div`
   position: fixed;
@@ -85,7 +86,26 @@ const CreateGameForm = (props) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleCreate = () => {};
+  const handleCreate = (e) => {
+    e.preventDefault();
+
+    const { roomName, mapName, maxPlayers, password } = formData;
+    const body = {
+      id: roomName,
+      mapName,
+      maxPlayers,
+      locked,
+      password,
+    };
+    axios
+      .post("/games/create-game", body)
+      .then((res) => {
+        console.log("Res data: ", res.data);
+      })
+      .catch((err) => {
+        console.error(err.response);
+      });
+  };
 
   return (
     <Root>
