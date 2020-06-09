@@ -68,7 +68,7 @@ const GameList = () => {
       </GridContainer>
       {formOpen && (
         <Backdrop>
-          <CreateGameForm />
+          <CreateGameForm onClose={() => setFormOpen(false)} />
         </Backdrop>
       )}
 

@@ -72,10 +72,10 @@ const InputContainer = styled.div`
   margin-bottom: 10px;
 `;
 
-const CreateGameForm = () => {
+const CreateGameForm = (props) => {
   const [formData, setFormData] = useState({
     roomName: "",
-    maxPlayers: 0,
+    maxPlayers: 6,
     mapName: "",
     password: "",
   });
@@ -84,6 +84,8 @@ const CreateGameForm = () => {
   const handleFormChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const handleCreate = () => {};
 
   return (
     <Root>
@@ -111,13 +113,12 @@ const CreateGameForm = () => {
           />
         </InputContainer>
         <InputContainer>
-          <InputLabel htmlFor="mapName">Map Name: </InputLabel>
+          <InputLabel htmlFor="mapName">Map: </InputLabel>
           <SelectField
             name="mapName"
             id="mapName"
-            type="text"
             value={formData.mapName}
-            placeholder="Map Name"
+            placeholder="Map"
             onChange={handleFormChange}
           >
             <option>Test</option>
@@ -154,13 +155,18 @@ const CreateGameForm = () => {
         )}
       </FormContainer>
       <ButtonsContainer>
-        <Button height="45px" margin="0px 10px 10px 10px">
+        <Button
+          height="45px"
+          margin="0px 10px 10px 10px"
+          onClick={handleCreate}
+        >
           Create Game
         </Button>
         <Button
           height="45px"
           backgroundColor="#D65252"
           margin="0px 10px 0px 10px"
+          onClick={props.onClose}
         >
           Cancel
         </Button>
