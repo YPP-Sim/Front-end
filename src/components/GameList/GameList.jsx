@@ -34,7 +34,7 @@ const IconContainer = styled.img`
 
 const GameList = () => {
   const [games, setGames] = useState([]);
-  const [formOpen, setFormOpen] = useState(true);
+  const [formOpen, setFormOpen] = useState(false);
 
   useEffect(() => {
     axios

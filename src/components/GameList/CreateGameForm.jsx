@@ -112,8 +112,8 @@ const CreateGameForm = (props) => {
     };
     axios
       .post("/games/create-game", body)
-      .then((res) => {
-        console.log("Res data: ", res.data);
+      .then(() => {
+        props.onClose();
       })
       .catch((err) => {
         console.error(err.response);
