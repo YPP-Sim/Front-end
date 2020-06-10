@@ -3,6 +3,7 @@ import styled from "styled-components";
 import InputField from "../InputField";
 import Button from "../Button";
 import axios from "../../axios-config";
+import { useHistory } from "react-router-dom";
 
 const Root = styled.div`
   position: fixed;
@@ -74,6 +75,8 @@ const InputContainer = styled.div`
 `;
 
 const CreateGameForm = (props) => {
+  const history = useHistory();
+
   const [formData, setFormData] = useState({
     roomName: "",
     maxPlayers: 6,
@@ -114,6 +117,7 @@ const CreateGameForm = (props) => {
       .post("/games/create-game", body)
       .then(() => {
         props.onClose();
+        history.push(`/games/${roomName}`);
       })
       .catch((err) => {
         console.error(err.response);

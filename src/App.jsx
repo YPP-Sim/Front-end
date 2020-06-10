@@ -5,6 +5,7 @@ import { Route } from "react-router-dom";
 import GameList from "./components/GameList/GameList";
 import NavBar from "./components/NavBar";
 import GameInfoView from "./components/GameInfoView/GameInfoView";
+import GameLobby from "./components/GameLobby/GameLobby";
 const Root = styled.div``;
 
 const App = () => {
@@ -21,7 +22,8 @@ const App = () => {
 
       <Route exact path="/games/:gameId">
         <NavBar />
-        <GameInfoView />
+        {/* <GameInfoView /> */}
+        <GameLobby />
       </Route>
     </Root>
   );

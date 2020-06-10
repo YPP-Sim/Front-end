@@ -6,6 +6,7 @@ import axios from "../../axios-config";
 import FAB from "./FAB";
 import CreateGameForm from "./CreateGameForm";
 import Backdrop from "../Backdrop";
+import { useHistory } from "react-router-dom";
 
 const Root = styled.div`
   width: 100%;
@@ -32,19 +33,24 @@ const IconContainer = styled.img`
   color: white;
 `;
 
+function refreshGameList(setGames) {
+  axios
+    .get("/games/game-list")
+    .then((res) => {
+      setGames(res.data);
+    })
+    .catch((err) => {
+      console.error("Error: ", err);
+    });
+}
+
 const GameList = () => {
   const [games, setGames] = useState([]);
   const [formOpen, setFormOpen] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:4000/games/game-list")
-      .then((res) => {
-        setGames(res.data);
-      })
-      .catch((err) => {
-        console.log("Error: ", err);
-      });
+    refreshGameList(setGames);
   }, []);
 
   const handleCreateGameClick = () => {
@@ -63,6 +69,7 @@ const GameList = () => {
             maxPlayers={game.maxPlayers}
             hasPassword={game.locked}
             key={key}
+            onClick={() => history.push(`/games/${game.name}`)}
           />
         ))}
       </GridContainer>

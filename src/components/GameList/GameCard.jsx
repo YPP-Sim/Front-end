@@ -17,6 +17,8 @@ const Root = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
+
+  cursor: pointer;
 `;
 
 const StatusBar = styled.div`
@@ -108,9 +110,10 @@ const GameCard = ({
   maxPlayers,
   map,
   hasPassword,
+  onClick,
 }) => {
   return (
-    <Root>
+    <Root onClick={onClick}>
       <CardImage src={battlePic} />
       <InfoContainer>
         <GameTitle>{title}</GameTitle>
