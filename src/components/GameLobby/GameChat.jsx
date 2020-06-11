@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
+import PlayerContext from "../../contexts/PlayerContext";
 
 const Root = styled.div`
   background-color: #fff;
@@ -45,6 +46,7 @@ const MessageSender = styled.span`
 `;
 
 const GameChat = ({ socket, gameId }) => {
+  const { playerName } = useContext(PlayerContext);
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState([
     { sender: "Arty", message: "Hello there" },
@@ -67,7 +69,7 @@ const GameChat = ({ socket, gameId }) => {
     if (e.keyCode === 13) {
       socket.emit("playerMessage", {
         gameId,
-        sender: "SocketTest",
+        sender: playerName,
         message: inputValue,
       });
       setInputValue("");
