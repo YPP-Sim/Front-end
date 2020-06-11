@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const Root = styled.div`
   background-color: #fff;
-  height: 100%;
   min-height: 300px;
   width: 100%;
   max-width: 250px;
+  max-height: 1000px;
 
   border-radius: 5px;
   padding: 10px;
@@ -44,25 +44,41 @@ const MessageSender = styled.span`
   font-weight: bold;
 `;
 
-const GameChat = () => {
+const GameChat = ({ socket, gameId }) => {
+  const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState([
-    { sender: "Arty", message: "Hello there" },
-    { sender: "Arty", message: "Hello there" },
-    { sender: "sss", message: "Hello asddd" },
-    { sender: "Arty", message: "Hello there" },
     { sender: "Arty", message: "Hello there" },
   ]);
 
+  useEffect(() => {
+    socket.on("playerMessage", (msgData) => {
+      addMessage(msgData);
+    });
+    return () => {
+      socket.off("playerMessage");
+    };
+  });
+
   const addMessage = (msg) => {
-    console.log("Adding msg");
     setMessages([...messages, msg]);
+  };
+
+  const handleSubmitMessage = (e) => {
+    if (e.keyCode === 13) {
+      socket.emit("playerMessage", {
+        gameId,
+        sender: "SocketTest",
+        message: inputValue,
+      });
+      setInputValue("");
+    }
   };
 
   return (
     <Root>
       <MessagesContainer>
         {messages.map((msg, key) => (
-          <Message>
+          <Message key={key}>
             <MessageSender>{msg.sender}</MessageSender>: {msg.message}
           </Message>
         ))}
@@ -70,7 +86,9 @@ const GameChat = () => {
       <MessageInputField
         type="text"
         placeholder="Message others here"
-        onClick={() => addMessage({ sender: "Test", message: "Testing" })}
+        onKeyDown={handleSubmitMessage}
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
       />
     </Root>
   );

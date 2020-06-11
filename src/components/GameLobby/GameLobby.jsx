@@ -37,7 +37,7 @@ const GameLobby = () => {
       <MainContainer>
         <TeamsView />
       </MainContainer>
-      <GameChat />
+      <GameChat gameId={gameId} socket={socket} />
     </Root>
   );
 };
