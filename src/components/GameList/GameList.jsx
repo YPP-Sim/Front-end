@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import PlayerContext from "../../contexts/PlayerContext";
 import styled from "styled-components";
 import GameCard from "./GameCard";
 import plusIconImg from "../../SVGs/plus-solid.svg";
@@ -7,6 +8,7 @@ import FAB from "./FAB";
 import CreateGameForm from "./CreateGameForm";
 import Backdrop from "../Backdrop";
 import { useHistory } from "react-router-dom";
+import PlayerNameForm from "./PlayerNameForm";
 
 const Root = styled.div`
   width: 100%;
@@ -45,6 +47,7 @@ function refreshGameList(setGames) {
 }
 
 const GameList = () => {
+  const { playerName, setPlayerName } = useContext(PlayerContext);
   const [games, setGames] = useState([]);
   const [formOpen, setFormOpen] = useState(false);
   const history = useHistory();
@@ -73,15 +76,23 @@ const GameList = () => {
           />
         ))}
       </GridContainer>
+      {playerName === "" && (
+        <Backdrop>
+          <PlayerNameForm />
+        </Backdrop>
+      )}
+
       {formOpen && (
         <Backdrop>
           <CreateGameForm onClose={() => setFormOpen(false)} />
         </Backdrop>
       )}
 
-      <FAB onClick={handleCreateGameClick}>
-        <IconContainer src={plusIconImg} />
-      </FAB>
+      {playerName !== "" && (
+        <FAB onClick={handleCreateGameClick}>
+          <IconContainer src={plusIconImg} />
+        </FAB>
+      )}
     </Root>
   );
 };
