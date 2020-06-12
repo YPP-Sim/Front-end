@@ -45,16 +45,24 @@ const MessageSender = styled.span`
   font-weight: bold;
 `;
 
+const SystemMessage = styled(Message)`
+  color: #555;
+`;
+
 const GameChat = ({ socket, gameId }) => {
   const { playerName } = useContext(PlayerContext);
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState([
-    { sender: "Arty", message: "Hello there" },
+    { sender: "Arty", message: "Hello there", playerMessage: true },
   ]);
 
   useEffect(() => {
     socket.on("playerMessage", (msgData) => {
-      addMessage(msgData);
+      addMessage({ ...msgData, playerMessage: true });
+    });
+
+    socket.on("gameMessage", (msg) => {
+      addMessage({ message: msg, playerMessage: false });
     });
     return () => {
       socket.off("playerMessage");
@@ -79,11 +87,15 @@ const GameChat = ({ socket, gameId }) => {
   return (
     <Root>
       <MessagesContainer>
-        {messages.map((msg, key) => (
-          <Message key={key}>
-            <MessageSender>{msg.sender}</MessageSender>: {msg.message}
-          </Message>
-        ))}
+        {messages.map((msg, key) =>
+          msg.playerMessage ? (
+            <Message key={key}>
+              <MessageSender>{msg.sender}</MessageSender>: {msg.message}
+            </Message>
+          ) : (
+            <SystemMessage>{msg.message}</SystemMessage>
+          )
+        )}
       </MessagesContainer>
       <MessageInputField
         type="text"
