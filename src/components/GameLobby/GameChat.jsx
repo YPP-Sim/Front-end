@@ -46,13 +46,15 @@ const MessageSender = styled.span`
 `;
 
 const SystemMessage = styled(Message)`
-  color: #555;
+  color: #999;
+  font-weight: bold;
 `;
 
 const GameChat = ({ socket, gameId }) => {
   const { playerName } = useContext(PlayerContext);
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState([
+    { message: "Arty has joined the room", playerMessage: false },
     { sender: "Arty", message: "Hello there", playerMessage: true },
   ]);
 
@@ -93,7 +95,7 @@ const GameChat = ({ socket, gameId }) => {
               <MessageSender>{msg.sender}</MessageSender>: {msg.message}
             </Message>
           ) : (
-            <SystemMessage>{msg.message}</SystemMessage>
+            <SystemMessage key={key}>{msg.message}</SystemMessage>
           )
         )}
       </MessagesContainer>

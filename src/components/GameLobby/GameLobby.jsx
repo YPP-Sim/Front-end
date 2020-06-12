@@ -1,13 +1,10 @@
-import React, { useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import PlayerContext from "../../contexts/PlayerContext";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import io from "socket.io-client";
 import GameChat from "./GameChat";
 import TeamsView from "./TeamsView";
-
-const ENDPOINT = "http://127.0.0.1:4000";
-const socket = io(ENDPOINT);
 
 const Root = styled.div`
   height: 100%;
@@ -23,7 +20,10 @@ const MainContainer = styled.div`
   margin-right: 10px;
 `;
 
+const ENDPOINT = "http://127.0.0.1:4000";
+
 const GameLobby = () => {
+  const [socket] = useState(io(ENDPOINT));
   const { gameId } = useParams();
   const { playerName } = useContext(PlayerContext);
 
@@ -31,8 +31,9 @@ const GameLobby = () => {
     socket.emit("joinGame", { gameId, playerName });
     return () => {
       socket.emit("leaveGame", { gameId, playerName });
+      socket.close();
     };
-  }, [gameId, playerName]);
+  }, [gameId, playerName, socket]);
 
   return (
     <Root>
