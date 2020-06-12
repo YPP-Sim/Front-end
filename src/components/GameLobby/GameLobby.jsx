@@ -6,6 +6,7 @@ import styled from "styled-components";
 import io from "socket.io-client";
 import GameChat from "./GameChat";
 import TeamsView from "./TeamsView";
+import LobbySocketController from "./LobbySocketController";
 
 const Root = styled.div`
   height: 100%;
@@ -23,6 +24,7 @@ const MainContainer = styled.div`
 
 const ENDPOINT = "http://127.0.0.1:4000";
 const socket = io(ENDPOINT, { autoConnect: false });
+const socketController = new LobbySocketController(socket);
 
 const GameLobby = () => {
   const history = useHistory();
@@ -34,12 +36,15 @@ const GameLobby = () => {
 
     if (socket.disconnected) socket.open();
 
+    socketController.registerEvents();
     socket.emit("joinGame", { gameId, playerName });
+
     return () => {
+      socketController.unregisterEvents();
       socket.disconnect();
     };
   }, [gameId, playerName, history]);
-  console.log("render");
+
   return (
     <Root>
       <MainContainer>

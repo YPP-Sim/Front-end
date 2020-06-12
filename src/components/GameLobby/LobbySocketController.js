@@ -4,7 +4,7 @@ class LobbySocketController {
   }
 
   registerEvents() {
-    this.socket.on("error", (err) => {
+    this.socket.on("gameError", (err) => {
       console.error("Received error message from socket: ", err);
     });
 
