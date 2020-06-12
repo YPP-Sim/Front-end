@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import PlayerCard from "./PlayerCard";
+import Button from "../Button";
 
 const Root = styled.div`
   width: 100%;
@@ -32,23 +33,16 @@ const TeamTitle = styled.h2`
   font-weight: normal;
 `;
 
-const UndecidedList = styled.p`
-  margin: 5px 5px 5px 0px;
-  font-family ${({ theme }) => theme.textFont};
-  
+const TitleContainer = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
-const TeamsView = ({ attackers, defenders, undecided }) => {
+const TeamsView = ({ attackers, defenders, undecided, onJoinTeam }) => {
   return (
     <Root>
       <TeamContainer>
         <TeamTitle>Undecided</TeamTitle>
-        {/* <UndecidedList>
-          {undecided.reduce((prev, curr, currIndex) => {
-            if (currIndex === 0) return prev;
-            return prev + ", " + curr.name;
-          }, undecided[0].name)}
-        </UndecidedList> */}
         <CardGrid>
           {undecided.map((player, key) => (
             <PlayerCard
@@ -60,7 +54,17 @@ const TeamsView = ({ attackers, defenders, undecided }) => {
         </CardGrid>
       </TeamContainer>
       <TeamContainer>
-        <TeamTitle>Attackers</TeamTitle>
+        <TitleContainer>
+          <TeamTitle>Attackers</TeamTitle>
+          <Button
+            onClick={() => onJoinTeam("ATTACKER")}
+            margin="0px 0px 0px 15px"
+            width="100px"
+            height="34px"
+          >
+            Join
+          </Button>
+        </TitleContainer>
         <CardGrid>
           {attackers &&
             attackers.map((attacker, key) => (
@@ -73,7 +77,17 @@ const TeamsView = ({ attackers, defenders, undecided }) => {
         </CardGrid>
       </TeamContainer>
       <TeamContainer>
-        <TeamTitle>Defenders</TeamTitle>
+        <TitleContainer>
+          <TeamTitle>Defenders</TeamTitle>
+          <Button
+            onClick={() => onJoinTeam("DEFENDER")}
+            margin="0px 0px 0px 15px"
+            width="100px"
+            height="34px"
+          >
+            Join
+          </Button>
+        </TitleContainer>
         <CardGrid>
           {defenders &&
             defenders.map((defender, key) => (

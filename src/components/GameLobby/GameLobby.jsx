@@ -80,6 +80,21 @@ const GameLobby = () => {
   }, [gameId, playerName, history]);
 
   console.log("Game Data: ", gameData);
+
+  const onJoinTeam = (team) => {
+    switch (team) {
+      case "ATTACKER":
+        socket.emit("joinTeam", { playerName, side: "ATTACKER", gameId });
+        break;
+      case "DEFENDER":
+        socket.emit("joinTeam", { playerName, side: "DEFENDER", gameId });
+        break;
+      case "UNDECIDED":
+      default:
+        break;
+    }
+  };
+
   return (
     <Root>
       <MainContainer>
@@ -87,6 +102,7 @@ const GameLobby = () => {
           attackers={gameData.attackers}
           defenders={gameData.defenders}
           undecided={gameData.undecided}
+          onJoinTeam={onJoinTeam}
         />
       </MainContainer>
       <GameChat gameId={gameId} socket={socket} />
