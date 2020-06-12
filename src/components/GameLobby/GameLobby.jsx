@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import PlayerContext from "../../contexts/PlayerContext";
+import { useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import io from "socket.io-client";
@@ -21,20 +22,24 @@ const MainContainer = styled.div`
 `;
 
 const ENDPOINT = "http://127.0.0.1:4000";
+const socket = io(ENDPOINT, { autoConnect: false });
 
 const GameLobby = () => {
-  const [socket] = useState(io(ENDPOINT));
+  const history = useHistory();
   const { gameId } = useParams();
   const { playerName } = useContext(PlayerContext);
 
   useEffect(() => {
+    if (playerName.length === 0) history.push("/games");
+
+    if (socket.disconnected) socket.open();
+
     socket.emit("joinGame", { gameId, playerName });
     return () => {
-      socket.emit("leaveGame", { gameId, playerName });
-      socket.close();
+      socket.disconnect();
     };
-  }, [gameId, playerName, socket]);
-
+  }, [gameId, playerName, history]);
+  console.log("render");
   return (
     <Root>
       <MainContainer>

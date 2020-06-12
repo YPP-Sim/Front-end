@@ -53,10 +53,7 @@ const SystemMessage = styled(Message)`
 const GameChat = ({ socket, gameId }) => {
   const { playerName } = useContext(PlayerContext);
   const [inputValue, setInputValue] = useState("");
-  const [messages, setMessages] = useState([
-    { message: "Arty has joined the room", playerMessage: false },
-    { sender: "Arty", message: "Hello there", playerMessage: true },
-  ]);
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     socket.on("playerMessage", (msgData) => {
