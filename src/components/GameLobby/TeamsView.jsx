@@ -31,23 +31,58 @@ const TeamTitle = styled.h2`
   margin: 0;
   font-weight: normal;
 `;
-const TeamsView = () => {
+
+const UndecidedList = styled.p`
+  margin: 5px 5px 5px 0px;
+  font-family ${({ theme }) => theme.textFont};
+  
+`;
+
+const TeamsView = ({ attackers, defenders, undecided }) => {
   return (
     <Root>
       <TeamContainer>
+        <TeamTitle>Undecided</TeamTitle>
+        {/* <UndecidedList>
+          {undecided.reduce((prev, curr, currIndex) => {
+            if (currIndex === 0) return prev;
+            return prev + ", " + curr.name;
+          }, undecided[0].name)}
+        </UndecidedList> */}
+        <CardGrid>
+          {undecided.map((player, key) => (
+            <PlayerCard
+              name={player.playerName}
+              shipType={player.shipType}
+              key={key}
+            />
+          ))}
+        </CardGrid>
+      </TeamContainer>
+      <TeamContainer>
         <TeamTitle>Attackers</TeamTitle>
         <CardGrid>
-          <PlayerCard name="Arty" shipType="WAR_FRIG" />
-          <PlayerCard name="Layli" shipType="WAR_BRIG" />
-          <PlayerCard name="Putosqu" shipType="WAR_BRIG" />
+          {attackers &&
+            attackers.map((attacker, key) => (
+              <PlayerCard
+                name={attacker.playerName}
+                shipType={attacker.shipType}
+                key={key}
+              />
+            ))}
         </CardGrid>
       </TeamContainer>
       <TeamContainer>
         <TeamTitle>Defenders</TeamTitle>
         <CardGrid>
-          <PlayerCard name="Arty" shipType="WAR_FRIG" />
-          <PlayerCard name="Layli" shipType="WAR_BRIG" />
-          <PlayerCard name="Putosqu" shipType="WAR_BRIG" />
+          {defenders &&
+            defenders.map((defender, key) => (
+              <PlayerCard
+                name={defender.playerName}
+                shipType={defender.shipType}
+                key={key}
+              />
+            ))}
         </CardGrid>
       </TeamContainer>
     </Root>

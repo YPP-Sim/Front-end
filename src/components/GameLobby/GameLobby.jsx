@@ -7,6 +7,7 @@ import io from "socket.io-client";
 import GameChat from "./GameChat";
 import TeamsView from "./TeamsView";
 import LobbySocketController from "./LobbySocketController";
+import { useState } from "react";
 
 const Root = styled.div`
   height: 100%;
@@ -26,18 +27,51 @@ const ENDPOINT = "http://127.0.0.1:4000";
 const socket = io(ENDPOINT, { autoConnect: false });
 const socketController = new LobbySocketController(socket);
 
+function organizeGameData(gameData) {
+  const attackers = [];
+  const defenders = [];
+  const undecided = [];
+
+  for (let data of gameData.players) {
+    switch (data.side) {
+      case "ATTACKER":
+        attackers.push(data);
+        break;
+      case "DEFENDER":
+        defenders.push(data);
+        break;
+      case "UNDECIDED":
+      default:
+        undecided.push(data);
+        break;
+    }
+  }
+
+  return { attackers, defenders, undecided, status: gameData.status };
+}
+
 const GameLobby = () => {
+  const [gameData, setGameData] = useState({
+    undecided: [],
+    attackers: [],
+    defenders: [],
+    status: "WAITING",
+  });
   const history = useHistory();
   const { gameId } = useParams();
   const { playerName } = useContext(PlayerContext);
 
   useEffect(() => {
-    if (playerName.length === 0) history.push("/games");
+    if (playerName.trim().length === 0) history.push("/games");
 
     if (socket.disconnected) socket.open();
 
     socketController.registerEvents();
     socket.emit("joinGame", { gameId, playerName });
+
+    socketController.registerEvent("gameData", (gameData) => {
+      setGameData(organizeGameData(gameData));
+    });
 
     return () => {
       socketController.unregisterEvents();
@@ -45,10 +79,15 @@ const GameLobby = () => {
     };
   }, [gameId, playerName, history]);
 
+  console.log("Game Data: ", gameData);
   return (
     <Root>
       <MainContainer>
-        <TeamsView />
+        <TeamsView
+          attackers={gameData.attackers}
+          defenders={gameData.defenders}
+          undecided={gameData.undecided}
+        />
       </MainContainer>
       <GameChat gameId={gameId} socket={socket} />
     </Root>
