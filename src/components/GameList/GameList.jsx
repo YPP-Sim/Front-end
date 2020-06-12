@@ -9,12 +9,15 @@ import CreateGameForm from "./CreateGameForm";
 import Backdrop from "../Backdrop";
 import { useHistory } from "react-router-dom";
 import PlayerNameForm from "./PlayerNameForm";
+import InfoBar from "./Infobar";
 
 const Root = styled.div`
   width: 100%;
   max-width: ${({ theme }) => theme.pageMaxWidth};
   margin: 0 auto;
+`;
 
+const FlexCenterContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -49,6 +52,7 @@ function refreshGameList(setGames) {
 const GameList = () => {
   const { playerName, setPlayerName } = useContext(PlayerContext);
   const [games, setGames] = useState([]);
+
   const [formOpen, setFormOpen] = useState(false);
   const history = useHistory();
 
@@ -62,37 +66,43 @@ const GameList = () => {
 
   return (
     <Root>
-      <GridContainer>
-        {games.map((game, key) => (
-          <GameCard
-            title={game.name}
-            status={game.status}
-            map={game.mapName}
-            currentPlayers={game.currentPlayers}
-            maxPlayers={game.maxPlayers}
-            hasPassword={game.locked}
-            key={key}
-            onClick={() => history.push(`/games/${game.name}`)}
-          />
-        ))}
-      </GridContainer>
-      {playerName === "" && (
-        <Backdrop>
-          <PlayerNameForm />
-        </Backdrop>
-      )}
+      <InfoBar
+        onRefresh={() => refreshGameList(setGames)}
+        onEditName={() => setPlayerName("")}
+      />
+      <FlexCenterContainer>
+        <GridContainer>
+          {games.map((game, key) => (
+            <GameCard
+              title={game.name}
+              status={game.status}
+              map={game.mapName}
+              currentPlayers={game.currentPlayers}
+              maxPlayers={game.maxPlayers}
+              hasPassword={game.locked}
+              key={key}
+              onClick={() => history.push(`/games/${game.name}`)}
+            />
+          ))}
+        </GridContainer>
+        {playerName === "" && (
+          <Backdrop>
+            <PlayerNameForm />
+          </Backdrop>
+        )}
 
-      {formOpen && (
-        <Backdrop>
-          <CreateGameForm onClose={() => setFormOpen(false)} />
-        </Backdrop>
-      )}
+        {formOpen && (
+          <Backdrop>
+            <CreateGameForm onClose={() => setFormOpen(false)} />
+          </Backdrop>
+        )}
 
-      {playerName !== "" && (
-        <FAB onClick={handleCreateGameClick}>
-          <IconContainer src={plusIconImg} />
-        </FAB>
-      )}
+        {playerName !== "" && (
+          <FAB onClick={handleCreateGameClick}>
+            <IconContainer src={plusIconImg} />
+          </FAB>
+        )}
+      </FlexCenterContainer>
     </Root>
   );
 };
