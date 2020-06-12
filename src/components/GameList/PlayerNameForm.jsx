@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import PlayerContext from "../../contexts/PlayerContext";
 import Button from "../Button";
@@ -62,12 +62,22 @@ const PlayerNameForm = () => {
   const [inputValue, setInputValue] = useState("");
   const { setPlayerName } = useContext(PlayerContext);
 
+  useEffect(() => {
+    document.getElementById("nameInput").focus();
+  }, []);
+
   const handleSubmit = () => {
     setPlayerName(inputValue);
   };
 
   const onInputChange = (e) => {
     setInputValue(e.target.value);
+  };
+
+  const handleEnter = (e) => {
+    if (e.keyCode === 13) {
+      handleSubmit();
+    }
   };
 
   return (
@@ -81,6 +91,7 @@ const PlayerNameForm = () => {
           placeholder="John Doe"
           value={inputValue}
           onChange={onInputChange}
+          onKeyDown={handleEnter}
         />
       </CenterContainer>
       <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
