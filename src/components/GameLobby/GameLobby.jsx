@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
+import PlayerContext from "../../contexts/PlayerContext";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import io from "socket.io-client";
@@ -24,13 +25,14 @@ const MainContainer = styled.div`
 
 const GameLobby = () => {
   const { gameId } = useParams();
+  const { playerName } = useContext(PlayerContext);
 
   useEffect(() => {
-    socket.emit("joinGame", gameId);
+    socket.emit("joinGame", { gameId, playerName });
     return () => {
-      socket.emit("leaveGame", gameId);
+      socket.emit("leaveGame", { gameId, playerName });
     };
-  }, [gameId]);
+  }, [gameId, playerName]);
 
   return (
     <Root>
