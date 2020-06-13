@@ -175,6 +175,10 @@ export function calculateGameToSpritePosition(x, y) {
   return { spaceX, spaceY };
 }
 
+function removeContextMenu(event) {
+  event.preventDefault();
+}
+
 class Game extends Component {
   constructor(props) {
     super(props);
@@ -218,12 +222,14 @@ class Game extends Component {
     window.addEventListener("resize", this.resize.bind(this));
     this.socketController.registerEvents();
     this.resize();
+    this.pixi_cnt.addEventListener("contextmenu", removeContextMenu);
   }
 
   componentWillUnmount() {
     this.socketController.unregisterEvents();
 
     window.removeEventListener("resize", this.resize.bind(this));
+    this.pixi_cnt.removeEventListener(removeContextMenu);
   }
 
   updatePixiContainer = (el) => {
