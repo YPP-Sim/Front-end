@@ -68,7 +68,7 @@ const TeamsView = ({ attackers, defenders, undecided, player, onJoinTeam }) => {
             attackers.map((attacker, key) => (
               <PlayerCard
                 name={attacker.playerName}
-                shipType={attacker.shipType}
+                shipType={attacker.shipData ? attacker.shipData.shipType : ""}
                 key={key}
               />
             ))}
@@ -88,7 +88,7 @@ const TeamsView = ({ attackers, defenders, undecided, player, onJoinTeam }) => {
             defenders.map((defender, key) => (
               <PlayerCard
                 name={defender.playerName}
-                shipType={defender.shipType}
+                shipType={defender.shipData ? defender.shipData.shipType : ""}
                 key={key}
               />
             ))}

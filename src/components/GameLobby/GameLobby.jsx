@@ -8,11 +8,11 @@ import GameChat from "./GameChat";
 import TeamsView from "./TeamsView";
 import LobbySocketController from "./LobbySocketController";
 import { useState } from "react";
+import ShipSelection from "./ShipSelection";
 
 const Root = styled.div`
   height: 100%;
-  display: flex;
-  justify-content: space-between;
+
   margin: 0 auto;
   padding: 20px;
   max-width: ${({ theme }) => theme.pageMaxWidth};
@@ -21,6 +21,19 @@ const Root = styled.div`
 const MainContainer = styled.div`
   width: 100%;
   margin-right: 10px;
+`;
+
+const Title = styled.h2`
+  font-family: ${({ theme }) => theme.textFont};
+  font-size: 19px;
+  text-align: center;
+  color: ${({ theme }) => theme.textColor};
+`;
+
+const TopContainer = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const ENDPOINT = "http://127.0.0.1:4000";
@@ -104,18 +117,30 @@ const GameLobby = () => {
     }
   };
 
+  const onSelect = (ship) => {
+    socket.emit("playerChangeShip", {
+      playerName,
+      gameId,
+      shipType: ship,
+    });
+  };
+
   return (
     <Root>
-      <MainContainer>
-        <TeamsView
-          attackers={gameData.attackers}
-          defenders={gameData.defenders}
-          undecided={gameData.undecided}
-          onJoinTeam={onJoinTeam}
-          player={gameData.thisPlayer}
-        />
-      </MainContainer>
-      <GameChat gameId={gameId} socket={socket} />
+      <TopContainer>
+        <MainContainer>
+          <TeamsView
+            attackers={gameData.attackers}
+            defenders={gameData.defenders}
+            undecided={gameData.undecided}
+            onJoinTeam={onJoinTeam}
+            player={gameData.thisPlayer}
+          />
+          <Title>Ship Selection</Title>
+          <ShipSelection onSelect={onSelect} />
+        </MainContainer>
+        <GameChat gameId={gameId} socket={socket} />
+      </TopContainer>
     </Root>
   );
 };
