@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import io from "socket.io-client";
 import GameChat from "./GameChat";
+import Game from "../../game/Game";
 import TeamsView from "./TeamsView";
 import LobbySocketController from "./LobbySocketController";
 import { useState } from "react";
@@ -16,7 +17,6 @@ const Root = styled.div`
 
   margin: 0 auto;
   padding: 20px;
-  max-width: ${({ theme }) => theme.pageMaxWidth};
 `;
 
 const MainContainer = styled.div`
@@ -85,6 +85,29 @@ function organizeGameData(gameData, thisPlayerName) {
   };
 }
 
+function getViewByStatus(status, gameData, onJoinTeam, onSelect, socket) {
+  if (status === "INGAME")
+    return (
+      <MainContainer>
+        <Game socket={socket} />
+      </MainContainer>
+    );
+  else
+    return (
+      <MainContainer>
+        <TeamsView
+          attackers={gameData.attackers}
+          defenders={gameData.defenders}
+          undecided={gameData.undecided}
+          onJoinTeam={onJoinTeam}
+          player={gameData.thisPlayer}
+        />
+        <Title>Ship Selection</Title>
+        <ShipSelection onSelect={onSelect} />
+      </MainContainer>
+    );
+}
+
 const GameLobby = () => {
   const [gameData, setGameData] = useState({
     undecided: [],
@@ -110,6 +133,10 @@ const GameLobby = () => {
       setGameData(organizeGameData(gameData, playerName));
     });
 
+    socketController.registerEvent("startGame", (gameData) => {
+      setGameData(organizeGameData(gameData, playerName));
+    });
+
     return () => {
       socketController.unregisterEvents();
       socket.disconnect();
@@ -132,6 +159,10 @@ const GameLobby = () => {
     }
   };
 
+  const handleStart = () => {
+    socket.emit("startGame", { gameId });
+  };
+
   const onSelect = (ship) => {
     socket.emit("playerChangeShip", {
       playerName,
@@ -140,24 +171,18 @@ const GameLobby = () => {
     });
   };
 
+  const status = gameData.status;
+
   return (
     <Root>
       <TopContainer>
-        <MainContainer>
-          <TeamsView
-            attackers={gameData.attackers}
-            defenders={gameData.defenders}
-            undecided={gameData.undecided}
-            onJoinTeam={onJoinTeam}
-            player={gameData.thisPlayer}
-          />
-          <Title>Ship Selection</Title>
-          <ShipSelection onSelect={onSelect} />
-        </MainContainer>
+        {getViewByStatus(status, gameData, onJoinTeam, onSelect, socket)}
         <SideContainer>
           <GameChat gameId={gameId} socket={socket} />
-          {gameData.gameOwner === playerName && (
-            <StartButton backgroundColor="#29ca5a">START</StartButton>
+          {gameData.gameOwner === playerName && status === "WAITING" && (
+            <StartButton onClick={handleStart} backgroundColor="#29ca5a">
+              START
+            </StartButton>
           )}
         </SideContainer>
       </TopContainer>

@@ -8,6 +8,7 @@ const Root = styled.div`
   width: 100%;
   height: 100%;
   max-width: 250px;
+  min-width: 200px;
   max-height: 1000px;
 
   border-radius: 5px;

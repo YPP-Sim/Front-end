@@ -4,15 +4,14 @@ import SpriteBody from "./SpriteBody";
 import Ship from "./Ship";
 import ShipType from "./ShipType";
 import Orientation from "./Orientation";
-
 import resourcePairs from "./resources";
-
-import io from "socket.io-client";
 import SocketController from "./SocketController";
+import styled from "styled-components";
 
-const ENDPOINT = "http://127.0.0.1:4000";
-
-const socket = io(ENDPOINT);
+const GameContainer = styled.div`
+  // width: 100%;
+  height: 100%;
+`;
 
 const defaultMap = [
   [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -50,8 +49,8 @@ class Game extends Component {
 
     this.pixi_cnt = null;
     const renderer = new PIXI.Renderer({
-      width: 600,
-      height: 600,
+      width: props.width || 600,
+      height: props.height || 600,
       transparent: false,
       backgroundColor: 0x6a819c, // A hex color code
       resolution: window.devicePixelRatio,
@@ -71,18 +70,28 @@ class Game extends Component {
     this.map = defaultMap;
     this.mapBody = new SpriteBody(null, 100, 250);
     this.ships = {};
-
-    this.socketController = new SocketController(socket, this);
+    this.socket = props.socket;
+    this.socketController = new SocketController(this.socket, this);
 
     this.setupLoaded = false;
   }
 
+  resize() {
+    const elem = document.getElementById("game");
+    if (this.app)
+      this.app.resize(window.innerWidth - 300, elem.clientHeight - 4);
+  }
+
   componentDidMount() {
+    window.addEventListener("resize", this.resize.bind(this));
     this.socketController.registerEvents();
+    this.resize();
   }
 
   componentWillUnmount() {
     this.socketController.unregisterEvents();
+
+    window.removeEventListener("resize", this.resize.bind(this));
   }
 
   updatePixiContainer = (el) => {
@@ -616,7 +625,9 @@ class Game extends Component {
   updateTokens() {}
 
   render() {
-    return <div ref={this.updatePixiContainer}></div>;
+    return (
+      <GameContainer id="game" ref={this.updatePixiContainer}></GameContainer>
+    );
   }
 }
 

@@ -32,7 +32,7 @@ const ShipCard = styled.div`
 const ShipIcon = styled.img``;
 
 const ShipSelection = ({ onSelect }) => {
-  const [selected, setSelected] = useState(0);
+  const [selected, setSelected] = useState(-1);
   return (
     <Root>
       <ShipCard
