@@ -33,6 +33,12 @@ const Container = styled.button`
   cursor: pointer;
 
   transition: background-color linear 0.08s;
+
+  &:disabled {
+    background-color: #555;
+    cursor: default;
+    opacity: 0.7;
+  }
 `;
 
 const InvertedButton = styled(Container)`

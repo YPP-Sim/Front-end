@@ -27,12 +27,14 @@ const ENDPOINT = "http://127.0.0.1:4000";
 const socket = io(ENDPOINT, { autoConnect: false });
 const socketController = new LobbySocketController(socket);
 
-function organizeGameData(gameData) {
+function organizeGameData(gameData, thisPlayerName) {
   const attackers = [];
   const defenders = [];
   const undecided = [];
-
+  let thisPlayer;
   for (let data of gameData.players) {
+    if (data.playerName === thisPlayerName) thisPlayer = data;
+
     switch (data.side) {
       case "ATTACKER":
         attackers.push(data);
@@ -47,7 +49,13 @@ function organizeGameData(gameData) {
     }
   }
 
-  return { attackers, defenders, undecided, status: gameData.status };
+  return {
+    attackers,
+    defenders,
+    undecided,
+    thisPlayer,
+    status: gameData.status,
+  };
 }
 
 const GameLobby = () => {
@@ -56,6 +64,7 @@ const GameLobby = () => {
     attackers: [],
     defenders: [],
     status: "WAITING",
+    thisPlayer: {},
   });
   const history = useHistory();
   const { gameId } = useParams();
@@ -70,7 +79,7 @@ const GameLobby = () => {
     socket.emit("joinGame", { gameId, playerName });
 
     socketController.registerEvent("gameData", (gameData) => {
-      setGameData(organizeGameData(gameData));
+      setGameData(organizeGameData(gameData, playerName));
     });
 
     return () => {
@@ -103,6 +112,7 @@ const GameLobby = () => {
           defenders={gameData.defenders}
           undecided={gameData.undecided}
           onJoinTeam={onJoinTeam}
+          player={gameData.thisPlayer}
         />
       </MainContainer>
       <GameChat gameId={gameId} socket={socket} />

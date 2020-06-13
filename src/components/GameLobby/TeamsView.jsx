@@ -17,7 +17,7 @@ const TeamContainer = styled.div`
 
 const CardGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 225px));
   width: 100%;
   height: 100%;
   gap: 15px;
@@ -38,7 +38,7 @@ const TitleContainer = styled.div`
   align-items: center;
 `;
 
-const TeamsView = ({ attackers, defenders, undecided, onJoinTeam }) => {
+const TeamsView = ({ attackers, defenders, undecided, player, onJoinTeam }) => {
   return (
     <Root>
       <TeamContainer>
@@ -61,6 +61,9 @@ const TeamsView = ({ attackers, defenders, undecided, onJoinTeam }) => {
             margin="0px 0px 0px 15px"
             width="100px"
             height="34px"
+            disabled={attackers.some(
+              (attacker, key) => attacker.playerName === player.playerName
+            )}
           >
             Join
           </Button>
@@ -84,6 +87,9 @@ const TeamsView = ({ attackers, defenders, undecided, onJoinTeam }) => {
             margin="0px 0px 0px 15px"
             width="100px"
             height="34px"
+            disabled={defenders.some(
+              (defender, key) => defender.playerName === player.playerName
+            )}
           >
             Join
           </Button>
