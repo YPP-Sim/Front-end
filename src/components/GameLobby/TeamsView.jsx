@@ -38,6 +38,10 @@ const TitleContainer = styled.div`
   align-items: center;
 `;
 
+const JoinButton = styled(Button)`
+  height: 120px;
+`;
+
 const TeamsView = ({ attackers, defenders, undecided, player, onJoinTeam }) => {
   return (
     <Root>
@@ -56,17 +60,6 @@ const TeamsView = ({ attackers, defenders, undecided, player, onJoinTeam }) => {
       <TeamContainer>
         <TitleContainer>
           <TeamTitle>Attackers</TeamTitle>
-          <Button
-            onClick={() => onJoinTeam("ATTACKER")}
-            margin="0px 0px 0px 15px"
-            width="100px"
-            height="34px"
-            disabled={attackers.some(
-              (attacker, key) => attacker.playerName === player.playerName
-            )}
-          >
-            Join
-          </Button>
         </TitleContainer>
         <CardGrid>
           {attackers &&
@@ -77,22 +70,16 @@ const TeamsView = ({ attackers, defenders, undecided, player, onJoinTeam }) => {
                 key={key}
               />
             ))}
+          {!attackers.some(
+            (attacker) => attacker.playerName === player.playerName
+          ) && (
+            <JoinButton onClick={() => onJoinTeam("ATTACKER")}>Join</JoinButton>
+          )}
         </CardGrid>
       </TeamContainer>
       <TeamContainer>
         <TitleContainer>
           <TeamTitle>Defenders</TeamTitle>
-          <Button
-            onClick={() => onJoinTeam("DEFENDER")}
-            margin="0px 0px 0px 15px"
-            width="100px"
-            height="34px"
-            disabled={defenders.some(
-              (defender, key) => defender.playerName === player.playerName
-            )}
-          >
-            Join
-          </Button>
         </TitleContainer>
         <CardGrid>
           {defenders &&
@@ -103,6 +90,11 @@ const TeamsView = ({ attackers, defenders, undecided, player, onJoinTeam }) => {
                 key={key}
               />
             ))}
+          {!defenders.some(
+            (defender) => defender.playerName === player.playerName
+          ) && (
+            <JoinButton onClick={() => onJoinTeam("DEFENDER")}>Join</JoinButton>
+          )}
         </CardGrid>
       </TeamContainer>
     </Root>
