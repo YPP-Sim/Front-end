@@ -45,18 +45,20 @@ const JoinButton = styled(Button)`
 const TeamsView = ({ attackers, defenders, undecided, player, onJoinTeam }) => {
   return (
     <Root>
-      <TeamContainer>
-        <TeamTitle>Undecided</TeamTitle>
-        <CardGrid>
-          {undecided.map((player, key) => (
-            <PlayerCard
-              name={player.playerName}
-              shipType={player.shipType}
-              key={key}
-            />
-          ))}
-        </CardGrid>
-      </TeamContainer>
+      {undecided.length > 0 && (
+        <TeamContainer>
+          <TeamTitle>Undecided</TeamTitle>
+          <CardGrid>
+            {undecided.map((player, key) => (
+              <PlayerCard
+                name={player.playerName}
+                shipType={player.shipType}
+                key={key}
+              />
+            ))}
+          </CardGrid>
+        </TeamContainer>
+      )}
       <TeamContainer>
         <TitleContainer>
           <TeamTitle>Attackers</TeamTitle>
