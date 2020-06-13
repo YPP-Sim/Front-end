@@ -85,11 +85,18 @@ function organizeGameData(gameData, thisPlayerName) {
   };
 }
 
-function getViewByStatus(status, gameData, onJoinTeam, onSelect, socket) {
-  if (status === "INGAME")
+function getViewByStatus(gameData, onJoinTeam, onSelect, socket, map, gameId) {
+  if (map.length === 0) {
+    socket.emit("requestMap", { gameId });
+  }
+  if (gameData.status === "INGAME")
     return (
       <MainContainer>
-        <Game socket={socket} />
+        {map.length > 0 ? (
+          <Game map={map} socket={socket} />
+        ) : (
+          <p>loading...</p>
+        )}
       </MainContainer>
     );
   else
@@ -113,10 +120,12 @@ const GameLobby = () => {
     undecided: [],
     attackers: [],
     defenders: [],
+    map: [],
     gameOwner: "",
     status: "WAITING",
     thisPlayer: {},
   });
+  const [map, setMap] = useState([]);
   const history = useHistory();
   const { gameId } = useParams();
   const { playerName } = useContext(PlayerContext);
@@ -133,7 +142,12 @@ const GameLobby = () => {
       setGameData(organizeGameData(gameData, playerName));
     });
 
+    socketController.registerEvent("gameMap", (gMap) => {
+      setMap(gMap);
+    });
     socketController.registerEvent("startGame", (gameData) => {
+      console.log("Start game data: ", gameData);
+      setMap(gameData.map);
       setGameData(organizeGameData(gameData, playerName));
     });
 
@@ -142,8 +156,6 @@ const GameLobby = () => {
       socket.disconnect();
     };
   }, [gameId, playerName, history]);
-
-  console.log("Game Data: ", gameData);
 
   const onJoinTeam = (team) => {
     switch (team) {
@@ -171,15 +183,13 @@ const GameLobby = () => {
     });
   };
 
-  const status = gameData.status;
-
   return (
     <Root>
       <TopContainer>
-        {getViewByStatus(status, gameData, onJoinTeam, onSelect, socket)}
+        {getViewByStatus(gameData, onJoinTeam, onSelect, socket, map, gameId)}
         <SideContainer>
           <GameChat gameId={gameId} socket={socket} />
-          {gameData.gameOwner === playerName && status === "WAITING" && (
+          {gameData.gameOwner === playerName && gameData.status === "WAITING" && (
             <StartButton onClick={handleStart} backgroundColor="#29ca5a">
               START
             </StartButton>

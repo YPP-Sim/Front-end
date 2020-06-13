@@ -8,8 +8,9 @@ import resourcePairs from "./resources";
 import SocketController from "./SocketController";
 import styled from "styled-components";
 
+let loaderLoaded = false;
+
 const GameContainer = styled.div`
-  // width: 100%;
   height: 100%;
 `;
 
@@ -203,7 +204,7 @@ class Game extends Component {
     // Save sprite handles from setup() to edit in game later
     this.sprites = {};
 
-    this.map = defaultMap;
+    this.map = props.map;
     this.mapBody = new SpriteBody(null, 100, 250);
     this.ships = {};
     this.socket = props.socket;
@@ -229,7 +230,7 @@ class Game extends Component {
     this.socketController.unregisterEvents();
 
     window.removeEventListener("resize", this.resize.bind(this));
-    this.pixi_cnt.removeEventListener(removeContextMenu);
+    this.pixi_cnt.removeEventListener("contextmenu", removeContextMenu);
   }
 
   updatePixiContainer = (el) => {
@@ -249,8 +250,12 @@ class Game extends Component {
     this.loader = loader;
 
     // Load resources from resources.js
-    let res;
-    for (res of resourcePairs) loader.add(res.name, res.image);
+    if (!loaderLoaded) {
+      let res;
+      for (res of resourcePairs) loader.add(res.name, res.image);
+
+      loaderLoaded = true;
+    }
 
     loader.load((loader, resources) => {
       this.setupLoaded = true;
