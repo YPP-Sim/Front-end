@@ -14,6 +14,72 @@ const GameContainer = styled.div`
 `;
 
 const defaultMap = [
+  [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+  ],
+  [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+  ],
+  [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+  ],
   [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 2, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -23,6 +89,72 @@ const defaultMap = [
   [3, 7, 8, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [15, 6, 5, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [15, 0, 0, 0, 4, 4, 4, 4, 4, 4, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+  [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+  ],
+  [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+  ],
+  [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+  ],
 ];
 
 function isRock(cell_id) {
@@ -174,22 +306,40 @@ class Game extends Component {
 
   loadMapSpritesheets(resources) {
     // Regular cells
-    const cellRect = new PIXI.Rectangle(0, 0, 64, 48);
-    const c0_t = new PIXI.Texture(resources["cell"].texture, cellRect);
+    let cellRect = new PIXI.Rectangle(0, 0, 64, 48);
+    let c0_t = new PIXI.Texture(resources["cell"].texture, cellRect);
     cellRect.x += 64;
-    const c1_t = new PIXI.Texture(resources["cell"].texture, cellRect);
+    let c1_t = new PIXI.Texture(resources["cell"].texture, cellRect);
     cellRect.x += 64;
-    const c2_t = new PIXI.Texture(resources["cell"].texture, cellRect);
+    let c2_t = new PIXI.Texture(resources["cell"].texture, cellRect);
     cellRect.x += 64;
-    const c3_t = new PIXI.Texture(resources["cell"].texture, cellRect);
+    let c3_t = new PIXI.Texture(resources["cell"].texture, cellRect);
     cellRect.x += 64;
-    const c4_t = new PIXI.Texture(resources["cell"].texture, cellRect);
+    let c4_t = new PIXI.Texture(resources["cell"].texture, cellRect);
 
     this.textures["cell_0"] = c0_t;
     this.textures["cell_1"] = c1_t;
     this.textures["cell_2"] = c2_t;
     this.textures["cell_3"] = c3_t;
     this.textures["cell_4"] = c4_t;
+
+    // Safezone cells
+    cellRect = new PIXI.Rectangle(0, 0, 64, 48);
+    c0_t = new PIXI.Texture(resources["safezone"].texture, cellRect);
+    cellRect.x += 64;
+    c1_t = new PIXI.Texture(resources["safezone"].texture, cellRect);
+    cellRect.x += 64;
+    c2_t = new PIXI.Texture(resources["safezone"].texture, cellRect);
+    cellRect.x += 64;
+    c3_t = new PIXI.Texture(resources["safezone"].texture, cellRect);
+    cellRect.x += 64;
+    c4_t = new PIXI.Texture(resources["safezone"].texture, cellRect);
+
+    this.textures["safezone_0"] = c0_t;
+    this.textures["safezone_1"] = c1_t;
+    this.textures["safezone_2"] = c2_t;
+    this.textures["safezone_3"] = c3_t;
+    this.textures["safezone_4"] = c4_t;
 
     // Winds
     const windRect = new PIXI.Rectangle(0, 0, 64, 48);
@@ -459,6 +609,8 @@ class Game extends Component {
    */
   getCellTexture(cell_id) {
     switch (cell_id) {
+      case -1:
+        return this.textures["safezone_3"];
       case 0:
         // const rNum = Math.floor(Math.random() * 5);
         return this.textures["cell_3"];
