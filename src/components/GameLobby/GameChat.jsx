@@ -6,6 +6,7 @@ const Root = styled.div`
   background-color: #fff;
   min-height: 300px;
   width: 100%;
+  height: 100%;
   max-width: 250px;
   max-height: 1000px;
 

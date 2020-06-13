@@ -9,6 +9,7 @@ import TeamsView from "./TeamsView";
 import LobbySocketController from "./LobbySocketController";
 import { useState } from "react";
 import ShipSelection from "./ShipSelection";
+import Button from "../Button";
 
 const Root = styled.div`
   height: 100%;
@@ -34,6 +35,18 @@ const TopContainer = styled.div`
   height: 100%;
   display: flex;
   justify-content: space-between;
+`;
+
+const SideContainer = styled.div`
+  display: flex;
+  width: 100%;
+  max-width: 250px;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const StartButton = styled(Button)`
+  margin-top: 10px;
 `;
 
 const ENDPOINT = "http://127.0.0.1:4000";
@@ -67,6 +80,7 @@ function organizeGameData(gameData, thisPlayerName) {
     defenders,
     undecided,
     thisPlayer,
+    gameOwner: gameData.gameOwner,
     status: gameData.status,
   };
 }
@@ -76,6 +90,7 @@ const GameLobby = () => {
     undecided: [],
     attackers: [],
     defenders: [],
+    gameOwner: "",
     status: "WAITING",
     thisPlayer: {},
   });
@@ -139,7 +154,12 @@ const GameLobby = () => {
           <Title>Ship Selection</Title>
           <ShipSelection onSelect={onSelect} />
         </MainContainer>
-        <GameChat gameId={gameId} socket={socket} />
+        <SideContainer>
+          <GameChat gameId={gameId} socket={socket} />
+          {gameData.gameOwner === playerName && (
+            <StartButton backgroundColor="#29ca5a">START</StartButton>
+          )}
+        </SideContainer>
       </TopContainer>
     </Root>
   );

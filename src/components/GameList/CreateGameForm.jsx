@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import PlayerContext from "../../contexts/PlayerContext";
 import styled from "styled-components";
 import InputField from "../InputField";
 import Button from "../Button";
@@ -76,6 +77,7 @@ const InputContainer = styled.div`
 
 const CreateGameForm = (props) => {
   const history = useHistory();
+  const { playerName } = useContext(PlayerContext);
 
   const [formData, setFormData] = useState({
     roomName: "",
@@ -112,6 +114,7 @@ const CreateGameForm = (props) => {
       mapName,
       locked,
       password,
+      gameOwner: playerName,
     };
     axios
       .post("/games/create-game", body)
