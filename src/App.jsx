@@ -12,8 +12,14 @@ const Root = styled.div`
   height: 100%;
 `;
 
+function getDefaultName() {
+  if (localStorage.getItem("playerName"))
+    return localStorage.getItem("playerName");
+  return "";
+}
+
 const App = () => {
-  const [playerName, setPlayerName] = useState("");
+  const [playerName, setPlayerName] = useState(getDefaultName());
   return (
     <PlayerProvider value={{ playerName, setPlayerName }}>
       <Root>
@@ -28,7 +34,6 @@ const App = () => {
 
         <Route exact path="/games/:gameId">
           <NavBar />
-          {/* <GameInfoView /> */}
           <GameLobby />
         </Route>
       </Root>

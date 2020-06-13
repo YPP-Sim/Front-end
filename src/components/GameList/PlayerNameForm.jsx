@@ -68,6 +68,7 @@ const PlayerNameForm = () => {
 
   const handleSubmit = () => {
     setPlayerName(inputValue);
+    localStorage.setItem("playerName", inputValue);
   };
 
   const onInputChange = (e) => {
