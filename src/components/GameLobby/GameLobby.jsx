@@ -93,7 +93,7 @@ function getViewByStatus(gameData, onJoinTeam, onSelect, socket, map, gameId) {
     return (
       <MainContainer>
         {map.length > 0 ? (
-          <Game map={map} socket={socket} />
+          <Game map={map} gameData={gameData} socket={socket} />
         ) : (
           <p>loading...</p>
         )}
@@ -146,9 +146,9 @@ const GameLobby = () => {
       setMap(gMap);
     });
     socketController.registerEvent("startGame", (gameData) => {
-      console.log("Start game data: ", gameData);
       setMap(gameData.map);
       setGameData(organizeGameData(gameData, playerName));
+      console.log("GameDATA: ", gameData);
     });
 
     return () => {

@@ -211,6 +211,7 @@ class Game extends Component {
     this.socketController = new SocketController(this.socket, this);
 
     this.setupLoaded = false;
+    this.gameData = props.gameData;
   }
 
   resize() {
@@ -264,10 +265,35 @@ class Game extends Component {
       this.reRenderRocks(rocks);
       this.loadShipUI(resources);
       this.oldTime = Date.now();
-
+      this.initPlayerShips();
       requestAnimationFrame(this.animate.bind(this));
     });
   };
+
+  initPlayerShips() {
+    for (let player of this.gameData.attackers) {
+      const { playerName, shipData } = player;
+      if (!shipData) continue;
+      this.addShip(
+        playerName,
+        shipData.shipType,
+        shipData.boardX,
+        shipData.boardY,
+        shipData.orientation
+      );
+    }
+    for (let player of this.gameData.defenders) {
+      const { playerName, shipData } = player;
+      if (!shipData) continue;
+      this.addShip(
+        playerName,
+        shipData.shipType,
+        shipData.boardX,
+        shipData.boardY,
+        shipData.orientation
+      );
+    }
+  }
 
   animate() {
     var newTime = Date.now();
