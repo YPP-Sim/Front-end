@@ -431,20 +431,27 @@ class Game extends Component {
     rightSprite.zIndex = 52;
     forwardSprite.zIndex = 52;
 
+    // Sand masks
     const sandTopMask = new PIXI.Graphics();
-
     sandTopMask.beginFill(0xde3249);
     sandTopMask.drawRect(-180, -21, 19, 43);
     sandTopMask.endFill();
     sandTopMask.zIndex = 100;
     sandTop.mask = sandTopMask;
 
+    const sandBotMask = new PIXI.Graphics();
+    sandBotMask.beginFill(0xde3249);
+    sandBotMask.drawRect(-180, 23 + 43, 19, 43);
+    sandBotMask.endFill();
+    sandBotMask.zIndex = 100;
+    sandBot.mask = sandBotMask;
+
     this.setMaskPosition = (tick) => {
-      const maskCoveragePercentage = (35 - tick) / 35;
-      const maskHeight = maskCoveragePercentage * 43;
-      const offsetY = Math.floor(43 - maskHeight) / 2;
-      sandTopMask.y = this.app.height - 92 + offsetY;
-      sandTopMask.height = maskHeight;
+      let maskY = this.app.height - 92 + (tick / 35) * 43;
+      sandTopMask.y = maskY;
+
+      maskY = this.app.height - 91 - (tick / 35) * 43;
+      sandBotMask.y = maskY;
     };
 
     movesBody.addSprite(shiphandSprite, 55, -1);
@@ -452,6 +459,8 @@ class Game extends Component {
     movesBody.addSprite(sandTop, 130, 3);
     movesBody.addSprite(sandTopMask, 300, 3);
     movesBody.addSprite(sandBot, 130, 47);
+    movesBody.addSprite(sandBotMask, 300, 3);
+
     movesBody.addSprite(shipStatusBgSprite, 130, -50);
     movesBody.addSprite(shipStatusBorderSprite, 130, -50);
     movesBody.addSprite(movesTitle, -60, -57);
@@ -479,7 +488,7 @@ class Game extends Component {
     stage.addChild(sandBot);
     stage.addChild(hourglassSprite);
     stage.addChild(sandTopMask);
-
+    stage.addChild(sandBotMask);
     stage.addChild(shipStatusBgSprite);
     stage.addChild(shipStatusBorderSprite);
 
