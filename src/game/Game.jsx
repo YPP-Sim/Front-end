@@ -431,9 +431,26 @@ class Game extends Component {
     rightSprite.zIndex = 52;
     forwardSprite.zIndex = 52;
 
+    const sandTopMask = new PIXI.Graphics();
+
+    sandTopMask.beginFill(0xde3249);
+    sandTopMask.drawRect(-180, -21, 19, 43);
+    sandTopMask.endFill();
+    sandTopMask.zIndex = 100;
+    sandTop.mask = sandTopMask;
+
+    this.setMaskPosition = (tick) => {
+      const maskCoveragePercentage = (35 - tick) / 35;
+      const maskHeight = maskCoveragePercentage * 43;
+      const offsetY = Math.floor(43 - maskHeight) / 2;
+      sandTopMask.y = this.app.height - 92 + offsetY;
+      sandTopMask.height = maskHeight;
+    };
+
     movesBody.addSprite(shiphandSprite, 55, -1);
     movesBody.addSprite(hourglassSprite, 130, 25);
     movesBody.addSprite(sandTop, 130, 3);
+    movesBody.addSprite(sandTopMask, 300, 3);
     movesBody.addSprite(sandBot, 130, 47);
     movesBody.addSprite(shipStatusBgSprite, 130, -50);
     movesBody.addSprite(shipStatusBorderSprite, 130, -50);
@@ -461,6 +478,7 @@ class Game extends Component {
     stage.addChild(sandTop);
     stage.addChild(sandBot);
     stage.addChild(hourglassSprite);
+    stage.addChild(sandTopMask);
 
     stage.addChild(shipStatusBgSprite);
     stage.addChild(shipStatusBorderSprite);

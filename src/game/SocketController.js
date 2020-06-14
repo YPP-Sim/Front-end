@@ -15,6 +15,9 @@ class SocketController {
     socket.on("gameTick", (tick) => {
       console.log("Game tick: ", tick);
       this.game.currentGameTick = tick;
+
+      const setMaskPosition = this.game.setMaskPosition;
+      if (setMaskPosition) setMaskPosition(tick);
     });
 
     socket.on("message", (e) => {
