@@ -7,6 +7,9 @@ import autoOff from "../assets/ui/auto-off.png";
 import radioOn from "../assets/ui/radio-on.png";
 import radioOff from "../assets/ui/radio-off.png";
 import hourglass from "../assets/ui/hourglass.png";
+import sandTop from "../assets/ui/sand_top.png";
+import sandBot from "../assets/ui/sand_bot.png";
+import sandTrickle from "../assets/ui/sand_trickle.png";
 import selectBox from "../assets/ui/sel_border_square.png";
 import shipStatusBorder from "../assets/ui/status.png";
 import shipStatus from "../assets/ui/status-bg.png";
@@ -37,6 +40,18 @@ import wind from "../assets/sea/wind.png";
 import wfShip from "../assets/vessel/wf/spritesheet.png";
 
 const resourcePairs = [
+  {
+    name: "sandBot",
+    image: sandBot,
+  },
+  {
+    name: "sandTop",
+    image: sandTop,
+  },
+  {
+    name: "sandTrickle",
+    image: sandTrickle,
+  },
   {
     name: "wfShip",
     image: wfShip,

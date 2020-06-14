@@ -14,150 +14,6 @@ const GameContainer = styled.div`
   height: 100%;
 `;
 
-const defaultMap = [
-  [
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-  ],
-  [
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-  ],
-  [
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-  ],
-  [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 2, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 13, 0, 11, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [15, 0, 14, 0, 10, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [3, 7, 8, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [15, 6, 5, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [15, 0, 0, 0, 4, 4, 4, 4, 4, 4, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0],
-  [
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-  ],
-  [
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-  ],
-  [
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-    -1,
-  ],
-];
-
 function isRock(cell_id) {
   switch (cell_id) {
     case 13:
@@ -212,6 +68,8 @@ class Game extends Component {
 
     this.setupLoaded = false;
     this.gameData = props.gameData;
+
+    this.currentGameTick = 0;
   }
 
   resize() {
@@ -447,6 +305,8 @@ class Game extends Component {
     const shiphandSprite = this.createSprite("shiphand");
     const hourglassSprite = this.createSprite("hourglass");
     const movesTitle = this.createSprite("movesTitle");
+    const sandTop = this.createSprite("sandTop");
+    const sandBot = this.createSprite("sandBot");
 
     movesBgSprite.interactive = true;
     movesBgSprite.on("pointerdown", () => {
@@ -457,7 +317,9 @@ class Game extends Component {
     shipStatusBgSprite.zIndex = 52;
     shipStatusBorderSprite.zIndex = 52;
     shiphandSprite.zIndex = 52;
-    hourglassSprite.zIndex = 52;
+    hourglassSprite.zIndex = 53;
+    sandTop.zIndex = 54;
+    sandBot.zIndex = 54;
     movesTitle.zIndex = 52;
 
     const gunTokenTexture = new PIXI.Texture(
@@ -571,6 +433,8 @@ class Game extends Component {
 
     movesBody.addSprite(shiphandSprite, 55, -1);
     movesBody.addSprite(hourglassSprite, 130, 25);
+    movesBody.addSprite(sandTop, 130, 3);
+    movesBody.addSprite(sandBot, 130, 47);
     movesBody.addSprite(shipStatusBgSprite, 130, -50);
     movesBody.addSprite(shipStatusBorderSprite, 130, -50);
     movesBody.addSprite(movesTitle, -60, -57);
@@ -594,6 +458,8 @@ class Game extends Component {
 
     stage.addChild(movesBgSprite);
     stage.addChild(shiphandSprite);
+    stage.addChild(sandTop);
+    stage.addChild(sandBot);
     stage.addChild(hourglassSprite);
 
     stage.addChild(shipStatusBgSprite);

@@ -14,6 +14,7 @@ class SocketController {
 
     socket.on("gameTick", (tick) => {
       console.log("Game tick: ", tick);
+      this.game.currentGameTick = tick;
     });
 
     socket.on("message", (e) => {
