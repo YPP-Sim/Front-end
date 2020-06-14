@@ -308,6 +308,35 @@ class Game extends Component {
     const sandTop = this.createSprite("sandTop");
     const sandBot = this.createSprite("sandBot");
 
+    const sandTrickleFrame = new PIXI.Rectangle(0, 0, 2, 43);
+    const sandTrickle = new PIXI.Sprite(resources["sandTrickle"].texture);
+    sandTrickle.texture.frame = sandTrickleFrame;
+
+    sandTrickle.zIndex = 55;
+
+    const sandTrickleTicker = new PIXI.Ticker();
+    sandTrickleTicker.speed = 1;
+
+    let targetTimeDelay = 70;
+    let totalTimePassed = 0;
+    sandTrickleTicker.add(() => {
+      if (totalTimePassed >= targetTimeDelay) {
+        totalTimePassed = 0;
+        if (sandTrickleFrame.x >= 3) sandTrickleFrame.x = 0;
+        else sandTrickleFrame.x += 2;
+
+        sandTrickle.texture.frame = sandTrickleFrame;
+      } else totalTimePassed += sandTrickleTicker.elapsedMS;
+    });
+    sandTrickleTicker.start();
+
+    const sandTrickleMask = new PIXI.Graphics();
+    sandTrickleMask.beginFill(0xde3249);
+    sandTrickleMask.drawRect(-0, 0, 5, 43);
+    sandTrickleMask.endFill();
+    sandTrickleMask.zIndex = 100;
+    sandTrickle.mask = sandTrickleMask;
+
     movesBgSprite.interactive = true;
     movesBgSprite.on("pointerdown", () => {
       this.bgClicked = true;
@@ -452,6 +481,9 @@ class Game extends Component {
 
       maskY = this.app.height - 91 - (tick / 35) * 43;
       sandBotMask.y = maskY;
+
+      maskY = this.app.height - 68 - (tick / 35) * 43;
+      sandTrickleMask.y = maskY;
     };
 
     movesBody.addSprite(shiphandSprite, 55, -1);
@@ -460,7 +492,8 @@ class Game extends Component {
     movesBody.addSprite(sandTopMask, 300, 3);
     movesBody.addSprite(sandBot, 130, 47);
     movesBody.addSprite(sandBotMask, 300, 3);
-
+    movesBody.addSprite(sandTrickle, 129, 26);
+    movesBody.addSprite(sandTrickleMask, 129, 26);
     movesBody.addSprite(shipStatusBgSprite, 130, -50);
     movesBody.addSprite(shipStatusBorderSprite, 130, -50);
     movesBody.addSprite(movesTitle, -60, -57);
@@ -486,9 +519,11 @@ class Game extends Component {
     stage.addChild(shiphandSprite);
     stage.addChild(sandTop);
     stage.addChild(sandBot);
+    stage.addChild(sandTrickleMask);
     stage.addChild(hourglassSprite);
     stage.addChild(sandTopMask);
     stage.addChild(sandBotMask);
+    stage.addChild(sandTrickle);
     stage.addChild(shipStatusBgSprite);
     stage.addChild(shipStatusBorderSprite);
 
