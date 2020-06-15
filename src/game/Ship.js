@@ -45,6 +45,8 @@ class Ship {
 
   loadSprites() {
     const loader = PIXI.Loader.shared;
+
+    // Ship Sprite
     const shipSprite = new PIXI.Sprite(
       new PIXI.Texture(loader.resources[this.type.textureName].texture)
     );
@@ -58,6 +60,7 @@ class Ship {
       spaceY
     );
 
+    // Movement bar
     const shipMoveBar = new PIXI.Graphics();
     shipMoveBar.lineStyle(1, 0x000000);
 
@@ -67,8 +70,7 @@ class Ship {
     shipMoveBar.drawRect(0, -30, totalBarWidth, this.barHeight);
     shipMoveBar.pivot.x = totalBarWidth / 2;
     shipMoveBar.pivot.y = this.barHeight / 2;
-
-    shipMoveBar.zIndex = 65;
+    shipMoveBar.zIndex = 2;
 
     this.setSpriteBarPosition = this.game.mapBody.addSprite(
       shipMoveBar,
