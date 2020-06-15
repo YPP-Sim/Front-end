@@ -60,6 +60,7 @@ class Game extends Component {
     // Save sprite handles from setup() to edit in game later
     this.sprites = {};
 
+    this.gameId = props.gameId;
     this.map = props.map;
     this.mapBody = new SpriteBody(null, 100, 250);
     this.ships = {};
@@ -70,6 +71,7 @@ class Game extends Component {
     this.gameData = props.gameData;
 
     this.currentGameTick = 0;
+    console.log("Game data: ", this.gameData);
   }
 
   resize() {
@@ -490,6 +492,9 @@ class Game extends Component {
       sandTrickleMask.y = maskY;
     };
 
+    // Ship move buttons
+    this.addShipHandTurnButtonsSprites(resources, movesBody);
+
     movesBody.addSprite(shiphandSprite, 55, -1);
     movesBody.addSprite(hourglassSprite, 130, 25);
     movesBody.addSprite(sandTop, 130, 3);
@@ -548,6 +553,66 @@ class Game extends Component {
 
     stage.addChild(gunTokenSprite);
     stage.addChild(autoButtonSprite);
+  }
+
+  addShipHandTurnButtonsSprites(resources, movesBody) {
+    const stage = this.stage;
+    const setCenterAnchor = this.setCenterAnchor;
+    const socket = this.socket;
+
+    const gameId = this.gameId;
+    const playerName = this.gameData.thisPlayer.playerName;
+
+    function createTurnSprite(turnNumber, yOffset) {
+      const turnSprite = new PIXI.Sprite(
+        new PIXI.Texture(resources["movesShiphand"].texture)
+      );
+      const turnFrameRect = new PIXI.Rectangle(84, 0, 28, 28);
+      turnSprite.texture.frame = turnFrameRect;
+      turnSprite.interactive = true;
+      turnSprite.on("pointerdown", (event) => {
+        const buttonType = event.data.originalEvent.button;
+        if (buttonType === 0) {
+          // Left click
+          if (turnFrameRect.x >= 84) turnFrameRect.x = 0;
+          else turnFrameRect.x += 28;
+        } else if (buttonType === 1) {
+          // Middle mouse click
+          turnFrameRect.x = 28;
+        } else if (buttonType === 2) {
+          // Right Click
+          if (turnFrameRect.x <= 0) turnFrameRect.x = 84;
+          else turnFrameRect.x -= 28;
+        }
+
+        let turnDirection = null;
+        if (turnFrameRect.x === 0) turnDirection = "LEFT";
+        else if (turnFrameRect.x === 28) turnDirection = "FORWARD";
+        else if (turnFrameRect.x === 56) turnDirection = "RIGHT";
+
+        socket.emit("setMove", {
+          gameId,
+          playerName,
+          moveData: {
+            moveNumber: turnNumber,
+            direction: turnDirection,
+            leftGuns: [false, false],
+            rightGuns: [false, false],
+          },
+        });
+
+        turnSprite.texture.frame = turnFrameRect;
+      });
+      turnSprite.zIndex = 55;
+      setCenterAnchor(turnSprite);
+
+      movesBody.addSprite(turnSprite, 54, yOffset);
+      stage.addChild(turnSprite);
+    }
+    createTurnSprite(1, -48);
+    createTurnSprite(2, -14);
+    createTurnSprite(3, 20);
+    createTurnSprite(4, 54);
   }
 
   // A function that helps with readability when making sprites.

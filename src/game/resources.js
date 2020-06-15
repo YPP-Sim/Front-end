@@ -20,6 +20,7 @@ import damageStatus from "../assets/ui/damage.png";
 import gunToken from "../assets/ui/grapplecannon.png";
 
 import moves from "../assets/ui/move.png";
+import shiphandMoves from "../assets/ui/move_shiphand.png";
 
 // Cannonballs
 import cbSmall from "../assets/projectile/cannonball_small.png";
@@ -40,6 +41,10 @@ import wind from "../assets/sea/wind.png";
 import wfShip from "../assets/vessel/wf/spritesheet.png";
 
 const resourcePairs = [
+  {
+    name: "movesShiphand",
+    image: shiphandMoves,
+  },
   {
     name: "sandBot",
     image: sandBot,

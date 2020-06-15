@@ -93,7 +93,7 @@ function getViewByStatus(gameData, onJoinTeam, onSelect, socket, map, gameId) {
     return (
       <MainContainer>
         {map.length > 0 ? (
-          <Game map={map} gameData={gameData} socket={socket} />
+          <Game map={map} gameData={gameData} socket={socket} gameId={gameId} />
         ) : (
           <p>loading...</p>
         )}
