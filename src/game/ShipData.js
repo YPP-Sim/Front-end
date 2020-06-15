@@ -1,4 +1,3 @@
-import * as PIXI from "pixi.js";
 const orientations = {
   NORTH: "NORTH",
   SOUTH: "SOUTH",

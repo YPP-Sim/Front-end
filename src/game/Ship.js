@@ -11,9 +11,10 @@ import Orientation from "./Orientation";
 // moveShip -- shipId: art, moveType: SOUTH
 
 class Ship {
-  constructor(shipType, game) {
+  constructor(shipType, game, playerName) {
     this.type = shipType;
     this.game = game;
+    this.playerName = playerName;
 
     //Graphical position of the ship (in terms for the sprite)
     this.x = 0;
@@ -70,7 +71,7 @@ class Ship {
     shipMoveBar.drawRect(0, -30, totalBarWidth, this.barHeight);
     shipMoveBar.pivot.x = totalBarWidth / 2;
     shipMoveBar.pivot.y = this.barHeight / 2;
-    shipMoveBar.zIndex = 2;
+    shipMoveBar.zIndex = 4;
 
     this.setSpriteBarPosition = this.game.mapBody.addSprite(
       shipMoveBar,
@@ -78,7 +79,19 @@ class Ship {
       spaceY - 20
     );
 
+    // Ship Name Text
+    const textStyle = new PIXI.TextStyle({ fontSize: 14 });
+    const shipNameText = new PIXI.Text(this.playerName, textStyle);
+    shipNameText.zIndex = 4;
+    shipNameText.anchor.x = 0.5;
+    shipNameText.anchor.y = 0.5;
+    this.setNamePosition = this.game.mapBody.addSprite(
+      shipNameText,
+      spaceX + 64,
+      spaceY - 67
+    );
     this.sprite = shipSprite;
+    this.game.stage.addChild(shipNameText);
     this.game.stage.addChild(shipMoveBar);
     this.game.stage.addChild(shipSprite);
     this.faceDirection = orientation.SOUTH;
@@ -98,6 +111,7 @@ class Ship {
     const { spaceX, spaceY } = calculateGameToSpritePosition(x, y);
     this.setSpritePosition(spaceX, spaceY);
     this.setSpriteBarPosition(spaceX, spaceY - 20);
+    this.setNamePosition(spaceX, spaceY - 67);
   }
 
   /**

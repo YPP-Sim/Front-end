@@ -129,8 +129,8 @@ class Game extends Component {
   };
 
   initPlayerShips() {
-    this.addShip("Artysh", "WAR_FRIG", 1, 1, Orientation.SOUTH);
-
+    const shh = this.addShip("Artysh", "WAR_FRIG", 1, 1, Orientation.SOUTH);
+    shh.moveLeft();
     for (let player of this.gameData.attackers) {
       const { playerName, shipData } = player;
       if (!shipData) continue;
@@ -185,11 +185,13 @@ class Game extends Component {
       return;
     }
 
-    const ship = new Ship(ShipType.warFrig, this);
+    const ship = new Ship(ShipType.warFrig, this, shipId);
     ship.loadSprites();
     ship.setOrientation(orientation);
     ship.setPosition(boardX, boardY);
     this.ships[shipId] = ship;
+
+    return ship;
   }
 
   /**
