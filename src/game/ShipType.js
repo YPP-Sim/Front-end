@@ -5,6 +5,7 @@ const shipTypes = {
     name: "War Frigate",
     textureName: "wfShip",
     orientations: wfOrientations,
+    hasStallToken: true,
   },
 };
 

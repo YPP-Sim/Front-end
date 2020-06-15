@@ -129,6 +129,8 @@ class Game extends Component {
   };
 
   initPlayerShips() {
+    this.addShip("Artysh", "WAR_FRIG", 1, 1, Orientation.SOUTH);
+
     for (let player of this.gameData.attackers) {
       const { playerName, shipData } = player;
       if (!shipData) continue;

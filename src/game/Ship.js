@@ -38,6 +38,9 @@ class Ship {
     this.movementTicker.addEventListener("message", () => {
       this.activeTicker.fire();
     });
+
+    this.barSectionWidth = 12;
+    this.barHeight = 8;
   }
 
   loadSprites() {
@@ -55,7 +58,26 @@ class Ship {
       spaceY
     );
 
+    const shipMoveBar = new PIXI.Graphics();
+    shipMoveBar.lineStyle(1, 0x000000);
+
+    const totalBarWidth = this.type.hasStallToken
+      ? this.barSectionWidth * 3
+      : this.barSectionWidth * 4;
+    shipMoveBar.drawRect(0, -30, totalBarWidth, this.barHeight);
+    shipMoveBar.pivot.x = totalBarWidth / 2;
+    shipMoveBar.pivot.y = this.barHeight / 2;
+
+    shipMoveBar.zIndex = 65;
+
+    this.setSpriteBarPosition = this.game.mapBody.addSprite(
+      shipMoveBar,
+      spaceX,
+      spaceY - 20
+    );
+
     this.sprite = shipSprite;
+    this.game.stage.addChild(shipMoveBar);
     this.game.stage.addChild(shipSprite);
     this.faceDirection = orientation.SOUTH;
     this.setTextureFromOrientation(this.faceDirection);
@@ -73,6 +95,7 @@ class Ship {
     this.y = y;
     const { spaceX, spaceY } = calculateGameToSpritePosition(x, y);
     this.setSpritePosition(spaceX, spaceY);
+    this.setSpriteBarPosition(spaceX, spaceY - 20);
   }
 
   /**
@@ -199,8 +222,8 @@ class Ship {
 
     let frameCounter = 0;
     const textureAnimId = setInterval(() => {
-      if (toDirection == "RIGHT" && currentFrameId === 15) currentFrameId = 0;
-      else if (toDirection == "LEFT" && currentFrameId === 0)
+      if (toDirection === "RIGHT" && currentFrameId === 15) currentFrameId = 0;
+      else if (toDirection === "LEFT" && currentFrameId === 0)
         currentFrameId = 15;
 
       const { x, y, width, height } = this.type.orientations.orientations[
@@ -213,8 +236,8 @@ class Ship {
       shipRect.height = height;
 
       this.sprite.texture.frame = shipRect;
-      if (toDirection == "RIGHT") currentFrameId++;
-      else if (toDirection == "LEFT") currentFrameId--;
+      if (toDirection === "RIGHT") currentFrameId++;
+      else if (toDirection === "LEFT") currentFrameId--;
 
       frameCounter++;
 
