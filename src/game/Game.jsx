@@ -196,6 +196,13 @@ class Game extends Component {
     requestAnimationFrame(this.animate.bind(this));
   }
 
+  clearActivityBars() {
+    for (let pShipName in this.ships) {
+      const pShip = this.ships[pShipName];
+      pShip.setBarMovements(0);
+    }
+  }
+
   /**
    *
    * @param {string} shipId  Usually the name of the player that owns the ship
@@ -578,69 +585,71 @@ class Game extends Component {
     stage.addChild(autoButtonSprite);
   }
 
-  addShipHandTurnButtonsSprites(resources, movesBody) {
-    const stage = this.stage;
-    const setCenterAnchor = this.setCenterAnchor;
-    const socket = this.socket;
+  _createTurnSprite(turnNumber, yOffset, resources, movesBody) {
+    const turnSprite = new PIXI.Sprite(
+      new PIXI.Texture(resources["movesShiphand"].texture)
+    );
+    const turnFrameRect = new PIXI.Rectangle(84, 0, 28, 28);
+    turnSprite.texture.frame = turnFrameRect;
+    turnSprite.interactive = true;
+    turnSprite.on("pointerdown", (event) => {
+      const buttonType = event.data.originalEvent.button;
+      this.bgClicked = true;
+      if (buttonType === 0) {
+        // Left click
+        if (turnFrameRect.x >= 84) turnFrameRect.x = 0;
+        else turnFrameRect.x += 28;
+      } else if (buttonType === 1) {
+        // Middle mouse click
+        turnFrameRect.x = 28;
+      } else if (buttonType === 2) {
+        // Right Click
+        if (turnFrameRect.x <= 0) turnFrameRect.x = 84;
+        else turnFrameRect.x -= 28;
+      }
 
-    const gameId = this.gameId;
-    const playerName = this.gameData.thisPlayer.playerName;
+      let turnDirection = null;
+      if (turnFrameRect.x === 0) turnDirection = "LEFT";
+      else if (turnFrameRect.x === 28) turnDirection = "FORWARD";
+      else if (turnFrameRect.x === 56) turnDirection = "RIGHT";
 
-    const setBgClicked = (clicked) => {
-      this.bgClicked = clicked;
-    };
-
-    function createTurnSprite(turnNumber, yOffset) {
-      const turnSprite = new PIXI.Sprite(
-        new PIXI.Texture(resources["movesShiphand"].texture)
-      );
-      const turnFrameRect = new PIXI.Rectangle(84, 0, 28, 28);
-      turnSprite.texture.frame = turnFrameRect;
-      turnSprite.interactive = true;
-      turnSprite.on("pointerdown", (event) => {
-        const buttonType = event.data.originalEvent.button;
-        setBgClicked(true);
-        if (buttonType === 0) {
-          // Left click
-          if (turnFrameRect.x >= 84) turnFrameRect.x = 0;
-          else turnFrameRect.x += 28;
-        } else if (buttonType === 1) {
-          // Middle mouse click
-          turnFrameRect.x = 28;
-        } else if (buttonType === 2) {
-          // Right Click
-          if (turnFrameRect.x <= 0) turnFrameRect.x = 84;
-          else turnFrameRect.x -= 28;
-        }
-
-        let turnDirection = null;
-        if (turnFrameRect.x === 0) turnDirection = "LEFT";
-        else if (turnFrameRect.x === 28) turnDirection = "FORWARD";
-        else if (turnFrameRect.x === 56) turnDirection = "RIGHT";
-
-        socket.emit("setMove", {
-          gameId,
-          playerName,
-          moveData: {
-            moveNumber: turnNumber,
-            direction: turnDirection,
-            leftGuns: [false, false],
-            rightGuns: [false, false],
-          },
-        });
-
-        turnSprite.texture.frame = turnFrameRect;
+      this.socket.emit("setMove", {
+        gameId: this.gameId,
+        playerName: this.gameData.thisPlayer.playerName,
+        moveData: {
+          moveNumber: turnNumber,
+          direction: turnDirection,
+          leftGuns: [false, false],
+          rightGuns: [false, false],
+        },
       });
-      turnSprite.zIndex = 55;
-      setCenterAnchor(turnSprite);
 
-      movesBody.addSprite(turnSprite, 54, yOffset);
-      stage.addChild(turnSprite);
-    }
-    createTurnSprite(1, -48);
-    createTurnSprite(2, -14);
-    createTurnSprite(3, 20);
-    createTurnSprite(4, 54);
+      turnSprite.texture.frame = turnFrameRect;
+    });
+    turnSprite.zIndex = 55;
+    this.setCenterAnchor(turnSprite);
+
+    movesBody.addSprite(turnSprite, 54, yOffset);
+    this.stage.addChild(turnSprite);
+
+    return () => {
+      turnFrameRect.x = 84;
+      turnSprite.texture.frame = turnFrameRect;
+    };
+  }
+
+  addShipHandTurnButtonsSprites(resources, movesBody) {
+    const clear1 = this._createTurnSprite(1, -48, resources, movesBody);
+    const clear2 = this._createTurnSprite(2, -14, resources, movesBody);
+    const clear3 = this._createTurnSprite(3, 20, resources, movesBody);
+    const clear4 = this._createTurnSprite(4, 54, resources, movesBody);
+
+    this.clearShipHand = () => {
+      clear1();
+      clear2();
+      clear3();
+      clear4();
+    };
   }
 
   // A function that helps with readability when making sprites.

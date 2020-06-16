@@ -24,6 +24,11 @@ class SocketController {
       if (setMaskPosition) setMaskPosition(tick);
     });
 
+    socket.on("clearShips", () => {
+      this.game.clearShipHand();
+      this.game.clearActivityBars();
+    });
+
     socket.on("updatePlayerActions", ({ playerName, turnAmount }) => {
       console.log("Update pmoves?");
       const ship = this.game.getShip(playerName);
