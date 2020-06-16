@@ -41,7 +41,7 @@ class Ship {
     });
 
     this.barSectionWidth = 12;
-    this.barHeight = 8;
+    this.barHeight = 6;
   }
 
   loadSprites() {
@@ -63,7 +63,7 @@ class Ship {
 
     // Movement bar
     const shipMoveBar = new PIXI.Graphics();
-    shipMoveBar.lineStyle(1, 0x000000);
+    shipMoveBar.lineStyle(2, 0x000000);
 
     const totalBarWidth = this.type.hasStallToken
       ? this.barSectionWidth * 3
@@ -78,6 +78,54 @@ class Ship {
       spaceX,
       spaceY - 20
     );
+
+    // filled movement bar
+    const shipFillBar = new PIXI.Graphics();
+    shipFillBar.beginFill(0xffffff);
+    shipFillBar.drawRect(-6, -30, 0, this.barHeight);
+    shipFillBar.pivot.x = this.barSectionWidth;
+    shipFillBar.pivot.y = this.barHeight / 2;
+    shipFillBar.zIndex = 5;
+    shipFillBar.endFill();
+
+    this.setFillBarPosition = this.game.mapBody.addSprite(
+      shipFillBar,
+      spaceX,
+      spaceY - 20
+    );
+
+    this.setBarMovements = (moves) => {
+      shipFillBar.clear();
+      shipFillBar.beginFill(0xffffff);
+      if (this.type.hasStallToken) {
+        if (moves > 3) {
+          shipFillBar.drawRect(
+            -6,
+            -30,
+            this.barSectionWidth * 3,
+            this.barHeight
+          );
+          // Add red suffix
+        } else
+          shipFillBar.drawRect(
+            -6,
+            -30,
+            this.barSectionWidth * moves,
+            this.barHeight
+          );
+      } else {
+        shipFillBar.drawRect(
+          0,
+          -30,
+          this.barSectionWidth * moves,
+          this.barHeight
+        );
+      }
+
+      shipFillBar.endFill();
+    };
+
+    this.setBarMovements(3);
 
     // Ship Name Text
     const textStyle = new PIXI.TextStyle({ fontSize: 14 });
@@ -94,6 +142,7 @@ class Ship {
     this.game.stage.addChild(shipNameText);
     this.game.stage.addChild(shipMoveBar);
     this.game.stage.addChild(shipSprite);
+    this.game.stage.addChild(shipFillBar);
     this.faceDirection = orientation.SOUTH;
     this.setTextureFromOrientation(this.faceDirection);
   }
@@ -112,6 +161,7 @@ class Ship {
     this.setSpritePosition(spaceX, spaceY);
     this.setSpriteBarPosition(spaceX, spaceY - 20);
     this.setNamePosition(spaceX, spaceY - 67);
+    this.setFillBarPosition(spaceX, spaceY - 20);
   }
 
   /**

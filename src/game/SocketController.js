@@ -8,17 +8,16 @@ class SocketController {
 
   registerEvents() {
     const socket = this.socket;
-    socket.on("gameTurn", (data) => {
-      console.log("Game turn: ", data);
-    });
+    socket.on("gameTurn", (data) => {});
 
     socket.on("gameTick", (tick) => {
-      console.log("Game tick: ", tick);
       this.game.currentGameTick = tick;
 
       const setMaskPosition = this.game.setMaskPosition;
       if (setMaskPosition) setMaskPosition(tick);
     });
+
+    socket.on("", () => {});
 
     socket.on("message", (e) => {
       console.log("Received message from server: ", e);
