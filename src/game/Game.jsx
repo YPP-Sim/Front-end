@@ -14,6 +14,10 @@ const GameContainer = styled.div`
   height: 100%;
 `;
 
+function sleep(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
 function isRock(cell_id) {
   switch (cell_id) {
     case 13:
@@ -132,7 +136,26 @@ class Game extends Component {
 
   initPlayerShips() {
     const shh = this.addShip("Artysh", "WAR_FRIG", 1, 1, Orientation.SOUTH);
-    shh.moveLeft();
+
+    const moveData = {
+      turn_1: [{ playerName: "Artysh", direction: "FORWARD" }],
+      turn_1_shots: [
+        {
+          playerName: "Artysh",
+          leftGuns: [true, true],
+          rightGuns: [true, false],
+        },
+      ],
+      turn_2: [{ playerName: "Artysh", direction: "LEFT" }],
+      turn_2_shots: [],
+      turn_3: [{ playerName: "Artysh", direction: "FORWARD" }],
+      turn_3_shots: [],
+      turn_4: [{ playerName: "Artysh", direction: "RIGHT" }],
+      turn_4_shots: [],
+    };
+
+    this.executeGameTurns({ playerMovements: moveData });
+
     for (let player of this.gameData.attackers) {
       const { playerName, shipData } = player;
       if (!shipData) continue;
@@ -630,6 +653,40 @@ class Game extends Component {
   setCenterAnchor(sprite) {
     sprite.anchor.x = 0.5;
     sprite.anchor.y = 0.5;
+  }
+
+  executeGameTurns(turnData) {
+    const { playerMovements } = turnData;
+
+    this._executeMoves(1, playerMovements);
+  }
+
+  async _executeMoves(numberedTurn, playerMovements) {
+    if (numberedTurn > 4) return;
+
+    const turnMovements = playerMovements["turn_" + numberedTurn];
+    const turnShots = playerMovements["turn_" + numberedTurn + "_shots"];
+    for (let turn of turnMovements) {
+      const { playerName, direction, shots } = turn;
+
+      const ship = this.getShip(playerName);
+      if (!ship) continue;
+
+      ship.move(direction);
+    }
+    if (turnMovements.length > 0) await sleep(1000);
+
+    if (turnShots.length > 0) {
+      console.log("Shooting turn...");
+
+      for (let shotData of turnShots) {
+        const { playerName, leftGuns, rightGuns } = shotData;
+        // Do gun shooting animation;
+      }
+      await sleep(1000);
+    }
+
+    this._executeMoves(++numberedTurn, playerMovements);
   }
 
   /**

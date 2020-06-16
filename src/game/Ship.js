@@ -200,6 +200,25 @@ class Ship {
     this.faceDirection = orientation;
     this.setTextureFromOrientation(orientation);
   }
+  /**
+   *
+   * @param {string} direction
+   */
+  move(direction) {
+    switch (direction) {
+      case "LEFT":
+        this.moveLeft();
+        break;
+      case "FORWARD":
+        this.moveForward();
+        break;
+      case "RIGHT":
+        this.moveRight();
+        break;
+      default:
+        break;
+    }
+  }
 
   moveForward() {
     let targetX = 0;
