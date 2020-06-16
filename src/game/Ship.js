@@ -40,7 +40,7 @@ class Ship {
       this.activeTicker.fire();
     });
 
-    this.barSectionWidth = 12;
+    this.barSectionWidth = 11;
     this.barHeight = 6;
   }
 
@@ -63,7 +63,7 @@ class Ship {
 
     // Movement bar
     const shipMoveBar = new PIXI.Graphics();
-    shipMoveBar.lineStyle(2, 0x000000);
+    shipMoveBar.lineStyle(1, 0x000000);
 
     const totalBarWidth = this.type.hasStallToken
       ? this.barSectionWidth * 3
@@ -106,6 +106,14 @@ class Ship {
             this.barHeight
           );
           // Add red suffix
+          shipFillBar.beginFill(0xff0000);
+          shipFillBar.drawRect(
+            -6 + this.barSectionWidth * 3,
+            -30,
+            this.barSectionWidth,
+            this.barHeight
+          );
+          shipFillBar.endFill();
         } else
           shipFillBar.drawRect(
             -6,
@@ -124,8 +132,6 @@ class Ship {
 
       shipFillBar.endFill();
     };
-
-    this.setBarMovements(3);
 
     // Ship Name Text
     const textStyle = new PIXI.TextStyle({ fontSize: 14 });

@@ -563,6 +563,10 @@ class Game extends Component {
     const gameId = this.gameId;
     const playerName = this.gameData.thisPlayer.playerName;
 
+    const setBgClicked = (clicked) => {
+      this.bgClicked = clicked;
+    };
+
     function createTurnSprite(turnNumber, yOffset) {
       const turnSprite = new PIXI.Sprite(
         new PIXI.Texture(resources["movesShiphand"].texture)
@@ -572,6 +576,7 @@ class Game extends Component {
       turnSprite.interactive = true;
       turnSprite.on("pointerdown", (event) => {
         const buttonType = event.data.originalEvent.button;
+        setBgClicked(true);
         if (buttonType === 0) {
           // Left click
           if (turnFrameRect.x >= 84) turnFrameRect.x = 0;

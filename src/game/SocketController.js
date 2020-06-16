@@ -1,6 +1,11 @@
 import ShipType from "./ShipType";
-
+import Game from "./Game";
 class SocketController {
+  /**
+   *
+   * @param {*} socket
+   * @param {Game} game
+   */
   constructor(socket, game) {
     this.game = game;
     this.socket = socket;
@@ -17,7 +22,17 @@ class SocketController {
       if (setMaskPosition) setMaskPosition(tick);
     });
 
-    socket.on("", () => {});
+    socket.on("updatePlayerActions", ({ playerName, turnAmount }) => {
+      console.log("Update pmoves?");
+      const ship = this.game.getShip(playerName);
+      if (!ship) {
+        console.error(
+          "Player making moves but does not have a ship on the board."
+        );
+        return;
+      }
+      ship.setBarMovements(turnAmount);
+    });
 
     socket.on("message", (e) => {
       console.log("Received message from server: ", e);
