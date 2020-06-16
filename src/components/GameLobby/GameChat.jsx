@@ -18,6 +18,7 @@ const Root = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  user-select: none;
 `;
 
 const MessagesContainer = styled.div`
