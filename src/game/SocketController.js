@@ -13,7 +13,9 @@ class SocketController {
 
   registerEvents() {
     const socket = this.socket;
-    socket.on("gameTurn", (data) => {});
+    socket.on("gameTurn", (turnData) => {
+      this.game.executeGameTurns(turnData);
+    });
 
     socket.on("gameTick", (tick) => {
       this.game.currentGameTick = tick;
