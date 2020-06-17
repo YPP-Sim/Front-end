@@ -494,7 +494,7 @@ class Game extends Component {
     this.sprites["rightTokens"] = rightSprite;
 
     const movesBody = new SpriteBody(movesBgSprite, 175, this.app.height - 95);
-
+    this.movesBody = movesBody;
     leftSprite.zIndex = 52;
     rightSprite.zIndex = 52;
     forwardSprite.zIndex = 52;
@@ -527,6 +527,8 @@ class Game extends Component {
 
     // Ship move buttons
     this.addShipHandTurnButtonsSprites(resources, movesBody);
+
+    this._addShiphandGuns(true, resources);
 
     movesBody.addSprite(shiphandSprite, 55, -1);
     movesBody.addSprite(hourglassSprite, 130, 25);
@@ -639,6 +641,35 @@ class Game extends Component {
       turnFrameRect.x = 84;
       turnSprite.texture.frame = turnFrameRect;
     };
+  }
+
+  _addShiphandGuns(dualCannon, resources) {
+    const stage = this.stage;
+    const movesBody = this.movesBody;
+    function createGunSprite(x, y, gunTurn, side) {
+      const gunSprite = new PIXI.Sprite(
+        new PIXI.Texture(resources["cannonSlots"].texture)
+      );
+      const gunFrame = new PIXI.Rectangle(0, 0, dualCannon ? 32 : 17, 18);
+      gunSprite.interactive = true;
+      gunSprite.zIndex = 53;
+      gunSprite.texture.frame = gunFrame;
+      gunSprite.on("pointerDown", () => {
+        console.log(` Clicked on ${side} side ${gunTurn} turn guns`);
+      });
+
+      if (side === "LEFT") {
+        gunSprite.anchor.x = 1;
+      } else if (side === "RIGHT") {
+        gunSprite.anchor.x = 0;
+      }
+
+      movesBody.addSprite(gunSprite, x, y);
+      stage.addChild(gunSprite);
+    }
+
+    createGunSprite(39, -57, 1, "LEFT");
+    createGunSprite(67, -57, 1, "RIGHT");
   }
 
   addShipHandTurnButtonsSprites(resources, movesBody) {

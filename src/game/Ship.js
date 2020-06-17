@@ -249,19 +249,19 @@ class Ship {
       yComplete,
     } = this._getMovementAnimData(targetX, targetY);
 
-    this.activeTicker = new MyTicker();
-    this.activeTicker.add(() => {
+    const animationTicker = new PIXI.Ticker();
+    animationTicker.add((deltaTime) => {
       this.setGamePosition(this.x + incrementX, this.y + incrementY);
       xComplete -= Math.abs(incrementX);
       yComplete -= Math.abs(incrementY);
 
       if (xComplete <= 0 && yComplete <= 0) {
         this.setPosition(targetX, targetY);
-        this.movementTicker.postMessage(["stop"]);
+        animationTicker.stop();
       }
-    });
+    }, {});
 
-    this.movementTicker.postMessage(["start", this.animationSpeed]);
+    animationTicker.start();
   }
 
   moveRight() {
@@ -361,7 +361,16 @@ class Ship {
     } = this._getMovementAnimData(targetX, targetY);
 
     this.activeTicker = new MyTicker();
-    this.activeTicker.add(() => {
+
+    const animationTicker = new PIXI.Ticker();
+    const movementContext = {
+      object: this.sprite,
+      initialPosition: {},
+      finalPosition: {},
+      totalTime: 2000,
+      lastElapsedTime: 0,
+    };
+    animationTicker.add((deltaTime) => {
       let toX = this.x;
       let toY = this.y;
 
@@ -378,12 +387,36 @@ class Ship {
       this.setGamePosition(toX, toY);
 
       if (xComplete <= 0 && yComplete <= 0) {
-        this.movementTicker.postMessage(["stop"]);
+        animationTicker.stop();
         this.setPosition(targetX, targetY);
       }
-    });
+    }, movementContext);
 
-    this.movementTicker.postMessage(["start", this.animationSpeed]);
+    animationTicker.start();
+
+    // this.activeTicker.add(() => {
+    //   let toX = this.x;
+    //   let toY = this.y;
+
+    //   if ((xFirst || yComplete <= this.turnThreshold) && xComplete > 0) {
+    //     toX += incrementX;
+    //     xComplete -= Math.abs(incrementX);
+    //   }
+
+    //   if ((yFirst || xComplete <= this.turnThreshold) && yComplete > 0) {
+    //     toY += incrementY;
+    //     yComplete -= Math.abs(incrementY);
+    //   }
+
+    //   this.setGamePosition(toX, toY);
+
+    //   if (xComplete <= 0 && yComplete <= 0) {
+    //     this.movementTicker.postMessage(["stop"]);
+    //     this.setPosition(targetX, targetY);
+    //   }
+    // });
+
+    // this.movementTicker.postMessage(["start", this.animationSpeed]);
   }
 
   moveLeft() {

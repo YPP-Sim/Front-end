@@ -14,6 +14,8 @@ import selectBox from "../assets/ui/sel_border_square.png";
 import shipStatusBorder from "../assets/ui/status.png";
 import shipStatus from "../assets/ui/status-bg.png";
 
+import cannonSlots from "../assets/ui/cannonslots.png";
+
 import bilgeStatus from "../assets/ui/bilge.png";
 import damageStatus from "../assets/ui/damage.png";
 
@@ -44,6 +46,10 @@ const resourcePairs = [
   {
     name: "movesShiphand",
     image: shiphandMoves,
+  },
+  {
+    name: "cannonSlots",
+    image: cannonSlots,
   },
   {
     name: "sandBot",
