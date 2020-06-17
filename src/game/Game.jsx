@@ -650,11 +650,11 @@ class Game extends Component {
       const gunSprite = new PIXI.Sprite(
         new PIXI.Texture(resources["cannonSlots"].texture)
       );
-      const gunFrame = new PIXI.Rectangle(0, 0, dualCannon ? 32 : 17, 18);
+      const gunFrame = new PIXI.Rectangle(0, 0, dualCannon ? 32 : 16, 18);
       gunSprite.interactive = true;
       gunSprite.zIndex = 53;
       gunSprite.texture.frame = gunFrame;
-      gunSprite.on("pointerDown", () => {
+      gunSprite.on("pointerdown", () => {
         console.log(` Clicked on ${side} side ${gunTurn} turn guns`);
       });
 
@@ -668,8 +668,17 @@ class Game extends Component {
       stage.addChild(gunSprite);
     }
 
-    createGunSprite(39, -57, 1, "LEFT");
-    createGunSprite(67, -57, 1, "RIGHT");
+    createGunSprite(40, -57, 1, "LEFT");
+    createGunSprite(69, -57, 1, "RIGHT");
+
+    createGunSprite(40, -23, 2, "LEFT");
+    createGunSprite(69, -23, 2, "RIGHT");
+
+    createGunSprite(40, 11, 3, "LEFT");
+    createGunSprite(69, 11, 3, "RIGHT");
+
+    createGunSprite(40, 45, 4, "LEFT");
+    createGunSprite(69, 45, 4, "RIGHT");
   }
 
   addShipHandTurnButtonsSprites(resources, movesBody) {
