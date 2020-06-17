@@ -134,7 +134,6 @@ const GameLobby = () => {
     if (playerName.trim().length === 0) history.push("/games");
 
     if (socket.disconnected) socket.open();
-
     socketController.registerEvents();
     socket.emit("joinGame", { gameId, playerName });
 

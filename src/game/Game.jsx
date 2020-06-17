@@ -135,26 +135,28 @@ class Game extends Component {
   };
 
   initPlayerShips() {
-    const shh = this.addShip("Artysh", "WAR_FRIG", 1, 1, Orientation.SOUTH);
+    // const shh = this.addShip("Artysh", "WAR_FRIG", 1, 1, Orientation.SOUTH);
 
-    const moveData = {
-      turn_1: [{ playerName: "Artysh", direction: "FORWARD" }],
-      turn_1_shots: [
-        {
-          playerName: "Artysh",
-          leftGuns: [true, true],
-          rightGuns: [true, false],
-        },
-      ],
-      turn_2: [{ playerName: "Artysh", direction: "LEFT" }],
-      turn_2_shots: [],
-      turn_3: [{ playerName: "Artysh", direction: "FORWARD" }],
-      turn_3_shots: [],
-      turn_4: [{ playerName: "Artysh", direction: "RIGHT" }],
-      turn_4_shots: [],
-    };
+    // const moveData = {
+    //   turn_1: [{ playerName: "Artysh", direction: "FORWARD" }],
+    //   turn_1_shots: [
+    //     {
+    //       playerName: "Artysh",
+    //       leftGuns: [true, true],
+    //       rightGuns: [true, false],
+    //     },
+    //   ],
+    //   turn_2: [{ playerName: "Artysh", direction: "LEFT" }],
+    //   turn_2_shots: [],
+    //   turn_3: [{ playerName: "Artysh", direction: "FORWARD" }],
+    //   turn_3_shots: [],
+    //   turn_4: [{ playerName: "Artysh", direction: "RIGHT" }],
+    //   turn_4_shots: [],
+    // };
 
-    this.executeGameTurns({ playerMovements: moveData });
+    // this.executeGameTurns(moveData).then(() => {
+    //   console.log("Finished stuff");
+    // });
 
     for (let player of this.gameData.attackers) {
       const { playerName, shipData } = player;
@@ -380,6 +382,7 @@ class Game extends Component {
 
     movesBgSprite.zIndex = 51;
     shipStatusBgSprite.zIndex = 52;
+
     shipStatusBorderSprite.zIndex = 52;
     shiphandSprite.zIndex = 52;
     hourglassSprite.zIndex = 53;
@@ -664,38 +667,55 @@ class Game extends Component {
     sprite.anchor.y = 0.5;
   }
 
-  executeGameTurns(turnData) {
-    const { playerMovements } = turnData;
+  updateShipPositions(playerData) {
+    for (let player of playerData) {
+      const { boardX, boardY, orientation, playerName } = player;
+      const ship = this.getShip(playerName);
+      if (!ship) continue;
+      ship.setPosition(boardX, boardY);
+      ship.setOrientation(orientation);
+    }
+  }
 
-    this._executeMoves(1, playerMovements);
+  executeGameTurns(playerMovements) {
+    return new Promise(async (resolve) => {
+      await this._executeMoves(1, playerMovements);
+      resolve();
+    });
   }
 
   async _executeMoves(numberedTurn, playerMovements) {
-    if (numberedTurn > 4) return;
-
-    const turnMovements = playerMovements["turn_" + numberedTurn];
-    const turnShots = playerMovements["turn_" + numberedTurn + "_shots"];
-    for (let turn of turnMovements) {
-      const { playerName, direction, shots } = turn;
-
-      const ship = this.getShip(playerName);
-      if (!ship) continue;
-
-      ship.move(direction);
-    }
-    if (turnMovements.length > 0) await sleep(1000);
-
-    if (turnShots.length > 0) {
-      console.log("Shooting turn...");
-
-      for (let shotData of turnShots) {
-        const { playerName, leftGuns, rightGuns } = shotData;
-        // Do gun shooting animation;
+    return new Promise(async (resolve) => {
+      if (numberedTurn > 4) {
+        resolve();
+        return;
       }
-      await sleep(1000);
-    }
 
-    this._executeMoves(++numberedTurn, playerMovements);
+      const turnMovements = playerMovements["turn_" + numberedTurn];
+      const turnShots = playerMovements["turn_" + numberedTurn + "_shots"];
+      for (let turn of turnMovements) {
+        const { playerName, direction, shots } = turn;
+
+        const ship = this.getShip(playerName);
+        if (!ship) continue;
+
+        ship.move(direction);
+      }
+      if (turnMovements.length > 0) await sleep(1000);
+
+      if (turnShots.length > 0) {
+        console.log("Shooting turn...");
+
+        for (let shotData of turnShots) {
+          const { playerName, leftGuns, rightGuns } = shotData;
+          // Do gun shooting animation;
+        }
+        await sleep(1000);
+      }
+
+      await this._executeMoves(++numberedTurn, playerMovements);
+      resolve();
+    });
   }
 
   /**

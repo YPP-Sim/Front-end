@@ -13,8 +13,13 @@ class SocketController {
 
   registerEvents() {
     const socket = this.socket;
-    socket.on("gameTurn", (turnData) => {
-      this.game.executeGameTurns(turnData);
+    socket.on("gameTurn", async (turnData) => {
+      socket.emit("requestShipStats", {
+        playerName: this.game.gameData.thisPlayer.playerName,
+        gameId: this.game.gameId,
+      });
+      await this.game.executeGameTurns(turnData.playerMovements);
+      this.game.updateShipPositions(turnData.playerData);
     });
 
     socket.on("gameTick", (tick) => {
@@ -22,6 +27,12 @@ class SocketController {
 
       const setMaskPosition = this.game.setMaskPosition;
       if (setMaskPosition) setMaskPosition(tick);
+    });
+
+    socket.on("updateShipStats", (shipStats) => {
+      const { bilge, damage } = shipStats;
+      // TODO
+      console.log(`Ship stats update. Bilge: ${bilge}, damage: ${damage}`);
     });
 
     socket.on("clearShips", () => {
@@ -106,6 +117,7 @@ class SocketController {
     socket.off("message");
     socket.off("shipPositionChange");
     socket.off("addShip");
+    socket.removeAllListeners();
   }
 }
 
