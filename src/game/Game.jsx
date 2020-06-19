@@ -7,6 +7,7 @@ import Orientation from "./Orientation";
 import resourcePairs from "./resources";
 import SocketController from "./SocketController";
 import styled from "styled-components";
+import PlayerMoves from "./PlayerMoves";
 
 let loaderLoaded = false;
 
@@ -76,6 +77,11 @@ class Game extends Component {
 
     this.currentGameTick = 0;
     console.log("Game data: ", this.gameData);
+
+    if (this.gameData.thisPlayer && this.gameData.thisPlayer.shipData)
+      this.playerMoves = new PlayerMoves(
+        this.gameData.thisPlayer.shipData.dualCannon
+      );
   }
 
   resize() {
