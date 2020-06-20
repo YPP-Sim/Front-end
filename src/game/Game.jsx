@@ -650,6 +650,8 @@ class Game extends Component {
   }
 
   _addShiphandGuns(dualCannon, resources) {
+    if (!this.gameData.thisPlayer || !this.gameData.thisPlayer.shipData) return;
+
     const stage = this.stage;
     const movesBody = this.movesBody;
     const playerMoves = this.playerMoves;
@@ -701,7 +703,8 @@ class Game extends Component {
 
         if (dualCannon) movesBody.addSprite(filledGunSecondSprite, x + 16, y);
       }
-
+      filledGunSecondSprite.visible = false;
+      filledGunFirstSprite.visible = false;
       movesBody.addSprite(filledGunFirstSprite, x, y);
       movesBody.addSprite(gunSprite, x, y);
       stage.addChild(filledGunSecondSprite);
