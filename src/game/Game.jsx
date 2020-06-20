@@ -652,6 +652,8 @@ class Game extends Component {
   _addShiphandGuns(dualCannon, resources) {
     const stage = this.stage;
     const movesBody = this.movesBody;
+    const playerMoves = this.playerMoves;
+
     function createGunSprite(x, y, gunTurn, side) {
       const gunSprite = new PIXI.Sprite(
         new PIXI.Texture(resources["cannonSlots"].texture)
@@ -660,18 +662,51 @@ class Game extends Component {
       gunSprite.interactive = true;
       gunSprite.zIndex = 53;
       gunSprite.texture.frame = gunFrame;
+
+      const filledGunFirstSprite = new PIXI.Sprite(
+        new PIXI.Texture(resources["cannonSlots"].texture)
+      );
+      filledGunFirstSprite.zIndex = 54;
+      filledGunFirstSprite.texture.frame = new PIXI.Rectangle(33, 0, 16, 18);
+
+      let filledGunSecondSprite = new PIXI.Sprite(
+        new PIXI.Texture(resources["cannonSlots"].texture)
+      );
+      filledGunSecondSprite.zIndex = 54;
+      filledGunSecondSprite.texture.frame = new PIXI.Rectangle(33, 0, 16, 18);
+
       gunSprite.on("pointerdown", () => {
-        console.log(` Clicked on ${side} side ${gunTurn} turn guns`);
+        playerMoves.incrementNumberedTurnGuns(gunTurn, side, (gunData) => {
+          if (gunData[0]) filledGunFirstSprite.visible = true;
+          else filledGunFirstSprite.visible = false;
+
+          if (gunData.length === 2) {
+            if (gunData[1]) filledGunSecondSprite.visible = true;
+            else filledGunSecondSprite.visible = false;
+          }
+
+          gunSprite.texture.frame = gunFrame;
+        });
       });
 
       if (side === "LEFT") {
         gunSprite.anchor.x = 1;
+        filledGunFirstSprite.anchor.x = 1;
+        filledGunSecondSprite.anchor.x = 1;
+        if (dualCannon) movesBody.addSprite(filledGunSecondSprite, x - 16, y);
       } else if (side === "RIGHT") {
         gunSprite.anchor.x = 0;
+        filledGunSecondSprite.anchor.x = 0;
+        filledGunFirstSprite.anchor.x = 0;
+
+        if (dualCannon) movesBody.addSprite(filledGunSecondSprite, x + 16, y);
       }
 
+      movesBody.addSprite(filledGunFirstSprite, x, y);
       movesBody.addSprite(gunSprite, x, y);
+      stage.addChild(filledGunSecondSprite);
       stage.addChild(gunSprite);
+      stage.addChild(filledGunFirstSprite);
     }
 
     createGunSprite(40, -57, 1, "LEFT");

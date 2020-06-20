@@ -10,13 +10,14 @@ class PlayerMoves {
       initialMoveData.leftGuns = [false];
     }
 
-    this.move1 = initialMoveData;
-    this.move2 = initialMoveData;
-    this.move3 = initialMoveData;
-    this.move4 = initialMoveData;
+    this.move1 = JSON.parse(JSON.stringify(initialMoveData));
+    this.move2 = JSON.parse(JSON.stringify(initialMoveData));
+    this.move3 = JSON.parse(JSON.stringify(initialMoveData));
+    this.move4 = JSON.parse(JSON.stringify(initialMoveData));
   }
 
-  incrementNumberedTurnGuns(numberedTurn, side) {
+  incrementNumberedTurnGuns(numberedTurn, side, onTextureChange) {
+    side = side.toLowerCase();
     const selectedMove = this["move" + numberedTurn];
     const selectedGuns = selectedMove[side + "Guns"];
 
@@ -34,6 +35,9 @@ class PlayerMoves {
         selectedGuns[0] = false;
       }
     }
+
+    if (onTextureChange)
+      onTextureChange(this["move" + numberedTurn][side + "Guns"]);
   }
 }
 
