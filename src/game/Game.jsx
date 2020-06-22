@@ -86,6 +86,7 @@ class Game extends Component {
 
   resize() {
     const elem = document.getElementById("game");
+    if (!elem) return;
     if (this.app)
       this.app.resize(window.innerWidth - 300, elem.clientHeight - 4);
   }
