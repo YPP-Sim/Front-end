@@ -655,6 +655,9 @@ class Game extends Component {
     const stage = this.stage;
     const movesBody = this.movesBody;
     const playerMoves = this.playerMoves;
+    const socket = this.socket;
+    const gameId = this.gameId;
+    const playerName = this.gameData.thisPlayer.playerName;
 
     function createGunSprite(x, y, gunTurn, side) {
       const gunSprite = new PIXI.Sprite(
@@ -688,6 +691,13 @@ class Game extends Component {
           }
 
           gunSprite.texture.frame = gunFrame;
+          socket.emit("setGuns", {
+            gameId,
+            playerName,
+            numberedTurn: gunTurn,
+            side,
+            gunData,
+          });
         });
       });
 
