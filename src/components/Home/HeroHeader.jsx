@@ -1,24 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import bgImage from "../../images/filler2.jpg";
 import { useHistory } from "react-router-dom";
 import NavBar from "../HeroNavBar";
 import Button from "../Button";
 
 const Root = styled.div`
-  // background: radial-gradient(
-  //     at center center,
-  //     rgba(0, 0, 0, 0.1) 0%,
-  //     rgba(0, 0, 0, 0.3) 65%,
-  //     rgba(0, 0, 0, 0.4) 100%
-  //   ),
-  //   url(${bgImage});
-  // background-image:
-  // linear-gradient(to bottom, #21d2ff, #a433ff);
-
   background: linear-gradient(to bottom, #ffe259, #ffa751);
-  
-  // background: linear-gradient(to bottom, #5433FF, #20BDFF, #A5FECB);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -35,7 +22,6 @@ const CenterContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 80%;
-  // color: #494949;
   color: #252525;
 `;
 
@@ -46,7 +32,6 @@ const Title = styled.h1`
   font-weight: bold;
   text-align: center;
   margin: 0;
-  // text-shadow: 1px 2px #000000;
 `;
 
 const TitleDescription = styled.p`
@@ -64,18 +49,6 @@ const ButtonsContainer = styled.div`
   width: 100%;
 `;
 
-const SecondaryButton = styled(Button)`
-  color: white;
-  background-color: #00000000;
-  border: 1px solid white;
-  margin: 10px 15px 10px 15px;
-
-  &:hover {
-    background-color: white;
-    color: black;
-  }
-`;
-
 const MaxWidthContainer = styled.div`
   max-width: ${({ theme }) => theme.pageMaxWidth};
   display: flex;
@@ -86,7 +59,6 @@ const MaxWidthContainer = styled.div`
 `;
 
 const CTAContainer = styled.div`
-  // margin-left: 20px;
   max-width: 450px;
   border-radius: 5px;
 `;
@@ -120,7 +92,6 @@ const HeroHeader = () => {
               >
                 Play
               </Button>
-              {/* <SecondaryButton>Learn more</SecondaryButton> */}
             </ButtonsContainer>
           </CTAContainer>
         </CenterContainer>
