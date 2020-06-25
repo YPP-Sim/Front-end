@@ -6,20 +6,26 @@ import NavBar from "../HeroNavBar";
 import Button from "../Button";
 
 const Root = styled.div`
-  background: radial-gradient(
-      at center center,
-      rgba(0, 0, 0, 0.5) 0%,
-      rgba(0, 0, 0, 0.5) 65%,
-      rgba(0, 0, 0, 0.5) 100%
-    ),
-    url(${bgImage});
+  // background: radial-gradient(
+  //     at center center,
+  //     rgba(0, 0, 0, 0.1) 0%,
+  //     rgba(0, 0, 0, 0.3) 65%,
+  //     rgba(0, 0, 0, 0.4) 100%
+  //   ),
+  //   url(${bgImage});
+  // background-image:
+  // linear-gradient(to bottom, #21d2ff, #a433ff);
 
+  background: linear-gradient(to bottom, #ffe259, #ffa751);
+  
+  // background: linear-gradient(to bottom, #5433FF, #20BDFF, #A5FECB);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
   width: 100%;
-  height: 100vh;
+  height: 80vh;
   min-height: 550px;
+  clip-path: ellipse(100% 55% at 48% 44%);
 `;
 
 const CenterContainer = styled.div`
@@ -27,25 +33,28 @@ const CenterContainer = styled.div`
   flex-direction: column;
   margin: ${({ theme }) => theme.pageMargins};
   justify-content: center;
+  align-items: center;
   height: 80%;
-  color: white;
+  // color: #494949;
+  color: #252525;
 `;
 
 const Title = styled.h1`
   font-family: ${({ theme }) => theme.titleFont};
   text-transform: uppercase;
   font-size: 70px;
-  font-weight: 400;
+  font-weight: bold;
+  text-align: center;
   margin: 0;
+  // text-shadow: 1px 2px #000000;
 `;
 
 const TitleDescription = styled.p`
-  font-size: 17.5px;
+  font-size: 18.5px;
   margin: 0;
   margin-top: 20px;
-  margin-left: 2px;
-  margin-bottom: 20px;
-  text-shadow: 1px 2px #00000066;
+  text-align: center;
+  margin-bottom: 35px;
 
   font-family: ${({ theme }) => theme.textFont};
 `;
@@ -103,10 +112,15 @@ const HeroHeader = () => {
             </TitleDescription>
 
             <ButtonsContainer>
-              <Button margin="10px 15px 10px 0px" onClick={handlePlayClick}>
+              <Button
+                height="60px"
+                // margin="10px 15px 10px 0px"
+                onClick={handlePlayClick}
+                backgroundColor="#252525"
+              >
                 Play
               </Button>
-              <SecondaryButton>Learn more</SecondaryButton>
+              {/* <SecondaryButton>Learn more</SecondaryButton> */}
             </ButtonsContainer>
           </CTAContainer>
         </CenterContainer>

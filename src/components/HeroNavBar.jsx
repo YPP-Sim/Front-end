@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const Root = styled.div`
   width: 100%;
-  color: white;
+  color: #333;
   background-color: rgba(0, 0, 0, 0);
   display: flex;
   height: fit-content;
@@ -30,7 +30,7 @@ const LinksContainer = styled.div`
     font-size: 16px;
     padding: 7px;
     margin: 7px;
-    color: #ffffffb0;
+    color: #494949;
     text-transform: uppercase;
 
     &:hover {
