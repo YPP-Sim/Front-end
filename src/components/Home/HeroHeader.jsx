@@ -38,8 +38,9 @@ const TitleDescription = styled.p`
   font-size: 18.5px;
   margin: 0;
   margin-top: 20px;
-  text-align: center;
+  text-align: justify;
   margin-bottom: 35px;
+  line-height: 1.6;
 
   font-family: ${({ theme }) => theme.textFont};
 `;

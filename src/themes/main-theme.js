@@ -1,13 +1,12 @@
 const theme = {
-  bgColor: "#f4f4f4",
+  bgColor: "#fff",
   titleFont: "'Rubik', sans-serif;",
   textFont: "'Karla', sans-serif;",
   accentColor: "#252525",
-  // accentColor: "#91aaff",
-  color1: "#d2deeb",
-  color2: "#c1d8f0",
-  color3: "#1d3557",
-  textColor: "#13022C",
+  color1: "#ffe259",
+  color2: "#ffa751",
+  color3: "#252525;",
+  textColor: "#494949",
 
   pageMargins: "0px 100px",
   pageMaxWidth: "1800px",

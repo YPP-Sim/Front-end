@@ -39,21 +39,6 @@ const HomePage = ({ theme }) => {
           voluptatem minima suscipit iste velit!
         </SectionDescription>
       </Section>
-      <Section backgroundColor={theme.color2}>
-        <SectionTitle>About</SectionTitle>
-        <SectionDescription>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
-          possimus fugit veniam nisi harum eligendi, quo omnis incidunt, labore
-          iusto officiis voluptatem illo! Nesciunt repudiandae ipsam excepturi
-          rerum possimus neque!
-          <br />
-          <br />
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem harum
-          exercitationem vero voluptatum similique voluptatem aperiam incidunt
-          deserunt, adipisci labore totam doloribus velit ad placeat, rerum sint
-          nisi. Quis, ullam.
-        </SectionDescription>
-      </Section>
     </Root>
   );
 };

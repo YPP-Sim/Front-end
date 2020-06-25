@@ -18,7 +18,6 @@ const Root = styled.div`
       ? `color: #eee;
     h2 {
         color: #eee;
-        font-weight: 400;
     }
 `
       : ""};

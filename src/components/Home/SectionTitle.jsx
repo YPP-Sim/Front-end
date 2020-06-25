@@ -3,13 +3,13 @@ import styled from "styled-components";
 
 const Title = styled.h2`
   font-family: ${({ theme }) => theme.titleFont};
-  font-weight: 700;
-  font-size: 30px;
-  color: ${({ theme }) => theme.textColor};
+  font-weight: bold;
+  font-size: 36px;
+  letter-spacing: 1.8px;
+  color: ${({ theme }) => theme.accentColor};
   margin: 0;
-  padding-bottom: 10px;
-  border-bottom: 2px solid ${({ theme }) => theme.accentColor};
-  width: fit-content;
+  margin-bottom: 80px;
+  text-align: center;
 `;
 
 const SectionTitle = (props) => {
