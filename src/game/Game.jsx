@@ -532,11 +532,11 @@ class Game extends Component {
       sandTrickleMask.y = maskY;
     };
 
-    // Ship move buttons
+    // Ship move buttons/sprites
     this.addShipHandTurnButtonsSprites(resources, movesBody);
-
+    // Ship gun sprites
     this._addShiphandGuns(true, resources);
-
+    // Ship status display (bilge/damage)
     this.createStatsDisplay(resources);
 
     movesBody.addSprite(shiphandSprite, 55, -1);
@@ -600,6 +600,7 @@ class Game extends Component {
   }
 
   createStatsDisplay(resources) {
+    // ------------------ Damage ---------------------
     const damageSprite = new PIXI.Sprite(
       new PIXI.Texture(resources["damageStatus"].texture)
     );
@@ -626,6 +627,34 @@ class Game extends Component {
     this.setCenterAnchor(damageSprite);
     this.movesBody.addSprite(damageSprite, 122, -50);
     this.stage.addChild(damageSprite);
+
+    // ------------------- Bilge ----------------------
+    const bilgeSprite = new PIXI.Sprite(
+      new PIXI.Texture(resources["bilgeStatus"].texture)
+    );
+    bilgeSprite.zIndex = 59;
+
+    const bilgeMask = new PIXI.Graphics();
+    bilgeMask.beginFill(0xde3249);
+    bilgeMask.arc(0, 0, 19, 0, Math.PI);
+    bilgeMask.endFill();
+    bilgeMask.zIndex = 100;
+    bilgeMask.angle = 90;
+
+    this.stage.addChild(bilgeMask);
+    this.movesBody.addSprite(bilgeMask, 131, -50);
+
+    bilgeSprite.mask = bilgeMask;
+
+    this.setBilgeUIPercent = (percent) => {
+      const angleToSubtract = percent * 180;
+
+      bilgeMask.angle = 90 - angleToSubtract;
+    };
+
+    this.setCenterAnchor(bilgeSprite);
+    this.movesBody.addSprite(bilgeSprite, 139, -50);
+    this.stage.addChild(bilgeSprite);
   }
 
   _createTurnSprite(turnNumber, yOffset, resources, movesBody) {
