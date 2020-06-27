@@ -33,6 +33,7 @@ class SocketController {
       const { bilge, damage } = shipStats;
       // TODO
       console.log(`Ship stats update. Bilge: ${bilge}, damage: ${damage}`);
+      this.game.setDamageUIPercent(damage);
     });
 
     socket.on("clearShips", () => {

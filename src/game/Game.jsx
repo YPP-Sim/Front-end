@@ -390,7 +390,7 @@ class Game extends Component {
     movesBgSprite.zIndex = 51;
     shipStatusBgSprite.zIndex = 52;
 
-    shipStatusBorderSprite.zIndex = 52;
+    shipStatusBorderSprite.zIndex = 65;
     shiphandSprite.zIndex = 52;
     hourglassSprite.zIndex = 53;
     sandTop.zIndex = 54;
@@ -537,6 +537,8 @@ class Game extends Component {
 
     this._addShiphandGuns(true, resources);
 
+    this.createStatsDisplay(resources);
+
     movesBody.addSprite(shiphandSprite, 55, -1);
     movesBody.addSprite(hourglassSprite, 130, 25);
     movesBody.addSprite(sandTop, 130, 3);
@@ -595,6 +597,35 @@ class Game extends Component {
 
     stage.addChild(gunTokenSprite);
     stage.addChild(autoButtonSprite);
+  }
+
+  createStatsDisplay(resources) {
+    const damageSprite = new PIXI.Sprite(
+      new PIXI.Texture(resources["damageStatus"].texture)
+    );
+    damageSprite.zIndex = 59;
+
+    const damageMask = new PIXI.Graphics();
+    damageMask.beginFill(0xde3249);
+    damageMask.arc(0, 0, 19, 0, Math.PI);
+    damageMask.endFill();
+    damageMask.zIndex = 100;
+    damageMask.angle = 270;
+
+    this.stage.addChild(damageMask);
+    this.movesBody.addSprite(damageMask, 130, -50);
+
+    damageSprite.mask = damageMask;
+
+    this.setDamageUIPercent = (percent) => {
+      const angleToAdd = percent * 180;
+
+      damageMask.angle = 270 + angleToAdd;
+    };
+
+    this.setCenterAnchor(damageSprite);
+    this.movesBody.addSprite(damageSprite, 122, -50);
+    this.stage.addChild(damageSprite);
   }
 
   _createTurnSprite(turnNumber, yOffset, resources, movesBody) {
