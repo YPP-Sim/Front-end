@@ -39,6 +39,8 @@ class SocketController {
     socket.on("clearShips", () => {
       this.game.clearShipHand();
       this.game.clearActivityBars();
+      this.game.clearUICannons();
+      this.game.playerMoves.clearCannons();
     });
 
     socket.on("updatePlayerActions", ({ playerName, turnAmount }) => {

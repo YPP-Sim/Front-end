@@ -706,11 +706,15 @@ class Game extends Component {
       filledGunFirstSprite.zIndex = 54;
       filledGunFirstSprite.texture.frame = new PIXI.Rectangle(33, 0, 16, 18);
 
-      let filledGunSecondSprite = new PIXI.Sprite(
-        new PIXI.Texture(resources["cannonSlots"].texture)
-      );
-      filledGunSecondSprite.zIndex = 54;
-      filledGunSecondSprite.texture.frame = new PIXI.Rectangle(33, 0, 16, 18);
+      let filledGunSecondSprite;
+
+      if (dualCannon) {
+        filledGunSecondSprite = new PIXI.Sprite(
+          new PIXI.Texture(resources["cannonSlots"].texture)
+        );
+        filledGunSecondSprite.zIndex = 54;
+        filledGunSecondSprite.texture.frame = new PIXI.Rectangle(33, 0, 16, 18);
+      }
 
       gunSprite.on("pointerdown", () => {
         playerMoves.incrementNumberedTurnGuns(gunTurn, side, (gunData) => {
@@ -752,19 +756,40 @@ class Game extends Component {
       stage.addChild(filledGunSecondSprite);
       stage.addChild(gunSprite);
       stage.addChild(filledGunFirstSprite);
+
+      return () => {
+        filledGunFirstSprite.visible = false;
+        if (dualCannon) {
+          filledGunSecondSprite.visible = false;
+        }
+      };
     }
 
-    createGunSprite(40, -57, 1, "LEFT");
-    createGunSprite(69, -57, 1, "RIGHT");
+    const left1Clear = createGunSprite(40, -57, 1, "LEFT");
+    const right1Clear = createGunSprite(69, -57, 1, "RIGHT");
 
-    createGunSprite(40, -23, 2, "LEFT");
-    createGunSprite(69, -23, 2, "RIGHT");
+    const left2Clear = createGunSprite(40, -23, 2, "LEFT");
+    const right2Clear = createGunSprite(69, -23, 2, "RIGHT");
 
-    createGunSprite(40, 11, 3, "LEFT");
-    createGunSprite(69, 11, 3, "RIGHT");
+    const left3Clear = createGunSprite(40, 11, 3, "LEFT");
+    const right3Clear = createGunSprite(69, 11, 3, "RIGHT");
 
-    createGunSprite(40, 45, 4, "LEFT");
-    createGunSprite(69, 45, 4, "RIGHT");
+    const left4Clear = createGunSprite(40, 45, 4, "LEFT");
+    const right4Clear = createGunSprite(69, 45, 4, "RIGHT");
+
+    this.clearUICannons = () => {
+      left1Clear();
+      right1Clear();
+
+      left2Clear();
+      right2Clear();
+
+      left3Clear();
+      right3Clear();
+
+      left4Clear();
+      right4Clear();
+    };
   }
 
   addShipHandTurnButtonsSprites(resources, movesBody) {

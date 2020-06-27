@@ -1,19 +1,28 @@
 class PlayerMoves {
   constructor(dualCannon) {
-    const initialMoveData = { rightGuns: [], leftGuns: [] };
+    this.initialMoveData = { rightGuns: [], leftGuns: [] };
 
     if (dualCannon) {
-      initialMoveData.rightGuns = [false, false];
-      initialMoveData.leftGuns = [false, false];
+      this.initialMoveData.rightGuns = [false, false];
+      this.initialMoveData.leftGuns = [false, false];
     } else {
-      initialMoveData.rightGuns = [false];
-      initialMoveData.leftGuns = [false];
+      this.initialMoveData.rightGuns = [false];
+      this.initialMoveData.leftGuns = [false];
     }
 
-    this.move1 = JSON.parse(JSON.stringify(initialMoveData));
-    this.move2 = JSON.parse(JSON.stringify(initialMoveData));
-    this.move3 = JSON.parse(JSON.stringify(initialMoveData));
-    this.move4 = JSON.parse(JSON.stringify(initialMoveData));
+    this.dualCannon = dualCannon;
+
+    this.move1 = JSON.parse(JSON.stringify(this.initialMoveData));
+    this.move2 = JSON.parse(JSON.stringify(this.initialMoveData));
+    this.move3 = JSON.parse(JSON.stringify(this.initialMoveData));
+    this.move4 = JSON.parse(JSON.stringify(this.initialMoveData));
+  }
+
+  clearCannons() {
+    this.move1 = this.initialMoveData;
+    this.move2 = this.initialMoveData;
+    this.move3 = this.initialMoveData;
+    this.move4 = this.initialMoveData;
   }
 
   incrementNumberedTurnGuns(numberedTurn, side, onTextureChange) {
