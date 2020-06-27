@@ -5,6 +5,7 @@ import MyTicker from "./MyTicker";
 
 import { calculateGameToSpritePosition } from "./Game";
 import Orientation from "./Orientation";
+import { getMovementAnimData, updateLinearAnimation } from "./util";
 
 // TESTING COMMANDS:
 // addShip -- shipId: art, boardX: 1, boardY: 1, shipType: warFrig, orientation: SOUTH
@@ -28,7 +29,7 @@ class Ship {
     // this.damage = 0;
 
     // Timings -- Try not to touch unless you really understand.
-    this.animationSmoothness = 50; // Bigger is smoother
+    this.animationSmoothness = 100; // Bigger is smoother
     this.animationSpeed = 10; // Lower is faster
     this.textureChangeDelay = 129;
     this.turnThreshold = 0.4;
@@ -52,7 +53,7 @@ class Ship {
       new PIXI.Texture(loader.resources[this.type.textureName].texture)
     );
 
-    shipSprite.zIndex = 2;
+    shipSprite.zIndex = 3;
     const { spaceX, spaceY } = calculateGameToSpritePosition(this.vX, this.vY);
 
     this.setSpritePosition = this.game.mapBody.addSprite(
@@ -200,6 +201,119 @@ class Ship {
     this.faceDirection = orientation;
     this.setTextureFromOrientation(orientation);
   }
+
+  /**
+   *
+   * @param {Array.<boolean>} gunData
+   * @param {string} side
+   */
+  shoot(gunData, side) {
+    const loader = PIXI.Loader.shared;
+    const cannonSprite = new PIXI.Sprite(
+      new PIXI.Texture(loader.resources[this.type.cannonType.texture].texture)
+    );
+    cannonSprite.zIndex = 1000;
+    let startingX = this.vX;
+    let startingY = this.vY;
+
+    const targetX = startingX + 3;
+    const targetY = startingY;
+
+    const { spaceX, spaceY } = calculateGameToSpritePosition(this.vX, this.vY);
+    const finalSpritePosition = calculateGameToSpritePosition(targetX, targetY);
+    const setCannonPosition = this.game.mapBody.addSprite(
+      cannonSprite,
+      spaceX,
+      spaceY
+    );
+    this.game.stage.addChild(cannonSprite);
+
+    // Sprite movement
+    const dX = targetX - startingX;
+    const dY = targetY - startingY;
+    let incrementX = 0;
+    let incrementY = 0;
+    const incrementValue = 0.02;
+
+    if (dX === 0) incrementX = 0;
+    else incrementX = dX > 0 ? incrementValue : -incrementValue;
+
+    if (dY === 0) incrementY = 0;
+    else incrementY = dY > 0 ? incrementValue : -incrementValue;
+
+    const shotTicker = new PIXI.Ticker();
+    // shotTicker.add(() => {
+    //   startingX += incrementX;
+    //   startingY += incrementY;
+    //   const spriteLocation = calculateGameToSpritePosition(
+    //     startingX,
+    //     startingY
+    //   );
+
+    //   setCannonPosition(spriteLocation.spaceX, spriteLocation.spaceY);
+    // });
+
+    const linearAnimationContext = {
+      object: cannonSprite, // replace with actual PIXI DisplayObject
+      initialPosition: { x: startingX, y: startingY },
+      finalPosition: { x: targetX, y: targetY },
+      totalTime: 100, // in ms
+      lastElapsedTime: 0, // in ms
+      ticker: shotTicker,
+      setPosition: (newX, newY) => {
+        const newCannonSpritePosition = calculateGameToSpritePosition(
+          newX,
+          newY
+        );
+        console.log("New : ", newX, newY);
+        setCannonPosition(
+          newCannonSpritePosition.spaceX,
+          newCannonSpritePosition.spaceY
+        );
+      },
+    };
+    shotTicker.add(updateLinearAnimation, linearAnimationContext);
+    shotTicker.start();
+  }
+
+  _moveSpriteLinear(
+    sprite,
+    currentX,
+    currentY,
+    targetX,
+    targetY,
+    setPosition,
+    setAbsolutePosition
+  ) {
+    let { incrementX, incrementY, xComplete, yComplete } = getMovementAnimData(
+      currentX,
+      currentY,
+      targetX,
+      targetY,
+      this.animationSmoothness
+    );
+
+    const animationTicker = new PIXI.Ticker();
+    animationTicker.add((deltaTime) => {
+      currentX += incrementX;
+      currentY += incrementY;
+      const { spaceX, spaceY } = calculateGameToSpritePosition(
+        currentX,
+        currentY
+      );
+      if (setPosition) setPosition(spaceX, spaceY);
+      xComplete -= Math.abs(incrementX);
+      yComplete -= Math.abs(incrementY);
+
+      if (xComplete <= 0 && yComplete <= 0) {
+        if (setAbsolutePosition) setAbsolutePosition(targetX, targetY);
+        animationTicker.stop();
+      }
+    }, {});
+
+    animationTicker.start();
+  }
+
   /**
    *
    * @param {string} direction
@@ -242,12 +356,13 @@ class Ship {
         break;
     }
 
-    let {
-      incrementX,
-      incrementY,
-      xComplete,
-      yComplete,
-    } = this._getMovementAnimData(targetX, targetY);
+    let { incrementX, incrementY, xComplete, yComplete } = getMovementAnimData(
+      this.x,
+      this.y,
+      targetX,
+      targetY,
+      this.animationSmoothness
+    );
 
     const animationTicker = new PIXI.Ticker();
     animationTicker.add((deltaTime) => {
@@ -339,26 +454,11 @@ class Ship {
     }, this.textureChangeDelay);
   }
 
-  _getMovementAnimData(targetX, targetY) {
-    let dX = targetX - this.x;
-    let dY = targetY - this.y;
-
-    const incrementX = dX / this.animationSmoothness;
-    const incrementY = dY / this.animationSmoothness;
-
-    let xComplete = Math.abs(dX);
-    let yComplete = Math.abs(dY);
-
-    return { incrementX, incrementY, xComplete, yComplete };
-  }
-
   _startMovementAnim(xFirst, yFirst, targetX, targetY) {
-    let {
-      incrementX,
-      incrementY,
-      xComplete,
-      yComplete,
-    } = this._getMovementAnimData(targetX, targetY);
+    let { incrementX, incrementY, xComplete, yComplete } = getMovementAnimData(
+      targetX,
+      targetY
+    );
 
     this.activeTicker = new MyTicker();
 
@@ -393,30 +493,6 @@ class Ship {
     }, movementContext);
 
     animationTicker.start();
-
-    // this.activeTicker.add(() => {
-    //   let toX = this.x;
-    //   let toY = this.y;
-
-    //   if ((xFirst || yComplete <= this.turnThreshold) && xComplete > 0) {
-    //     toX += incrementX;
-    //     xComplete -= Math.abs(incrementX);
-    //   }
-
-    //   if ((yFirst || xComplete <= this.turnThreshold) && yComplete > 0) {
-    //     toY += incrementY;
-    //     yComplete -= Math.abs(incrementY);
-    //   }
-
-    //   this.setGamePosition(toX, toY);
-
-    //   if (xComplete <= 0 && yComplete <= 0) {
-    //     this.movementTicker.postMessage(["stop"]);
-    //     this.setPosition(targetX, targetY);
-    //   }
-    // });
-
-    // this.movementTicker.postMessage(["start", this.animationSpeed]);
   }
 
   moveLeft() {

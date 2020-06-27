@@ -14,6 +14,7 @@ class SocketController {
   registerEvents() {
     const socket = this.socket;
     socket.on("gameTurn", async (turnData) => {
+      console.log("Turn data:", turnData);
       socket.emit("requestShipStats", {
         playerName: this.game.gameData.thisPlayer.playerName,
         gameId: this.game.gameId,
@@ -31,20 +32,18 @@ class SocketController {
 
     socket.on("updateShipStats", (shipStats) => {
       const { bilge, damage } = shipStats;
-      // TODO
-      console.log(`Ship stats update. Bilge: ${bilge}, damage: ${damage}`);
       this.game.setDamageUIPercent(damage);
+      this.game.setBilgeUIPercent(bilge);
     });
 
     socket.on("clearShips", () => {
       this.game.clearShipHand();
       this.game.clearActivityBars();
-      this.game.clearUICannons();
-      this.game.playerMoves.clearCannons();
+      if (this.game.clearUICannons) this.game.clearUICannons();
+      if (this.game.playerMoves) this.game.playerMoves.clearCannons();
     });
 
     socket.on("updatePlayerActions", ({ playerName, turnAmount }) => {
-      console.log("Update pmoves?");
       const ship = this.game.getShip(playerName);
       if (!ship) {
         console.error(

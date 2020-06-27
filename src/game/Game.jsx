@@ -142,28 +142,9 @@ class Game extends Component {
   };
 
   initPlayerShips() {
-    // const shh = this.addShip("Artysh", "WAR_FRIG", 1, 1, Orientation.SOUTH);
+    const shh = this.addShip("Artysh", "WAR_FRIG", 1, 1, Orientation.SOUTH);
 
-    // const moveData = {
-    //   turn_1: [{ playerName: "Artysh", direction: "FORWARD" }],
-    //   turn_1_shots: [
-    //     {
-    //       playerName: "Artysh",
-    //       leftGuns: [true, true],
-    //       rightGuns: [true, false],
-    //     },
-    //   ],
-    //   turn_2: [{ playerName: "Artysh", direction: "LEFT" }],
-    //   turn_2_shots: [],
-    //   turn_3: [{ playerName: "Artysh", direction: "FORWARD" }],
-    //   turn_3_shots: [],
-    //   turn_4: [{ playerName: "Artysh", direction: "RIGHT" }],
-    //   turn_4_shots: [],
-    // };
-
-    // this.executeGameTurns(moveData).then(() => {
-    //   console.log("Finished stuff");
-    // });
+    shh.shoot([true], "left");
 
     for (let player of this.gameData.attackers) {
       const { playerName, shipData } = player;
