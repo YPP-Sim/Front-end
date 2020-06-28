@@ -33,6 +33,11 @@ import explodeBig from "../assets/effects/explode_big.png";
 import explodeMed from "../assets/effects/explode_med.png";
 import explodeSmall from "../assets/effects/explode_sm.png";
 
+import hit from "../assets/effects/hit.png";
+
+import splashBig from "../assets/effects/splash_big.png";
+import splashSmall from "../assets/effects/splash_sm.png";
+
 // Sea/Map
 import cell from "../assets/sea/cell.png";
 import ocean from "../assets/sea/ocean.png";
@@ -47,6 +52,18 @@ import wind from "../assets/sea/wind.png";
 import wfShip from "../assets/vessel/wf/spritesheet.png";
 
 const resourcePairs = [
+  {
+    name: "splashSmall",
+    image: splashSmall,
+  },
+  {
+    name: "splashBig",
+    image: splashBig,
+  },
+  {
+    name: "hit",
+    image: hit,
+  },
   {
     name: "explodeBig",
     image: explodeBig,

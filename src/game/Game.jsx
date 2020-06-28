@@ -144,9 +144,9 @@ class Game extends Component {
   initPlayerShips() {
     const shh = this.addShip("Artysh", "WAR_FRIG", 1, 1, Orientation.SOUTH);
 
-    shh.shoot([true], "left", 3);
+    shh.shoot([true, true], "left", 3, false);
 
-    shh.shoot([true], "right", 2);
+    shh.shoot([true], "right", 2, true);
     for (let player of this.gameData.attackers) {
       const { playerName, shipData } = player;
       if (!shipData) continue;
@@ -869,8 +869,19 @@ class Game extends Component {
         console.log("Shooting turn...");
 
         for (let shotData of turnShots) {
-          const { playerName, leftGuns, rightGuns } = shotData;
+          const {
+            playerName,
+            leftGuns,
+            rightGuns,
+            rightGunEnd,
+            leftGunEnd,
+          } = shotData;
           // Do gun shooting animation;
+          if (leftGuns[0])
+            this.getShip(playerName).shoot(leftGuns, "left", rightGunEnd, true);
+
+          if (rightGuns[0])
+            this.getShip(playerName).shoot(leftGuns, "right", leftGunEnd, true);
         }
         await sleep(1000);
       }

@@ -40,6 +40,28 @@ export function updateLinearAnimation(deltaTime) {
   this.lastElapsedTime = elapsedTime;
 }
 
+export function updateTextureAnimation(deltaTime) {
+  const elapsedTime = this.lastElapsedTime + deltaTime;
+  this.textureChangeElapsed += deltaTime;
+  if (elapsedTime > this.time) {
+    this.ticker.stop();
+    this.remove();
+    return;
+  }
+
+  if (this.textureChangeElapsed >= this.speed) {
+    if (this.frame.x >= this.totalWidth) {
+      this.remove();
+      this.ticker.stop();
+      return;
+    } else this.frame.x += 40;
+
+    this.sprite.texture.frame = this.frame;
+    this.textureChangeElapsed = 0;
+  }
+  this.lastElapsedTime = elapsedTime;
+}
+
 export function getSideVelocity(orientation, side) {
   if (side !== "left" && side !== "right") return { x: 0, y: 0 };
 

@@ -9,6 +9,7 @@ import {
   getMovementAnimData,
   updateLinearAnimation,
   getSideVelocity,
+  updateTextureAnimation,
 } from "./util";
 
 // TESTING COMMANDS:
@@ -226,8 +227,7 @@ class Ship {
       loader.resources[this.type.cannonType.texture].texture
     );
 
-    for (let gun of gunData) {
-      if (!gun) continue;
+    const perCannonShoot = () => {
       const cannonSprite = new PIXI.Sprite(gunTexture);
       cannonSprite.anchor.x = 0.5;
       cannonSprite.anchor.y = 0.5;
@@ -253,6 +253,8 @@ class Ship {
           console.log("Animation completed");
           this.game.stage.removeChild(cannonSprite);
           cannonBody.removeSprite();
+          if (hit) this._playHitEffect(targetX, targetY);
+          else this._playMissEffect(targetX, targetY);
         },
         setPosition: (incrementX, incrementY) => {
           const newCannonSpritePosition = calculateGameToSpritePosition(
@@ -267,14 +269,99 @@ class Ship {
       };
       shotTicker.add(updateLinearAnimation, linearAnimationContext);
       shotTicker.start();
+    };
+
+    if (gunData[0]) {
+      perCannonShoot();
+      if (gunData[1]) {
+        // TODO maybe don't use setTimeout, change in future?
+        setTimeout(perCannonShoot, 200);
+      }
     }
+  }
+
+  _playHitEffect(boardX, boardY) {
+    const hitTexture = PIXI.Loader.shared.resources["hit"].texture;
+    const hitSprite = new PIXI.Sprite(new PIXI.Texture(hitTexture));
+    hitSprite.zIndex = 30;
+    hitSprite.anchor.x = 0.5;
+    hitSprite.anchor.y = 0.5;
+    const frame = new PIXI.Rectangle(0, 0, 40, 30);
+    hitSprite.texture.frame = frame;
+
+    this.game.stage.addChild(hitSprite);
+    const { spaceX, spaceY } = calculateGameToSpritePosition(boardX, boardY);
+
+    const { removeSprite } = this.game.mapBody.addSprite(
+      hitSprite,
+      spaceX,
+      spaceY
+    );
+    const ticker = new PIXI.Ticker();
+
+    const context = {
+      textureChangeElapsed: 0,
+      lastElapsedTime: 0,
+      time: 130,
+      speed: 4,
+      ticker,
+      totalWidth: 600 - 40,
+      remove: () => {
+        removeSprite();
+        this.game.stage.removeChild(hitSprite);
+      },
+      frame,
+      sprite: hitSprite,
+    };
+
+    ticker.add(updateTextureAnimation, context);
+    ticker.start();
+  }
+
+  _playMissEffect(boardX, boardY) {
+    const missTexture =
+      PIXI.Loader.shared.resources[this.type.cannonType.missTexture].texture;
+    const missSprite = new PIXI.Sprite(new PIXI.Texture(missTexture));
+    missSprite.zIndex = 30;
+    missSprite.anchor.x = 0.5;
+    missSprite.anchor.y = 0.5;
+    const frame = new PIXI.Rectangle(0, 0, 40, 30);
+    missSprite.texture.frame = frame;
+
+    this.game.stage.addChild(missSprite);
+    const { spaceX, spaceY } = calculateGameToSpritePosition(boardX, boardY);
+
+    const { removeSprite } = this.game.mapBody.addSprite(
+      missSprite,
+      spaceX,
+      spaceY
+    );
+    const ticker = new PIXI.Ticker();
+
+    const context = {
+      textureChangeElapsed: 0,
+      lastElapsedTime: 0,
+      time: 130,
+      totalWidth: this.type.cannonType.missTextureWidth - 40,
+      speed: 4,
+      ticker,
+      remove: () => {
+        removeSprite();
+        this.game.stage.removeChild(missSprite);
+      },
+      frame,
+      sprite: missSprite,
+    };
+
+    ticker.add(updateTextureAnimation, context);
+    ticker.start();
   }
 
   _playShootEffect(cannonType) {
     const expTexture =
       PIXI.Loader.shared.resources[cannonType.explosionTexture].texture;
     const explosionSprite = new PIXI.Sprite(new PIXI.Texture(expTexture));
-    explosionSprite.zIndex = 100;
+    explosionSprite.zIndex = 30;
     explosionSprite.anchor.x = 0.5;
     explosionSprite.anchor.y = 0.5;
     const frame = new PIXI.Rectangle(0, 0, 40, 30);
@@ -291,37 +378,21 @@ class Ship {
     const ticker = new PIXI.Ticker();
 
     const context = {
-      lastElapsedTime: 0,
-      speed: 3,
       textureChangeElapsed: 0,
+      lastElapsedTime: 0,
       time: 85,
-    };
-
-    ticker.add((deltaTime) => {
-      const elapsedTime = context.lastElapsedTime + deltaTime;
-      context.textureChangeElapsed += deltaTime;
-
-      if (elapsedTime > context.time) {
-        ticker.stop();
+      totalWidth: this.type.cannonType.explosionTextureWidth - 40,
+      speed: 3,
+      ticker,
+      remove: () => {
         removeSprite();
         this.game.stage.removeChild(explosionSprite);
-        return;
-      }
+      },
+      frame,
+      sprite: explosionSprite,
+    };
 
-      if (context.textureChangeElapsed >= context.speed) {
-        if (frame.x >= cannonType.explosionTextureWidth - 40) {
-          removeSprite();
-          this.game.stage.removeChild(explosionSprite);
-          ticker.stop();
-          return;
-        } else frame.x += 40;
-
-        explosionSprite.texture.frame = frame;
-        context.textureChangeElapsed = 0;
-      }
-      context.lastElapsedTime = elapsedTime;
-    });
-
+    ticker.add(updateTextureAnimation, context);
     ticker.start();
   }
 
