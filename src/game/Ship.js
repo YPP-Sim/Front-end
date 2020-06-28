@@ -31,7 +31,7 @@ class Ship {
     this.vY = 0;
 
     // Timings -- Try not to touch unless you really understand.
-    this.animationSmoothness = 100; // Bigger is smoother
+    this.animationSmoothness = 30; // Bigger is smoother
     this.animationSpeed = 10; // Lower is faster
     this.textureChangeDelay = 129;
     this.turnThreshold = 0.4;
@@ -438,26 +438,21 @@ class Ship {
         break;
     }
 
-    let { incrementX, incrementY, xComplete, yComplete } = getMovementAnimData(
-      this.x,
-      this.y,
-      targetX,
-      targetY,
-      this.animationSmoothness
-    );
-
     const animationTicker = new PIXI.Ticker();
-    animationTicker.add((deltaTime) => {
-      this.setGamePosition(this.x + incrementX, this.y + incrementY);
-      xComplete -= Math.abs(incrementX);
-      yComplete -= Math.abs(incrementY);
-
-      if (xComplete <= 0 && yComplete <= 0) {
+    const context = {
+      ticker: animationTicker,
+      lastElapsedTime: 0,
+      totalTime: 35,
+      initialPosition: { x: this.x, y: this.y },
+      finalPosition: { x: targetX, y: targetY },
+      setPosition: (incrementX, incrementY) => {
+        this.setGamePosition(this.x + incrementX, this.y + incrementY);
+      },
+      onComplete: () => {
         this.setPosition(targetX, targetY);
-        animationTicker.stop();
-      }
-    }, {});
-
+      },
+    };
+    animationTicker.add(updateLinearAnimation, context);
     animationTicker.start();
   }
 
@@ -481,14 +476,12 @@ class Ship {
         targetY = this.vY - 1;
         yFirst = true;
         toOrientation = orientation.EAST;
-
         break;
       case orientation.WEST:
         targetX = this.vX - 1;
         targetY = this.vY - 1;
         xFirst = true;
         toOrientation = orientation.NORTH;
-
         break;
       case orientation.EAST:
         targetX = this.vX + 1;
@@ -538,32 +531,28 @@ class Ship {
 
   _startMovementAnim(xFirst, yFirst, targetX, targetY) {
     let { incrementX, incrementY, xComplete, yComplete } = getMovementAnimData(
+      this.x,
+      this.y,
       targetX,
-      targetY
+      targetY,
+      this.animationSmoothness
     );
 
-    this.activeTicker = new MyTicker();
-
     const animationTicker = new PIXI.Ticker();
-    const movementContext = {
-      object: this.sprite,
-      initialPosition: {},
-      finalPosition: {},
-      totalTime: 2000,
-      lastElapsedTime: 0,
-    };
     animationTicker.add((deltaTime) => {
       let toX = this.x;
       let toY = this.y;
 
       if ((xFirst || yComplete <= this.turnThreshold) && xComplete > 0) {
-        toX += incrementX;
-        xComplete -= Math.abs(incrementX);
+        const toIncrementX = incrementX * deltaTime;
+        toX += toIncrementX;
+        xComplete -= Math.abs(toIncrementX);
       }
 
       if ((yFirst || xComplete <= this.turnThreshold) && yComplete > 0) {
-        toY += incrementY;
-        yComplete -= Math.abs(incrementY);
+        const toIncrementY = incrementY * deltaTime;
+        toY += toIncrementY;
+        yComplete -= Math.abs(toIncrementY);
       }
 
       this.setGamePosition(toX, toY);
@@ -572,7 +561,7 @@ class Ship {
         animationTicker.stop();
         this.setPosition(targetX, targetY);
       }
-    }, movementContext);
+    });
 
     animationTicker.start();
   }
@@ -597,14 +586,12 @@ class Ship {
         targetY = this.vY - 1;
         yFirst = true;
         toOrientation = orientation.WEST;
-
         break;
       case orientation.WEST:
         targetX = this.vX - 1;
         targetY = this.vY + 1;
         xFirst = true;
         toOrientation = orientation.SOUTH;
-
         break;
       case orientation.EAST:
         targetX = this.vX + 1;

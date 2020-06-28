@@ -22,8 +22,8 @@ export function getMovementAnimData(
 export function updateLinearAnimation(deltaTime) {
   const elapsedTime = this.lastElapsedTime + deltaTime;
   if (elapsedTime >= this.totalTime) {
-    this.onComplete();
-    this.ticker.stop();
+    if (this.onComplete) this.onComplete();
+    if (!this.dontStop) this.ticker.stop();
   }
   const { x: initialX, y: initialY } = this.initialPosition;
 

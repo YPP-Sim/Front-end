@@ -143,10 +143,9 @@ class Game extends Component {
 
   initPlayerShips() {
     const shh = this.addShip("Artysh", "WAR_FRIG", 1, 1, Orientation.SOUTH);
-
-    shh.shoot([true, true], "left", 3, false);
-
-    shh.shoot([true], "right", 2, true);
+    shh.moveLeft();
+    // shh.shoot([true, true], "left", 3, false);
+    // shh.shoot([true], "right", 2, true);
     for (let player of this.gameData.attackers) {
       const { playerName, shipData } = player;
       if (!shipData) continue;
@@ -342,7 +341,6 @@ class Game extends Component {
     sandTrickle.zIndex = 55;
 
     const sandTrickleTicker = new PIXI.Ticker();
-    sandTrickleTicker.speed = 1;
 
     let targetTimeDelay = 70;
     let totalTimePassed = 0;
@@ -863,11 +861,9 @@ class Game extends Component {
 
         ship.move(direction);
       }
-      if (turnMovements.length > 0) await sleep(1000);
+      if (turnMovements.length > 0) await sleep(1400);
 
       if (turnShots.length > 0) {
-        console.log("Shooting turn...");
-
         for (let shotData of turnShots) {
           const {
             playerName,
@@ -875,15 +871,27 @@ class Game extends Component {
             rightGuns,
             rightGunEnd,
             leftGunEnd,
+            leftHit,
+            rightHit,
           } = shotData;
           // Do gun shooting animation;
           if (leftGuns[0])
-            this.getShip(playerName).shoot(leftGuns, "left", rightGunEnd, true);
+            this.getShip(playerName).shoot(
+              leftGuns,
+              "left",
+              leftGunEnd,
+              leftHit
+            );
 
           if (rightGuns[0])
-            this.getShip(playerName).shoot(leftGuns, "right", leftGunEnd, true);
+            this.getShip(playerName).shoot(
+              rightGuns,
+              "right",
+              rightGunEnd,
+              rightHit
+            );
         }
-        await sleep(1000);
+        await sleep(1200);
       }
 
       await this._executeMoves(++numberedTurn, playerMovements);
