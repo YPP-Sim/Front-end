@@ -47,7 +47,22 @@ class SpriteBody {
       spriteObj.yOffset = offsetY;
     };
 
-    return setSpriteOffset;
+    const incrementSpriteOffset = (incrementX, incrementY) => {
+      const spriteObj = this.children[index];
+      if (!spriteObj) return;
+      spriteObj.xOffset += incrementX;
+      spriteObj.yOffset += incrementY;
+
+      sprite.x = this.x + spriteObj.xOffset;
+      sprite.y = this.y + spriteObj.yOffset;
+    };
+
+    const removeSprite = () => {
+      const spriteObj = this.children[index];
+      this.children.splice(index, 1);
+    };
+
+    return { setSpriteOffset, incrementSpriteOffset, removeSprite };
   }
 
   setPosition(x, y) {

@@ -5,7 +5,11 @@ import MyTicker from "./MyTicker";
 
 import { calculateGameToSpritePosition } from "./Game";
 import Orientation from "./Orientation";
-import { getMovementAnimData, updateLinearAnimation } from "./util";
+import {
+  getMovementAnimData,
+  updateLinearAnimation,
+  getSideVelocity,
+} from "./util";
 
 // TESTING COMMANDS:
 // addShip -- shipId: art, boardX: 1, boardY: 1, shipType: warFrig, orientation: SOUTH
@@ -25,14 +29,12 @@ class Ship {
     this.vX = 0;
     this.vY = 0;
 
-    // this.bilge = 0;
-    // this.damage = 0;
-
     // Timings -- Try not to touch unless you really understand.
     this.animationSmoothness = 100; // Bigger is smoother
     this.animationSpeed = 10; // Lower is faster
     this.textureChangeDelay = 129;
     this.turnThreshold = 0.4;
+    this.cannonMoveSpeed = 16; // Lower is faster, higher is slower
 
     //
     this.movementTicker = new WebTicker();
@@ -56,12 +58,8 @@ class Ship {
     shipSprite.zIndex = 3;
     const { spaceX, spaceY } = calculateGameToSpritePosition(this.vX, this.vY);
 
-    this.setSpritePosition = this.game.mapBody.addSprite(
-      shipSprite,
-      spaceX,
-      spaceY
-    );
-
+    const shipBody = this.game.mapBody.addSprite(shipSprite, spaceX, spaceY);
+    this.setSpritePosition = shipBody.setSpriteOffset;
     // Movement bar
     const shipMoveBar = new PIXI.Graphics();
     shipMoveBar.lineStyle(1, 0x000000);
@@ -74,11 +72,12 @@ class Ship {
     shipMoveBar.pivot.y = this.barHeight / 2;
     shipMoveBar.zIndex = 4;
 
-    this.setSpriteBarPosition = this.game.mapBody.addSprite(
+    const spriteBarBody = this.game.mapBody.addSprite(
       shipMoveBar,
       spaceX,
       spaceY - 20
     );
+    this.setSpriteBarPosition = spriteBarBody.setSpriteOffset;
 
     // filled movement bar
     const shipFillBar = new PIXI.Graphics();
@@ -89,11 +88,12 @@ class Ship {
     shipFillBar.zIndex = 5;
     shipFillBar.endFill();
 
-    this.setFillBarPosition = this.game.mapBody.addSprite(
+    const fillBarBody = this.game.mapBody.addSprite(
       shipFillBar,
       spaceX,
       spaceY - 20
     );
+    this.setFillBarPosition = fillBarBody.setSpriteOffset;
 
     this.setBarMovements = (moves) => {
       shipFillBar.clear();
@@ -140,11 +140,13 @@ class Ship {
     shipNameText.zIndex = 4;
     shipNameText.anchor.x = 0.5;
     shipNameText.anchor.y = 0.5;
-    this.setNamePosition = this.game.mapBody.addSprite(
+    const nameBody = this.game.mapBody.addSprite(
       shipNameText,
       spaceX + 64,
       spaceY - 67
     );
+    this.setNamePosition = nameBody.setSpriteOffset;
+
     this.sprite = shipSprite;
     this.game.stage.addChild(shipNameText);
     this.game.stage.addChild(shipMoveBar);
@@ -207,111 +209,64 @@ class Ship {
    * @param {Array.<boolean>} gunData
    * @param {string} side
    */
-  shoot(gunData, side) {
+  shoot(gunData, side, gunEnd, hit) {
     const loader = PIXI.Loader.shared;
-    const cannonSprite = new PIXI.Sprite(
-      new PIXI.Texture(loader.resources[this.type.cannonType.texture].texture)
-    );
-    cannonSprite.zIndex = 1000;
     let startingX = this.vX;
     let startingY = this.vY;
-
-    const targetX = startingX + 3;
-    const targetY = startingY;
-
-    const { spaceX, spaceY } = calculateGameToSpritePosition(this.vX, this.vY);
-    const finalSpritePosition = calculateGameToSpritePosition(targetX, targetY);
-    const setCannonPosition = this.game.mapBody.addSprite(
-      cannonSprite,
-      spaceX,
-      spaceY
-    );
-    this.game.stage.addChild(cannonSprite);
-
-    // Sprite movement
-    const dX = targetX - startingX;
-    const dY = targetY - startingY;
-    let incrementX = 0;
-    let incrementY = 0;
-    const incrementValue = 0.02;
-
-    if (dX === 0) incrementX = 0;
-    else incrementX = dX > 0 ? incrementValue : -incrementValue;
-
-    if (dY === 0) incrementY = 0;
-    else incrementY = dY > 0 ? incrementValue : -incrementValue;
-
-    const shotTicker = new PIXI.Ticker();
-    // shotTicker.add(() => {
-    //   startingX += incrementX;
-    //   startingY += incrementY;
-    //   const spriteLocation = calculateGameToSpritePosition(
-    //     startingX,
-    //     startingY
-    //   );
-
-    //   setCannonPosition(spriteLocation.spaceX, spriteLocation.spaceY);
-    // });
-
-    const linearAnimationContext = {
-      object: cannonSprite, // replace with actual PIXI DisplayObject
-      initialPosition: { x: startingX, y: startingY },
-      finalPosition: { x: targetX, y: targetY },
-      totalTime: 100, // in ms
-      lastElapsedTime: 0, // in ms
-      ticker: shotTicker,
-      setPosition: (newX, newY) => {
-        const newCannonSpritePosition = calculateGameToSpritePosition(
-          newX,
-          newY
-        );
-        console.log("New : ", newX, newY);
-        setCannonPosition(
-          newCannonSpritePosition.spaceX,
-          newCannonSpritePosition.spaceY
-        );
-      },
-    };
-    shotTicker.add(updateLinearAnimation, linearAnimationContext);
-    shotTicker.start();
-  }
-
-  _moveSpriteLinear(
-    sprite,
-    currentX,
-    currentY,
-    targetX,
-    targetY,
-    setPosition,
-    setAbsolutePosition
-  ) {
-    let { incrementX, incrementY, xComplete, yComplete } = getMovementAnimData(
-      currentX,
-      currentY,
-      targetX,
-      targetY,
-      this.animationSmoothness
+    const targetVelocity = getSideVelocity(this.faceDirection, side);
+    const targetX = startingX + gunEnd * targetVelocity.x;
+    const targetY = startingY + gunEnd * targetVelocity.y;
+    const startingSpritePosition = calculateGameToSpritePosition(
+      startingX,
+      startingY
     );
 
-    const animationTicker = new PIXI.Ticker();
-    animationTicker.add((deltaTime) => {
-      currentX += incrementX;
-      currentY += incrementY;
-      const { spaceX, spaceY } = calculateGameToSpritePosition(
-        currentX,
-        currentY
+    const gunTexture = new PIXI.Texture(
+      loader.resources[this.type.cannonType.texture].texture
+    );
+
+    for (let gun of gunData) {
+      if (!gun) continue;
+      const cannonSprite = new PIXI.Sprite(gunTexture);
+      cannonSprite.anchor.x = 0.5;
+      cannonSprite.anchor.y = 0.5;
+      cannonSprite.zIndex = 2;
+
+      const cannonBody = this.game.mapBody.addSprite(
+        cannonSprite,
+        startingSpritePosition.spaceX,
+        startingSpritePosition.spaceY
       );
-      if (setPosition) setPosition(spaceX, spaceY);
-      xComplete -= Math.abs(incrementX);
-      yComplete -= Math.abs(incrementY);
+      const incrementCannonPosition = cannonBody.incrementSpriteOffset;
 
-      if (xComplete <= 0 && yComplete <= 0) {
-        if (setAbsolutePosition) setAbsolutePosition(targetX, targetY);
-        animationTicker.stop();
-      }
-    }, {});
+      this.game.stage.addChild(cannonSprite);
 
-    animationTicker.start();
+      const shotTicker = new PIXI.Ticker();
+      const linearAnimationContext = {
+        initialPosition: { x: startingX, y: startingY },
+        finalPosition: { x: targetX, y: targetY },
+        totalTime: this.cannonMoveSpeed * gunEnd,
+        lastElapsedTime: 0, // Init to 0
+        ticker: shotTicker,
+        onComplete: () => {
+          console.log("Animation completed");
+          this.game.stage.removeChild(cannonSprite);
+          cannonBody.removeSprite();
+        },
+        setPosition: (incrementX, incrementY) => {
+          const newCannonSpritePosition = calculateGameToSpritePosition(
+            incrementX,
+            incrementY
+          );
+          incrementCannonPosition(
+            newCannonSpritePosition.spaceX,
+            newCannonSpritePosition.spaceY
+          );
+        },
+      };
+      shotTicker.add(updateLinearAnimation, linearAnimationContext);
+      shotTicker.start();
+    }
   }
 
   /**
