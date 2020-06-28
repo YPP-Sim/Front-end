@@ -29,6 +29,10 @@ import cbSmall from "../assets/projectile/cannonball_small.png";
 import cbMedium from "../assets/projectile/cannonball.png";
 import cbLarge from "../assets/projectile/cannonball_large.png";
 
+import explodeBig from "../assets/effects/explode_big.png";
+import explodeMed from "../assets/effects/explode_med.png";
+import explodeSmall from "../assets/effects/explode_sm.png";
+
 // Sea/Map
 import cell from "../assets/sea/cell.png";
 import ocean from "../assets/sea/ocean.png";
@@ -43,6 +47,18 @@ import wind from "../assets/sea/wind.png";
 import wfShip from "../assets/vessel/wf/spritesheet.png";
 
 const resourcePairs = [
+  {
+    name: "explodeBig",
+    image: explodeBig,
+  },
+  {
+    name: "explodeMedium",
+    image: explodeMed,
+  },
+  {
+    name: "explodeSmall",
+    image: explodeSmall,
+  },
   {
     name: "movesShiphand",
     image: shiphandMoves,
