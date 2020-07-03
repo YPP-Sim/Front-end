@@ -143,7 +143,7 @@ class Game extends Component {
 
   initPlayerShips() {
     const shh = this.addShip("Artysh", "WAR_FRIG", 1, 1, Orientation.SOUTH);
-    shh.moveForward(true);
+    shh.moveLeft(false, true);
     // shh.shoot([true, true], "left", 3, false);
     // shh.shoot([true], "right", 2, true);
     for (let player of this.gameData.attackers) {

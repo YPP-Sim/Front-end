@@ -33,7 +33,7 @@ class Ship {
     // Timings -- Try not to touch unless you really understand.
     this.animationSmoothness = 30; // Bigger is smoother
     this.animationSpeed = 10; // Lower is faster
-    this.textureChangeDelay = 129;
+    this.textureChangeDelay = 110;
     this.turnThreshold = 0.4;
     this.cannonMoveSpeed = 16; // Lower is faster, higher is slower
 
@@ -451,8 +451,6 @@ class Ship {
         break;
     }
 
-    const reverseTicker = new PIXI.Ticker();
-
     const animationTicker = new PIXI.Ticker();
     const context = {
       ticker: animationTicker,
@@ -467,6 +465,8 @@ class Ship {
         this.setPosition(targetX, targetY);
 
         if (cancelled) {
+          const reverseTicker = new PIXI.Ticker();
+
           const reverseContext = {
             ticker: reverseTicker,
             lastElapsedTime: 0,
@@ -491,7 +491,7 @@ class Ship {
     animationTicker.start();
   }
 
-  moveRight() {
+  moveRight(cancelledMovement, cancelledTurnal) {
     let targetX = 0;
     let targetY = 0;
     let toOrientation = orientation.NORTH;
@@ -499,28 +499,30 @@ class Ship {
     let xFirst = false;
     let yFirst = false;
 
+    const turnalDistance = cancelledTurnal ? 0 : 1;
+
     switch (this.faceDirection) {
       case orientation.SOUTH:
-        targetX = this.vX - 1;
+        targetX = this.vX - turnalDistance;
         targetY = this.vY + 1;
         yFirst = true;
         toOrientation = orientation.WEST;
         break;
       case orientation.NORTH:
-        targetX = this.vX + 1;
+        targetX = this.vX + turnalDistance;
         targetY = this.vY - 1;
         yFirst = true;
         toOrientation = orientation.EAST;
         break;
       case orientation.WEST:
         targetX = this.vX - 1;
-        targetY = this.vY - 1;
+        targetY = this.vY - turnalDistance;
         xFirst = true;
         toOrientation = orientation.NORTH;
         break;
       case orientation.EAST:
         targetX = this.vX + 1;
-        targetY = this.vY + 1;
+        targetY = this.vY + turnalDistance;
         xFirst = true;
         toOrientation = orientation.SOUTH;
         break;
@@ -528,6 +530,10 @@ class Ship {
 
     // Animation
     this._startTextureAnim(toOrientation, "RIGHT");
+
+    // TODO Maybe add a 'small' bump animation for cancelled movements on turns
+    if (cancelledMovement) return;
+
     // Movement
     this._startMovementAnim(xFirst, yFirst, targetX, targetY);
   }
@@ -601,7 +607,7 @@ class Ship {
     animationTicker.start();
   }
 
-  moveLeft() {
+  moveLeft(cancelledMovement, cancelledTurnal) {
     let targetX = 0;
     let targetY = 0;
     let toOrientation = orientation.NORTH;
@@ -609,28 +615,30 @@ class Ship {
     let xFirst = false;
     let yFirst = false;
 
+    const turnalDistance = cancelledTurnal ? 0 : 1;
+
     switch (this.faceDirection) {
       case orientation.SOUTH:
-        targetX = this.vX + 1;
+        targetX = this.vX + turnalDistance;
         targetY = this.vY + 1;
         yFirst = true;
         toOrientation = orientation.EAST;
         break;
       case orientation.NORTH:
-        targetX = this.vX - 1;
+        targetX = this.vX - turnalDistance;
         targetY = this.vY - 1;
         yFirst = true;
         toOrientation = orientation.WEST;
         break;
       case orientation.WEST:
         targetX = this.vX - 1;
-        targetY = this.vY + 1;
+        targetY = this.vY + turnalDistance;
         xFirst = true;
         toOrientation = orientation.SOUTH;
         break;
       case orientation.EAST:
         targetX = this.vX + 1;
-        targetY = this.vY - 1;
+        targetY = this.vY - turnalDistance;
         xFirst = true;
         toOrientation = orientation.NORTH;
         break;
@@ -639,6 +647,8 @@ class Ship {
     // Animation
     this._startTextureAnim(toOrientation, "LEFT");
     // Movement
+    if (cancelledMovement) return;
+
     this._startMovementAnim(xFirst, yFirst, targetX, targetY);
   }
 
