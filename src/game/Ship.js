@@ -37,6 +37,11 @@ class Ship {
     this.turnThreshold = 0.4;
     this.cannonMoveSpeed = 16; // Lower is faster, higher is slower
 
+    // The ratio/percentage distance from 0-1 of how far the ship will move forward
+    // on a cancelled forward move (due to bump given by server)
+    // before reversing back into place.
+    this.bumpMovementRatio = 0.7;
+
     //
     this.movementTicker = new WebTicker();
     this.activeTicker = new MyTicker();
@@ -416,42 +421,72 @@ class Ship {
     }
   }
 
-  moveForward() {
+  moveForward(cancelled) {
+    const originalX = this.x;
+    const originalY = this.y;
     let targetX = 0;
     let targetY = 0;
+
+    const distance = cancelled === true ? 1 - this.bumpMovementRatio : 1;
+
     switch (this.faceDirection) {
       case orientation.SOUTH:
         targetX = this.x;
-        targetY = this.y + 1;
+        targetY = this.y + distance;
         break;
       case orientation.NORTH:
         targetX = this.x;
-        targetY = this.y - 1;
+        targetY =
+          this.y - (cancelled === true ? 1 - this.bumpMovementRatio : 1);
         break;
       case orientation.WEST:
-        targetX = this.x - 1;
+        targetX =
+          this.x - (cancelled === true ? 1 - this.bumpMovementRatio : 1);
         targetY = this.y;
         break;
       case orientation.EAST:
-        targetX = this.x + 1;
+        targetX =
+          this.x + (cancelled === true ? 1 - this.bumpMovementRatio : 1);
         targetY = this.y;
         break;
     }
+
+    const reverseTicker = new PIXI.Ticker();
 
     const animationTicker = new PIXI.Ticker();
     const context = {
       ticker: animationTicker,
       lastElapsedTime: 0,
-      totalTime: 35,
-      initialPosition: { x: this.x, y: this.y },
+      totalTime: cancelled ? 12 : 35,
+      initialPosition: { x: originalX, y: originalY },
       finalPosition: { x: targetX, y: targetY },
       setPosition: (incrementX, incrementY) => {
         this.setGamePosition(this.x + incrementX, this.y + incrementY);
       },
       onComplete: () => {
         this.setPosition(targetX, targetY);
+
+        if (cancelled) {
+          const reverseContext = {
+            ticker: reverseTicker,
+            lastElapsedTime: 0,
+            totalTime: 10,
+            initialPosition: { x: this.x, y: this.y },
+            finalPosition: { x: originalY, y: originalX },
+            setPosition: (incrementX, incrementY) => {
+              this.setGamePosition(this.x + incrementX, this.y + incrementY);
+            },
+            onComplete: () => {
+              this.setPosition(originalX, originalY);
+            },
+          };
+
+          reverseTicker.add(updateLinearAnimation, reverseContext);
+          reverseTicker.start();
+        }
       },
     };
+
     animationTicker.add(updateLinearAnimation, context);
     animationTicker.start();
   }
