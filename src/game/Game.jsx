@@ -854,12 +854,17 @@ class Game extends Component {
       const turnMovements = playerMovements["turn_" + numberedTurn];
       const turnShots = playerMovements["turn_" + numberedTurn + "_shots"];
       for (let turn of turnMovements) {
-        const { playerName, direction, shots } = turn;
+        const {
+          playerName,
+          direction,
+          cancelledMovement,
+          cancelledTurnal,
+        } = turn;
 
         const ship = this.getShip(playerName);
         if (!ship) continue;
 
-        ship.move(direction);
+        ship.move(direction, cancelledMovement, cancelledTurnal);
       }
       if (turnMovements.length > 0) await sleep(1400);
 

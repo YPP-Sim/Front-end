@@ -405,16 +405,16 @@ class Ship {
    *
    * @param {string} direction
    */
-  move(direction) {
+  move(direction, cancelledMovement, cancelledTurnal) {
     switch (direction) {
       case "LEFT":
-        this.moveLeft();
+        this.moveLeft(cancelledMovement, cancelledTurnal);
         break;
       case "FORWARD":
-        this.moveForward();
+        this.moveForward(cancelledMovement);
         break;
       case "RIGHT":
-        this.moveRight();
+        this.moveRight(cancelledMovement, cancelledTurnal);
         break;
       default:
         break;
