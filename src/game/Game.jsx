@@ -82,6 +82,8 @@ class Game extends Component {
       this.playerMoves = new PlayerMoves(
         this.gameData.thisPlayer.shipData.dualCannon
       );
+
+    this.preventMovementInteraction = false;
   }
 
   resize() {
@@ -645,6 +647,8 @@ class Game extends Component {
     turnSprite.texture.frame = turnFrameRect;
     turnSprite.interactive = true;
     turnSprite.on("pointerdown", (event) => {
+      if (this.preventMovementInteraction) return;
+
       const buttonType = event.data.originalEvent.button;
       this.bgClicked = true;
       if (buttonType === 0) {
@@ -700,7 +704,7 @@ class Game extends Component {
     const gameId = this.gameId;
     const playerName = this.gameData.thisPlayer.playerName;
 
-    function createGunSprite(x, y, gunTurn, side) {
+    function createGunSprite_(x, y, gunTurn, side) {
       const gunSprite = new PIXI.Sprite(
         new PIXI.Texture(resources["cannonSlots"].texture)
       );
@@ -726,6 +730,8 @@ class Game extends Component {
       }
 
       gunSprite.on("pointerdown", () => {
+        if (this.preventMovementInteraction) return;
+
         playerMoves.incrementNumberedTurnGuns(gunTurn, side, (gunData) => {
           if (gunData[0]) filledGunFirstSprite.visible = true;
           else filledGunFirstSprite.visible = false;
@@ -773,6 +779,8 @@ class Game extends Component {
         }
       };
     }
+
+    const createGunSprite = createGunSprite_.bind(this);
 
     const left1Clear = createGunSprite(40, -57, 1, "LEFT");
     const right1Clear = createGunSprite(69, -57, 1, "RIGHT");

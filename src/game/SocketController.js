@@ -19,6 +19,7 @@ class SocketController {
         playerName: this.game.gameData.thisPlayer.playerName,
         gameId: this.game.gameId,
       });
+      this.game.preventMovementInteraction = true;
       await this.game.executeGameTurns(turnData.playerMovements);
       this.game.updateShipPositions(turnData.playerData);
     });
@@ -41,6 +42,8 @@ class SocketController {
       this.game.clearActivityBars();
       if (this.game.clearUICannons) this.game.clearUICannons();
       if (this.game.playerMoves) this.game.playerMoves.clearCannons();
+
+      this.game.preventMovementInteraction = false;
     });
 
     socket.on("updatePlayerActions", ({ playerName, turnAmount }) => {

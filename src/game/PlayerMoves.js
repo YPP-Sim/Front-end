@@ -19,10 +19,10 @@ class PlayerMoves {
   }
 
   clearCannons() {
-    this.move1 = this.initialMoveData;
-    this.move2 = this.initialMoveData;
-    this.move3 = this.initialMoveData;
-    this.move4 = this.initialMoveData;
+    this.move1 = JSON.parse(JSON.stringify(this.initialMoveData));
+    this.move2 = JSON.parse(JSON.stringify(this.initialMoveData));
+    this.move3 = JSON.parse(JSON.stringify(this.initialMoveData));
+    this.move4 = JSON.parse(JSON.stringify(this.initialMoveData));
   }
 
   incrementNumberedTurnGuns(numberedTurn, side, onTextureChange) {
