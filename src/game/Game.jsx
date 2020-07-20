@@ -3,7 +3,7 @@ import * as PIXI from "pixi.js";
 import SpriteBody from "./SpriteBody";
 import Ship from "./Ship";
 import ShipType from "./ShipType";
-import Orientation from "./Orientation";
+import Orientation, { getOrientationByName } from "./Orientation";
 import resourcePairs from "./resources";
 import SocketController from "./SocketController";
 import styled from "styled-components";
@@ -211,7 +211,9 @@ class Game extends Component {
 
     const ship = new Ship(ShipType.warFrig, this, shipId);
     ship.loadSprites();
-    ship.setOrientation(orientation);
+    if (typeof orientation === "string")
+      ship.setOrientation(getOrientationByName(orientation));
+    else ship.setOrientation(orientation);
     ship.setPosition(boardX, boardY);
     this.ships[shipId] = ship;
 
@@ -841,7 +843,7 @@ class Game extends Component {
       const ship = this.getShip(playerName);
       if (!ship) continue;
       ship.setPosition(boardX, boardY);
-      ship.setOrientation(orientation);
+      ship.setOrientation(getOrientationByName(orientation));
     }
   }
 

@@ -654,7 +654,6 @@ class Ship {
 
   setTextureFromOrientation(orient = Orientation.SOUTH) {
     let orientationNumber = this.getFrameByOrientation(orient);
-
     const {
       x,
       y,
@@ -670,14 +669,14 @@ class Ship {
   }
 
   getFrameByOrientation(orient) {
-    switch (orient) {
-      case orientation.NORTH:
+    switch (orient.name) {
+      case orientation.NORTH.name:
         return 14;
-      case orientation.SOUTH:
+      case orientation.SOUTH.name:
         return 6;
-      case orientation.EAST:
+      case orientation.EAST.name:
         return 2;
-      case orientation.WEST:
+      case orientation.WEST.name:
         return 10;
     }
   }
