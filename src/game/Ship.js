@@ -288,7 +288,7 @@ class Ship {
   _playHitEffect(boardX, boardY) {
     const hitTexture = PIXI.Loader.shared.resources["hit"].texture;
     const hitSprite = new PIXI.Sprite(new PIXI.Texture(hitTexture));
-    hitSprite.zIndex = 30;
+    hitSprite.zIndex = 99;
     hitSprite.anchor.x = 0.5;
     hitSprite.anchor.y = 0.5;
     const frame = new PIXI.Rectangle(0, 0, 40, 30);
