@@ -7,6 +7,7 @@ import Orientation, { getOrientationByName } from "./Orientation";
 import resourcePairs from "./resources";
 import SocketController from "./SocketController";
 import styled from "styled-components";
+import WindType from "./WindType";
 import PlayerMoves from "./PlayerMoves";
 
 let loaderLoaded = false;
@@ -146,7 +147,8 @@ class Game extends Component {
   initPlayerShips() {
     const shh = this.addShip("Artysh", "WAR_FRIG", 1, 1, Orientation.SOUTH);
     // shh.moveLeft(false, true);
-    shh.shoot([true, true], "left", 3, true);
+    shh.moveForward(true);
+    // shh.shoot([true, true], "left", 3, true);
     // shh.shoot([true], "right", 2, true);
     for (let player of this.gameData.attackers) {
       const { playerName, shipData } = player;
@@ -862,7 +864,10 @@ class Game extends Component {
       }
 
       const turnMovements = playerMovements["turn_" + numberedTurn];
+      const turnWinds = playerMovements["turn_" + numberedTurn + "_winds"];
       const turnShots = playerMovements["turn_" + numberedTurn + "_shots"];
+
+      // Initial Movement
       for (let turn of turnMovements) {
         const {
           playerName,
@@ -876,8 +881,23 @@ class Game extends Component {
 
         ship.move(direction, cancelledMovement, cancelledTurnal);
       }
-      if (turnMovements.length > 0) await sleep(1400);
+      if (turnMovements.length > 0) await sleep(1000);
 
+      // Wind movement
+      if (turnWinds.length > 0) {
+        for (let windMove of turnWinds) {
+          const ship = this.getShip(windMove.playerName);
+          const windType = WindType[windMove.windType.type];
+          ship.moveByOrientation(
+            windType.direction,
+            windMove.windType.cancelledMovement
+          );
+        }
+
+        await sleep(800);
+      }
+
+      // Shoot Cannons
       if (turnShots.length > 0) {
         for (let shotData of turnShots) {
           const {

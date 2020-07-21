@@ -421,6 +421,20 @@ class Ship {
     }
   }
 
+  moveByOrientation(orientation, cancelledMovement) {
+    const { xDir, yDir } = orientation;
+    const originalX = this.vX;
+    const originalY = this.vY;
+
+    const distance =
+      cancelledMovement === true ? 1 - this.bumpMovementRatio : 1;
+
+    let targetX = this.vX + distance * xDir;
+    let targetY = this.vY + distance * yDir;
+
+    this.animateTo(originalX, originalY, targetX, targetY, cancelledMovement);
+  }
+
   moveForward(cancelled) {
     const originalX = this.x;
     const originalY = this.y;
@@ -436,21 +450,22 @@ class Ship {
         break;
       case orientation.NORTH:
         targetX = this.x;
-        targetY =
-          this.y - (cancelled === true ? 1 - this.bumpMovementRatio : 1);
+        targetY = this.y - distance;
         break;
       case orientation.WEST:
-        targetX =
-          this.x - (cancelled === true ? 1 - this.bumpMovementRatio : 1);
+        targetX = this.x - distance;
         targetY = this.y;
         break;
       case orientation.EAST:
-        targetX =
-          this.x + (cancelled === true ? 1 - this.bumpMovementRatio : 1);
+        targetX = this.x + distance;
         targetY = this.y;
         break;
     }
 
+    this.animateTo(originalX, originalY, targetX, targetY, cancelled);
+  }
+
+  animateTo(originalX, originalY, targetX, targetY, cancelled) {
     const animationTicker = new PIXI.Ticker();
     const context = {
       ticker: animationTicker,
