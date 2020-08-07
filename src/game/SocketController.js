@@ -1,5 +1,6 @@
 import ShipType from "./ShipType";
 import Game from "./Game";
+import { getOrientationByName } from "./Orientation";
 class SocketController {
   /**
    *
@@ -65,7 +66,7 @@ class SocketController {
       const { shipId, boardX, boardY, orientation } = data;
       const ship = this.game.getShip(shipId);
       ship.setPosition(boardX, boardY);
-      ship.setOrientation(orientation);
+      ship.setOrientation(getOrientationByName(orientation));
     });
 
     socket.on("moveShip", (data) => {
