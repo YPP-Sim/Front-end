@@ -1,8 +1,5 @@
 import * as PIXI from "pixi.js";
 import orientation from "./Orientation";
-import WebTicker from "./webTicker.worker.js";
-import MyTicker from "./MyTicker";
-
 import { calculateGameToSpritePosition } from "./Game";
 import Orientation from "./Orientation";
 import {
@@ -41,13 +38,6 @@ class Ship {
     // on a cancelled forward move (due to bump given by server)
     // before reversing back into place.
     this.bumpMovementRatio = 0.7;
-
-    //
-    this.movementTicker = new WebTicker();
-    this.activeTicker = new MyTicker();
-    this.movementTicker.addEventListener("message", () => {
-      this.activeTicker.fire();
-    });
 
     this.barSectionWidth = 11;
     this.barHeight = 6;
