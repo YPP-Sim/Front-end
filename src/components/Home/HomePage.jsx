@@ -8,7 +8,6 @@ import Section from "./Section";
 const Root = styled.div``;
 
 const HomePage = ({ theme }) => {
-  console.log("Theme: ", theme);
   return (
     <Root>
       <HeroHeader />

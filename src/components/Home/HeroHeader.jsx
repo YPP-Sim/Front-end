@@ -74,7 +74,6 @@ const HeroHeader = () => {
   return (
     <Root>
       <MaxWidthContainer>
-        <NavBar />
         <CenterContainer>
           <CTAContainer>
             <Title>YPP-Sim</Title>

@@ -12,7 +12,8 @@ const Root = styled.div`
 `;
 
 const Container = styled.div`
-  margin: ${({ theme }) => theme.pageMargins};
+  // margin: ${({ theme }) => theme.pageMargins};
+  margin: 0px 76.5px;
   display: flex;
   justify-content: space-between;
   align-items: baseline;

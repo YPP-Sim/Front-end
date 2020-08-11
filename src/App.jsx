@@ -3,8 +3,7 @@ import styled from "styled-components";
 import HomePage from "./components/Home/HomePage";
 import { Route } from "react-router-dom";
 import GameList from "./components/GameList/GameList";
-import NavBar from "./components/NavBar";
-import GameInfoView from "./components/GameInfoView/GameInfoView";
+import NavBar from "./components/HeroNavBar";
 import GameLobby from "./components/GameLobby/GameLobby";
 import { PlayerProvider } from "./contexts/PlayerContext";
 
@@ -24,6 +23,7 @@ const App = () => {
     <PlayerProvider value={{ playerName, setPlayerName }}>
       <Root>
         <Route exact path="/">
+          <NavBar />
           <HomePage />
         </Route>
 

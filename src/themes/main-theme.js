@@ -1,7 +1,7 @@
 const theme = {
   bgColor: "#fff",
-  titleFont: "'Rubik', sans-serif;",
-  textFont: "'Karla', sans-serif;",
+  titleFont: "'Saira', sans-serif;",
+  textFont: "'Heebo', sans-serif;",
   accentColor: "#252525",
   color1: "#ffe259",
   color2: "#ffa751",
