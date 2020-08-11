@@ -20,7 +20,9 @@ const Container = styled.button`
   width: ${(props) => props.width || "100%"};
   height: ${(props) => props.height || "40px"};
 
-  box-shadow: 2px 2px 10px rgba(21, 21, 21, 0.3);
+  ${(props) =>
+    props.noShadow ? "" : "box-shadow: 2px 2px 10px rgba(21, 21, 21, 0.3);"}
+  
   border-radius: ${(props) => props.borderRadius || "12px"};
   cursor: pointer;
 

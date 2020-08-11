@@ -32,9 +32,9 @@ const ImageContainer = styled.div`
   align-items: center;
 `;
 
-const CreateGameCard = () => {
+const CreateGameCard = ({ onClick }) => {
   return (
-    <Root>
+    <Root onClick={onClick}>
       <Title>New game</Title>
       <ImageContainer>
         <Image src={plusIcon} />

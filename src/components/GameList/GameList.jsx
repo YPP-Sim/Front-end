@@ -58,7 +58,7 @@ const GameList = () => {
   const { playerName, setPlayerName } = useContext(PlayerContext);
   const [games, setGames] = useState([]);
 
-  const [formOpen, setFormOpen] = useState(false);
+  const [formOpen, setFormOpen] = useState(true);
   const history = useHistory();
 
   useEffect(() => {
@@ -74,7 +74,7 @@ const GameList = () => {
       <LobbyTitle>Lobby</LobbyTitle>
       <FlexCenterContainer>
         <GridContainer>
-          <CreateGameCard />
+          <CreateGameCard onClick={handleCreateGameClick} />
           {games.map((game, key) => (
             <GameCard
               title={game.name}

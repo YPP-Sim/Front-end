@@ -13,29 +13,38 @@ const Root = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
 
-  max-width: 600px;
-  max-height: 400px;
+  max-width: 493px;
+  max-height: 450px;
   width: 100%;
   height: 100%;
 
-  border-radius: 8px;
-  background-color: white;
   z-index: 100;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+
+  background: #333a42;
+  border-radius: 20px;
+
+  padding: 27px 42px;
+
+  box-sizing: border-box;
 `;
 
 const Title = styled.h2`
-  font-family: ${({ theme }) => theme.titleFont};
+  font-family: ${({ theme }) => theme.textFont};
   color: ${({ theme }) => theme.textColor};
   text-align: center;
+  font-size: 24px;
+  margin: 0;
   font-weight: 500;
 `;
 
-const FormContainer = styled.div``;
+const FormContainer = styled.div`
+  width: 100%;
+`;
 
 const ButtonsContainer = styled.div`
   display: flex;
@@ -44,8 +53,14 @@ const ButtonsContainer = styled.div`
 `;
 
 const InputLabel = styled.label`
-  font-size: 16px;
-  margin-right: 9px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 26px;
+
+  color: #ffffff;
+
+  margin-right: ${(props) => props.mr || "29px"};
   font-family: ${({ theme }) => theme.textFont};
 
   color: ${({ theme }) => theme.textColor};
@@ -55,7 +70,7 @@ const SelectField = styled.select`
   border: none;
 
   border-radius: 3px;
-  height: 30px;
+  height: 35px;
 
   font-size: 16px;
   font-family: ${({ theme }) => theme.textFont};
@@ -66,26 +81,28 @@ const SelectField = styled.select`
   outline: none;
 
   min-width: 188px;
+  width: 270px;
+  padding: 0px 10px;
 `;
 
 const InputContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 18px;
 `;
 
 const CreateGameForm = (props) => {
   const history = useHistory();
-  const { playerName } = useContext(PlayerContext);
+  const { playerName, setPlayerName } = useContext(PlayerContext);
 
   const [formData, setFormData] = useState({
     roomName: "",
     maxPlayers: 6,
     mapName: "",
     password: "",
+    userName: "",
   });
-  const [locked, setLocked] = useState(false);
   const [availableMaps, setAvailableMaps] = useState([]);
 
   useEffect(() => {
@@ -112,7 +129,7 @@ const CreateGameForm = (props) => {
       id: roomName,
       maxPlayers,
       mapName,
-      locked,
+      locked: password.length > 0,
       password,
       gameOwner: playerName,
     };
@@ -127,22 +144,34 @@ const CreateGameForm = (props) => {
       });
   };
 
+  const handleUsernameChange = (e) => {
+    setPlayerName(e.target.value);
+  };
+
   return (
     <Root>
       <Title>Create New Game</Title>
       <FormContainer>
         <InputContainer>
-          <InputLabel htmlFor="roomName">Room Name: </InputLabel>
+          <InputLabel htmlFor="userName">User name: </InputLabel>
+          <InputField
+            name="userName"
+            id="userName"
+            onChange={handleUsernameChange}
+            value={playerName}
+          />
+        </InputContainer>
+        <InputContainer>
+          <InputLabel htmlFor="roomName">Room name: </InputLabel>
           <InputField
             name="roomName"
             id="roomName"
-            placeholder="Room Name"
             onChange={handleFormChange}
             value={formData.roomName}
           />
         </InputContainer>
         <InputContainer>
-          <InputLabel htmlFor="maxPlayers">Max Players: </InputLabel>
+          <InputLabel htmlFor="maxPlayers">Max players: </InputLabel>
           <InputField
             name="maxPlayers"
             id="maxPlayers"
@@ -158,7 +187,6 @@ const CreateGameForm = (props) => {
             name="mapName"
             id="mapName"
             value={formData.mapName}
-            placeholder="Map"
             onChange={handleFormChange}
           >
             {availableMaps.map((map, key) => (
@@ -169,43 +197,36 @@ const CreateGameForm = (props) => {
         </InputContainer>
 
         <InputContainer>
-          <InputLabel htmlFor="locked">Locked: </InputLabel>
+          <InputLabel mr="10px" htmlFor="password">
+            Set password:
+          </InputLabel>
           <InputField
-            type="checkbox"
-            onChange={() => setLocked(!locked)}
-            name="locked"
-            id="locked"
-            placeholder="Locked"
-            checked={locked}
+            name="password"
+            id="password"
+            type="password"
+            value={formData.password}
+            placeholder="(optional)"
+            onChange={handleFormChange}
           />
         </InputContainer>
-
-        {locked && (
-          <InputContainer>
-            <InputLabel htmlFor="password">Password: </InputLabel>
-            <InputField
-              name="password"
-              id="password"
-              type="password"
-              value={formData.password}
-              placeholder="Password"
-              onChange={handleFormChange}
-            />
-          </InputContainer>
-        )}
       </FormContainer>
       <ButtonsContainer>
         <Button
-          height="45px"
-          margin="0px 10px 10px 10px"
+          height="40px"
+          fontSize="18px"
+          width="180px"
           onClick={handleCreate}
+          noShadow
         >
           Create Game
         </Button>
         <Button
-          height="45px"
-          backgroundColor="#D65252"
-          margin="0px 10px 0px 10px"
+          height="40px"
+          width="180px"
+          fontSize="18px"
+          color="#29B3BC"
+          backgroundColor="#FFFFFF"
+          noShadow
           onClick={props.onClose}
         >
           Cancel

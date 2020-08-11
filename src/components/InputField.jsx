@@ -3,18 +3,19 @@ import styled from "styled-components";
 
 const Root = styled.input`
   border: none;
+  background: #f2f2f2;
+  border-radius: 2px;
+  height: ${(props) => props.height || "35px"};
 
-  border-radius: 3px;
-  height: ${(props) => props.height || "30px"};
-
-  font-size: 16px;
+  font-size: 14px;
   font-family: ${({ theme }) => theme.textFont};
 
-  padding: 5px 10px;
+  padding: 0px 10px;
   color: ${(props) => props.color || "#535353"};
-  background-color: ${(props) => props.backgroundColor || "#eee"};
 
   outline: none;
+
+  width: 250px;
 `;
 
 const InputField = (props) => {
