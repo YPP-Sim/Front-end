@@ -23,7 +23,7 @@ const GridContainer = styled.div`
   margin: 0px 193px;
   display: grid;
   gap: 34px;
-  grid-template-columns: repeat(auto-fit, minmax(238px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(238px, 1fr));
   justify-items: center;
   width: 100%;
 `;
