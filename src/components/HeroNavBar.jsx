@@ -4,7 +4,6 @@ import styled from "styled-components";
 const Root = styled.div`
   width: 100%;
   color: #333;
-  background-color: rgba(0, 0, 0, 0);
   display: flex;
   height: fit-content;
   align-items: center;
@@ -12,7 +11,6 @@ const Root = styled.div`
 `;
 
 const Container = styled.div`
-  // margin: ${({ theme }) => theme.pageMargins};
   margin: 0px 76.5px;
   display: flex;
   justify-content: space-between;
@@ -20,7 +18,7 @@ const Container = styled.div`
   width: 100%;
   max-width: ${({ theme }) => theme.pageMaxWidth};
   font-family: ${(props) => props.theme.textFont};
-  margin-top: 80px;
+  margin-top: 45px;
 `;
 
 const LinksContainer = styled.div`
@@ -28,25 +26,37 @@ const LinksContainer = styled.div`
 
   a {
     text-decoration: none;
-    font-size: 16px;
-    padding: 7px;
-    margin: 7px;
-    color: #494949;
-    text-transform: uppercase;
+    margin-left: 40px;
+
+    font-family: ${({ theme }) => theme.textFont};
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    color: ${({ theme }) => theme.textColor};
 
     &:hover {
-      color: white;
-      text-shadow: 1px 2px #00000066;
+      color: ${({ theme }) => theme.accentColor};
     }
   }
+`;
+
+const NavTitle = styled.h3`
+  font-family: ${({ theme }) => theme.titleFont};
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 28px;
+
+  color: ${({ theme }) => theme.textColor};
 `;
 
 const NavBar = () => {
   return (
     <Root>
       <Container>
+        <NavTitle>YPP-SIM</NavTitle>
         <LinksContainer>
-          <a href="">Play</a>
+          <a href="">News</a>
           <a href="">About</a>
           <a href="https://github.com/YPP-Sim">Github</a>
         </LinksContainer>
