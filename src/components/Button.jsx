@@ -1,27 +1,18 @@
 import React from "react";
 
 import styled from "styled-components";
-import Values from "values.js";
 
 const Container = styled.button`
   outline: none;
   border: none;
   text-decoration: none;
 
-  background-color: ${(props) =>
-    props.backgroundColor || props.theme.accentColor};
+  background: ${(props) => props.backgroundColor || props.theme.buttonBg};
   color: ${(props) => props.color || props.theme.buttonTextColor};
 
-  &:hover {
-    background-color: ${(props) => {
-      const val = new Values(
-        props.backgroundColor ? props.backgroundColor : props.theme.accentColor
-      ).shade(15);
-      return `#${val.hex}`;
-    }};
-  }
-
-  font-size: 18.5px;
+  font-size: ${(props) => props.fontSize || "24px"};
+  font-style: normal;
+  font-weight: 500;
   font-family: ${({ theme }) => theme.textFont};
 
   margin: ${(props) => props.margin};
@@ -29,7 +20,8 @@ const Container = styled.button`
   width: ${(props) => props.width || "100%"};
   height: ${(props) => props.height || "40px"};
 
-  border-radius: ${(props) => props.borderRadius || "3px"};
+  box-shadow: 2px 2px 10px rgba(21, 21, 21, 0.3);
+  border-radius: ${(props) => props.borderRadius || "12px"};
   cursor: pointer;
 
   transition: background-color linear 0.08s;

@@ -11,6 +11,7 @@ const theme = {
   pageMargins: "0px 100px",
   pageMaxWidth: "1800px",
 
+  buttonBg: "linear-gradient(88.42deg, #609ACF -8.65%, #29B3BC 99.01%);",
   buttonTextColor: "#ffffff",
 };
 

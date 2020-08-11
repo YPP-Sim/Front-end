@@ -93,6 +93,9 @@ const HeroHeader = () => {
               Web-based and aims to give a better user experience. All without
               the need to download a client.
             </TitleDescription>
+            <Button onClick={handlePlayClick} width="203px" height="55px">
+              Play
+            </Button>
           </CTAContainer>
           <ImageContainer></ImageContainer>
         </CenterContainer>
