@@ -45,11 +45,6 @@ const TitleDescription = styled.p`
   color: ${({ theme }) => theme.textColor};
 `;
 
-const ButtonsContainer = styled.div`
-  display: flex;
-  width: 100%;
-`;
-
 const MaxWidthContainer = styled.div`
   max-width: ${({ theme }) => theme.pageMaxWidth};
   display: flex;
