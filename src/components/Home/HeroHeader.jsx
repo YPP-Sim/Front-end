@@ -1,48 +1,48 @@
 import React from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
-import NavBar from "../HeroNavBar";
 import Button from "../Button";
+import gameImg from "../../images/Game.png";
 
 const Root = styled.div`
-  background: linear-gradient(to bottom, #ffe259, #ffa751);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  width: 100%;
-  height: 80vh;
-  min-height: 550px;
-  clip-path: ellipse(100% 55% at 48% 44%);
+  margin: 100px;
 `;
 
 const CenterContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   margin: ${({ theme }) => theme.pageMargins};
+  max-width: 1250px;
   justify-content: center;
   align-items: center;
-  height: 80%;
-  color: #252525;
+  width: 100%;
 `;
 
-const Title = styled.h1`
-  font-family: ${({ theme }) => theme.titleFont};
-  text-transform: uppercase;
-  font-size: 70px;
+const TitleStatement = styled.h2`
+  font-family: ${({ theme }) => theme.textFont};
+  font-size: 36px;
+  font-style: normal;
   font-weight: bold;
-  text-align: center;
   margin: 0;
+  line-height: 53px;
+
+  max-width: 440px;
+  color: ${({ theme }) => theme.textColor};
 `;
 
 const TitleDescription = styled.p`
-  font-size: 18.5px;
+  font-family: ${({ theme }) => theme.textFont};
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 35px;
+
   margin: 0;
   margin-top: 20px;
-  text-align: justify;
-  margin-bottom: 35px;
-  line-height: 1.6;
+  margin-bottom: 40px;
+  max-width: 600px;
 
-  font-family: ${({ theme }) => theme.textFont};
+  color: ${({ theme }) => theme.textColor};
 `;
 
 const ButtonsContainer = styled.div`
@@ -54,14 +54,24 @@ const MaxWidthContainer = styled.div`
   max-width: ${({ theme }) => theme.pageMaxWidth};
   display: flex;
   flex-direction: column;
+  align-items: center;
   height: 100%;
   width: 100%;
   margin: 0 auto;
 `;
 
 const CTAContainer = styled.div`
-  max-width: 450px;
-  border-radius: 5px;
+  width: 100%;
+`;
+
+const ImageContainer = styled.div`
+  width: 100%;
+  height: 314px;
+  background-image: url(${gameImg});
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  filter: drop-shadow(0px 10px 50px rgba(0, 0, 0, 0.25));
 `;
 
 const HeroHeader = () => {
@@ -76,24 +86,15 @@ const HeroHeader = () => {
       <MaxWidthContainer>
         <CenterContainer>
           <CTAContainer>
-            <Title>YPP-Sim</Title>
+            <TitleStatement>
+              A better, free, Puzzle Pirates blockade simulator
+            </TitleStatement>
             <TitleDescription>
-              A better, free, Puzzle Pirates blockade simulator that is
-              web-based and aims to give a better user experience. All without
+              Web-based and aims to give a better user experience. All without
               the need to download a client.
             </TitleDescription>
-
-            <ButtonsContainer>
-              <Button
-                height="60px"
-                // margin="10px 15px 10px 0px"
-                onClick={handlePlayClick}
-                backgroundColor="#252525"
-              >
-                Play
-              </Button>
-            </ButtonsContainer>
           </CTAContainer>
+          <ImageContainer></ImageContainer>
         </CenterContainer>
       </MaxWidthContainer>
     </Root>

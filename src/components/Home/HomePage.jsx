@@ -4,6 +4,8 @@ import HeroHeader from "./HeroHeader";
 import SectionTitle from "./SectionTitle";
 import SectionDescription from "./SectionDescription";
 import Section from "./Section";
+import HomeContent from "./HomeContent";
+import HomeWave from "./HomeWave";
 
 const Root = styled.div``;
 
@@ -11,7 +13,9 @@ const HomePage = ({ theme }) => {
   return (
     <Root>
       <HeroHeader />
-      <Section>
+      <HomeWave />
+      <HomeContent></HomeContent>
+      {/* <Section>
         <SectionTitle>Features</SectionTitle>
         <SectionDescription>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
@@ -37,7 +41,7 @@ const HomePage = ({ theme }) => {
           facilis earum soluta nihil? Dolore, optio repellat? Totam doloremque
           voluptatem minima suscipit iste velit!
         </SectionDescription>
-      </Section>
+      </Section> */}
     </Root>
   );
 };
