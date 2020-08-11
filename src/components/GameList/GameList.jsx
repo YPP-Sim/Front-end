@@ -2,13 +2,11 @@ import React, { useState, useEffect, useContext } from "react";
 import PlayerContext from "../../contexts/PlayerContext";
 import styled from "styled-components";
 import GameCard from "./GameCard";
-import plusIconImg from "../../SVGs/plus-solid.svg";
 import axios from "../../axios-config";
-import FAB from "./FAB";
 import CreateGameForm from "./CreateGameForm";
 import Backdrop from "../Backdrop";
 import { useHistory } from "react-router-dom";
-import PlayerNameForm from "./PlayerNameForm";
+import CreateGameCard from "./CreateGameCard";
 
 const Root = styled.div`
   width: 100%;
@@ -23,7 +21,7 @@ const FlexCenterContainer = styled.div`
 `;
 
 const GridContainer = styled.div`
-  margin: 25px;
+  margin: 0px 193px;
   display: grid;
   gap: 25px;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -31,10 +29,18 @@ const GridContainer = styled.div`
   width: 100%;
 `;
 
-const IconContainer = styled.img`
-  width: 45%;
-  height: 45%;
-  color: white;
+const LobbyTitle = styled.h1`
+  font-family: ${({ theme }) => theme.textFont};
+  font-style: normal;
+  font-weight: bold;
+  font-size: 36px;
+  line-height: 53px;
+
+  text-align: center;
+  margin-top: 96px;
+  margin-bottom: 68px;
+
+  color: ${({ theme }) => theme.textColor};
 `;
 
 function refreshGameList(setGames) {
@@ -65,8 +71,10 @@ const GameList = () => {
 
   return (
     <Root>
+      <LobbyTitle>Lobby</LobbyTitle>
       <FlexCenterContainer>
         <GridContainer>
+          <CreateGameCard />
           {games.map((game, key) => (
             <GameCard
               title={game.name}
@@ -80,22 +88,11 @@ const GameList = () => {
             />
           ))}
         </GridContainer>
-        {playerName === "" && (
-          <Backdrop>
-            <PlayerNameForm />
-          </Backdrop>
-        )}
 
         {formOpen && (
           <Backdrop>
             <CreateGameForm onClose={() => setFormOpen(false)} />
           </Backdrop>
-        )}
-
-        {playerName !== "" && (
-          <FAB onClick={handleCreateGameClick}>
-            <IconContainer src={plusIconImg} />
-          </FAB>
         )}
       </FlexCenterContainer>
     </Root>
