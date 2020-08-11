@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import PlayerContext from "../../contexts/PlayerContext";
 import styled from "styled-components";
 import GameCard from "./GameCard";
 import axios from "../../axios-config";
@@ -55,10 +54,9 @@ function refreshGameList(setGames) {
 }
 
 const GameList = () => {
-  const { playerName, setPlayerName } = useContext(PlayerContext);
   const [games, setGames] = useState([]);
 
-  const [formOpen, setFormOpen] = useState(true);
+  const [formOpen, setFormOpen] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
