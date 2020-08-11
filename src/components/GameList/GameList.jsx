@@ -9,7 +9,6 @@ import CreateGameForm from "./CreateGameForm";
 import Backdrop from "../Backdrop";
 import { useHistory } from "react-router-dom";
 import PlayerNameForm from "./PlayerNameForm";
-import InfoBar from "./Infobar";
 
 const Root = styled.div`
   width: 100%;
@@ -66,10 +65,6 @@ const GameList = () => {
 
   return (
     <Root>
-      <InfoBar
-        onRefresh={() => refreshGameList(setGames)}
-        onEditName={() => setPlayerName("")}
-      />
       <FlexCenterContainer>
         <GridContainer>
           {games.map((game, key) => (

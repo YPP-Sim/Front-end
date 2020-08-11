@@ -1,15 +1,12 @@
 import React from "react";
-import styled, { withTheme } from "styled-components";
+import styled from "styled-components";
 import HeroHeader from "./HeroHeader";
-import SectionTitle from "./SectionTitle";
-import SectionDescription from "./SectionDescription";
-import Section from "./Section";
 import HomeContent from "./HomeContent";
 import HomeWave from "./HomeWave";
 
 const Root = styled.div``;
 
-const HomePage = ({ theme }) => {
+const HomePage = () => {
   return (
     <Root>
       <HeroHeader />
@@ -46,4 +43,4 @@ const HomePage = ({ theme }) => {
   );
 };
 
-export default withTheme(HomePage);
+export default HomePage;

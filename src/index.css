@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
   background: linear-gradient(116.65deg, #3e4a59 3.13%, #202830 78.51%);
   background-repeat: no-repeat;
 }
@@ -12,8 +13,4 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
-}
-
-body > #root > div {
-  height: 100%;
 }
