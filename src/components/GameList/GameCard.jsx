@@ -1,93 +1,84 @@
 import React from "react";
 import styled from "styled-components";
-import playerIcon from "../../images/player-icon.png";
-import mapIcon from "../../images/map-icon.png";
-import passwordIcon from "../../images/password-icon.png";
-import battlePic from "../../images/battle_nav.jpg";
+import playerIcon from "../../SVGs/playerIcon.svg";
+import mapIcon from "../../SVGs/mapIcon.svg";
+import unlockedIcon from "../../SVGs/unlockedIcon.svg";
+import lockedIcon from "../../SVGs/lockedIcon.svg";
+import Divider from "../Divider";
 
 const Root = styled.div`
-  min-width: 200px;
-  width: 100%;
-  background-color: #ffffff;
-  border-radius: 5px;
+  width: 238px;
+  height: 339px;
+  left: 465px;
+  top: 291px;
+
+  background: rgba(196, 196, 196, 0.1);
+  border-radius: 20px;
   box-sizing: border-box;
-
-  overflow: hidden;
-
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
+  padding: 27px 29px;
 
   cursor: pointer;
 `;
 
 const StatusBar = styled.div`
-  background-color: ${(props) => {
+  background: ${(props) => {
     switch (props.status) {
       case "WAITING":
-        return "#313131";
+        return "#FFFFFF";
       case "INGAME":
-        return "#52D66F";
+        return "linear-gradient(88.42deg, #609ACF -8.65%, #29B3BC 99.01%);";
       case "ENDING":
         return "#D65252";
       default:
-        return "#313131";
+        return "linear-gradient(88.42deg, #609ACF -8.65%, #29B3BC 99.01%);";
     }
   }};
+
+  color: ${(props) =>
+    props.status === "WAITING" ? "#29B3BC" : props.theme.textColor};
 
   width: 100%;
   height: 40px;
   font-family: ${({ theme }) => theme.textFont};
-  letter-spacing: 0.7px;
-  font-size: 14px;
-  line-height: 13px;
+  font-size: 18px;
   text-align: center;
-  color: #ffffff;
 
   display: flex;
   justify-content: center;
   align-items: center;
-  text-transform: uppercase;
+  border-radius: 12px;
 
-  margin-top: 10px;
+  margin-top: 32px;
 `;
 
 const GameTitle = styled.h2`
   color: ${({ theme }) => theme.textColor};
-  font-family: ${({ theme }) => theme.titleFont};
+  font-family: ${({ theme }) => theme.textFont};
   font-weight: 500;
-  font-size: 18px;
+  font-size: 24px;
+  line-height: 35px;
   text-align: center;
   margin: 0;
-
-  margin-bottom: 15px;
-`;
-
-const CardImage = styled.img`
-  width: 100%;
-  height: 80px;
 `;
 
 const InfoText = styled.p`
   margin: 0;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: 400;
   font-family: ${({ theme }) => theme.textFont};
   color: ${({ theme }) => theme.textColor};
 `;
 
 const FlexContainer = styled.div`
   display: flex;
-  margin-bottom: 5px;
-`;
-
-const InfoContainer = styled.div`
-  padding: 10px 25px;
+  align-items: center;
+  margin-bottom: ${(props) => props.mb};
 `;
 
 const Icon = styled.img`
   width: 18px;
   height: 18px;
-  margin-right: 8px;
+  margin-right: ${(props) => props.mr};
 `;
 
 function getStatusDescription(status) {
@@ -114,25 +105,22 @@ const GameCard = ({
 }) => {
   return (
     <Root onClick={onClick}>
-      <CardImage src={battlePic} />
-      <InfoContainer>
-        <GameTitle>{title}</GameTitle>
-
-        <FlexContainer>
-          <Icon src={playerIcon} />
-          <InfoText>
-            {currentPlayers}/{maxPlayers}
-          </InfoText>
-        </FlexContainer>
-        <FlexContainer>
-          <Icon src={mapIcon} />
-          <InfoText>{map}</InfoText>
-        </FlexContainer>
-        <FlexContainer>
-          <Icon src={passwordIcon} />
-          <InfoText>{hasPassword ? "Locked" : "Unlocked"}</InfoText>
-        </FlexContainer>
-      </InfoContainer>
+      <GameTitle>{title}</GameTitle>
+      <Divider mt="21px" mb="31px" />
+      <FlexContainer mb="24px">
+        <Icon mr="19px" src={playerIcon} />
+        <InfoText>
+          {currentPlayers}/{maxPlayers}
+        </InfoText>
+      </FlexContainer>
+      <FlexContainer mb="24px">
+        <Icon mr="16px" src={mapIcon} />
+        <InfoText>{map}</InfoText>
+      </FlexContainer>
+      <FlexContainer>
+        <Icon mr="18px" src={unlockedIcon} />
+        <InfoText>{hasPassword ? "Locked" : "Unlocked"}</InfoText>
+      </FlexContainer>
       <StatusBar status={status}>{getStatusDescription(status)}</StatusBar>
     </Root>
   );

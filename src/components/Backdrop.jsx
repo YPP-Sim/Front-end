@@ -7,7 +7,7 @@ const Root = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #00000033;
+  background: rgba(32, 40, 48, 0.8);
 `;
 
 const Backdrop = (props) => {

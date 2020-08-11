@@ -22,8 +22,8 @@ const FlexCenterContainer = styled.div`
 const GridContainer = styled.div`
   margin: 0px 193px;
   display: grid;
-  gap: 25px;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 34px;
+  grid-template-columns: repeat(auto-fit, minmax(238px, 1fr));
   justify-items: center;
   width: 100%;
 `;
