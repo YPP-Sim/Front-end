@@ -62,6 +62,45 @@ export function updateTextureAnimation(deltaTime) {
   this.lastElapsedTime = elapsedTime;
 }
 
+export function updateSinkingTextureAnimation(deltaTime) {
+  const elapsedTime = this.lastElapsedTime + deltaTime;
+  this.textureChangeElapsed += deltaTime;
+  if (elapsedTime > this.time) {
+    this.ticker.stop();
+    this.onComplete();
+    return;
+  }
+
+  if (this.textureChangeElapsed >= this.speed) {
+    if (this.currentFrame >= this.totalFrames) {
+      this.ticker.stop();
+      this.onComplete();
+      return;
+    } else {
+      const { x, y, width, height } = this.orientations[this.currentFrame];
+      this.frame.x = x;
+      this.frame.y = y;
+      this.frame.width = width;
+      this.frame.height = height;
+
+      this.currentFrame++;
+    }
+
+    this.sprite.texture.frame = this.frame;
+    this.textureChangeElapsed = 0;
+  }
+  this.lastElapsedTime = elapsedTime;
+}
+
+export function getObjectSize(obj) {
+  var size = 0,
+    key;
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) size++;
+  }
+  return size;
+}
+
 export function getSideVelocity(orientation, side) {
   if (side !== "left" && side !== "right") return { x: 0, y: 0 };
 

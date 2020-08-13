@@ -7,6 +7,8 @@ import {
   updateLinearAnimation,
   getSideVelocity,
   updateTextureAnimation,
+  updateSinkingTextureAnimation,
+  getObjectSize,
 } from "./util";
 
 // TESTING COMMANDS:
@@ -399,7 +401,35 @@ class Ship {
   }
 
   playSinkingAnimation() {
+    const orientations = this.type.sinkingOrientations.orientations;
+
+    const { x, y, width, height } = orientations[0];
+    const rect = new PIXI.Rectangle(x, y, width, height);
     this.sprite.texture = this.sinkingTexture;
+    this.sprite.texture.frame = rect;
+
+    const ticker = new PIXI.Ticker();
+    const context = {
+      textureChangeElapsed: 0,
+      lastElapsedTime: 0,
+      currentFrame: 0,
+      time: 430,
+      speed: 6,
+      ticker,
+      onComplete: () => {
+        this.game.socket.emit("requestShipStats", {
+          playerName: this.playerName,
+          gameId: this.game.gameId,
+        });
+      },
+      totalFrames: getObjectSize(orientations),
+      orientations,
+      frame: rect,
+      sprite: this.sprite,
+    };
+
+    ticker.add(updateSinkingTextureAnimation, context);
+    ticker.start();
   }
 
   /**

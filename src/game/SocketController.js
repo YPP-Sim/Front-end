@@ -65,6 +65,8 @@ class SocketController {
     socket.on("shipPositionChange", (data) => {
       const { shipId, boardX, boardY, orientation } = data;
       const ship = this.game.getShip(shipId);
+
+      ship.sprite.texture = ship.movementTexture;
       ship.setPosition(boardX, boardY);
       ship.setOrientation(getOrientationByName(orientation));
     });

@@ -147,7 +147,8 @@ class Game extends Component {
   initPlayerShips() {
     const shh = this.addShip("Artysh", "WAR_FRIG", 1, 1, Orientation.SOUTH);
     // shh.moveLeft(false, true);
-    shh.moveForward(true);
+    // shh.moveForward(false);
+    shh.playSinkingAnimation();
     // shh.shoot([true, true], "left", 3, true);
     // shh.shoot([true], "right", 2, true);
     for (let player of this.gameData.attackers) {
@@ -934,8 +935,10 @@ class Game extends Component {
       if (turnSinks.length > 0) {
         for (let playerObj of turnSinks) {
           const { playerName } = playerObj;
-
-          // Start sinking animation for specific player's ship.
+          const ship = this.getShip(playerName);
+          if (ship) {
+            ship.playSinkingAnimation();
+          }
         }
       }
 
