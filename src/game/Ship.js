@@ -46,10 +46,17 @@ class Ship {
   loadSprites() {
     const loader = PIXI.Loader.shared;
 
-    // Ship Sprite
-    const shipSprite = new PIXI.Sprite(
-      new PIXI.Texture(loader.resources[this.type.textureName].texture)
+    // Pre loading movement/sinking textures
+    this.sinkingTexture = new PIXI.Texture(
+      loader.resources[this.type.sinkingTextureName].texture
     );
+
+    this.movementTexture = new PIXI.Texture(
+      loader.resources[this.type.textureName].texture
+    );
+
+    // Ship Sprite
+    const shipSprite = new PIXI.Sprite(this.movementTexture);
 
     shipSprite.zIndex = 3;
     const { spaceX, spaceY } = calculateGameToSpritePosition(this.vX, this.vY);
@@ -389,6 +396,10 @@ class Ship {
 
     ticker.add(updateTextureAnimation, context);
     ticker.start();
+  }
+
+  playSinkingAnimation() {
+    this.sprite.texture = this.sinkingTexture;
   }
 
   /**

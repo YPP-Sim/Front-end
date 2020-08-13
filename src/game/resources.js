@@ -50,8 +50,13 @@ import wind from "../assets/sea/wind.png";
 
 //Ships
 import wfShip from "../assets/vessel/wf/spritesheet.png";
+import wfSinking from "../assets/vessel/wf/sinking2.png";
 
 const resourcePairs = [
+  {
+    name: "wfSinking",
+    image: wfSinking,
+  },
   {
     name: "splashSmall",
     image: splashSmall,

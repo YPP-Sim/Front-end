@@ -866,8 +866,9 @@ class Game extends Component {
       const turnMovements = playerMovements["turn_" + numberedTurn];
       const turnWinds = playerMovements["turn_" + numberedTurn + "_winds"];
       const turnShots = playerMovements["turn_" + numberedTurn + "_shots"];
+      const turnSinks = playerMovements["turn_" + numberedTurn + "_sinks"];
 
-      // Initial Movement
+      // Initial Movement phase
       for (let turn of turnMovements) {
         const {
           playerName,
@@ -883,7 +884,7 @@ class Game extends Component {
       }
       if (turnMovements.length > 0) await sleep(1000);
 
-      // Wind movement
+      // Wind movement phase
       if (turnWinds.length > 0) {
         for (let windMove of turnWinds) {
           const ship = this.getShip(windMove.playerName);
@@ -897,7 +898,7 @@ class Game extends Component {
         await sleep(800);
       }
 
-      // Shoot Cannons
+      // Cannons phase
       if (turnShots.length > 0) {
         for (let shotData of turnShots) {
           const {
@@ -927,6 +928,15 @@ class Game extends Component {
             );
         }
         await sleep(1200);
+      }
+
+      // Ship sinking phase
+      if (turnSinks.length > 0) {
+        for (let playerObj of turnSinks) {
+          const { playerName } = playerObj;
+
+          // Start sinking animation for specific player's ship.
+        }
       }
 
       await this._executeMoves(++numberedTurn, playerMovements);
