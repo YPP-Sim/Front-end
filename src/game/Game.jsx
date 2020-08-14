@@ -154,8 +154,10 @@ class Game extends Component {
       "DEFENDER"
     );
     // shh.moveLeft(false, true);
-    // shh.moveForward(false);
-    // shh.playSinkingAnimation();
+    shh.moveForward(false);
+    setTimeout(() => {
+      shh.playSinkingAnimation();
+    }, 2500);
     // shh.shoot([true, true], "left", 3, true);
     // shh.shoot([true], "right", 2, true);
     for (let player of this.gameData.attackers) {

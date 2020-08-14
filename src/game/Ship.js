@@ -432,12 +432,7 @@ class Ship {
       time: 430,
       speed: 6,
       ticker,
-      onComplete: () => {
-        this.game.socket.emit("requestShipStats", {
-          playerName: this.playerName,
-          gameId: this.game.gameId,
-        });
-      },
+      onComplete: () => {},
       totalFrames: getObjectSize(orientations),
       orientations,
       frame: rect,
