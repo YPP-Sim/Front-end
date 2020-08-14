@@ -106,7 +106,7 @@ export function getTeamColor(playerTeam, shipTeam) {
     case playerTeam:
       return 0x00eeff;
     case "ATTACKER":
-      return 0xff1111;
+      return 0xff4444;
     case "DEFENDER":
       return 0x70ff33;
     default:
