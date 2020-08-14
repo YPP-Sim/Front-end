@@ -68,7 +68,7 @@ class Ship {
     // Ship Sprite
     const shipSprite = new PIXI.Sprite(this.movementTexture);
 
-    shipSprite.filters = [new OutlineFilter(2, this.teamColor)];
+    shipSprite.filters = [new OutlineFilter(1, this.teamColor)];
     shipSprite.zIndex = 3;
     const { spaceX, spaceY } = calculateGameToSpritePosition(this.vX, this.vY);
 
@@ -151,8 +151,7 @@ class Ship {
     // Ship Name Text
     const textStyle = new PIXI.TextStyle({
       fontFamily: "Saira",
-      fontSize: 14,
-      fontWeight: "bold",
+      fontSize: 13,
       letterSpacing: 1,
       fill: this.teamColor,
       stroke: "black",
