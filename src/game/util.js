@@ -101,6 +101,19 @@ export function getObjectSize(obj) {
   return size;
 }
 
+export function getTeamColor(playerTeam, shipTeam) {
+  switch (shipTeam) {
+    case playerTeam:
+      return 0x00eeff;
+    case "ATTACKER":
+      return 0xff1111;
+    case "DEFENDER":
+      return 0x70ff33;
+    default:
+      return 0x000000;
+  }
+}
+
 export function getSideVelocity(orientation, side) {
   if (side !== "left" && side !== "right") return { x: 0, y: 0 };
 

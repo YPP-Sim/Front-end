@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import { OutlineFilter } from "pixi-filters";
 import orientation from "./Orientation";
 import { calculateGameToSpritePosition } from "./Game";
 import Orientation from "./Orientation";
@@ -9,17 +10,24 @@ import {
   updateTextureAnimation,
   updateSinkingTextureAnimation,
   getObjectSize,
+  getTeamColor,
 } from "./util";
 
 // TESTING COMMANDS:
-// addShip -- shipId: art, boardX: 1, boardY: 1, shipType: warFrig, orientation: SOUTH
+// addShip -- shipId: art, boardX: 1, boardY: 1, shipType: warFrig, orientation: SOUTH, team: "ATTACKER"
 // moveShip -- shipId: art, moveType: SOUTH
 
 class Ship {
-  constructor(shipType, game, playerName) {
+  constructor(shipType, game, playerName, team = "UNDECIDED") {
     this.type = shipType;
     this.game = game;
     this.playerName = playerName;
+    this.team = team;
+
+    this.teamColor = getTeamColor(
+      this.game.gameData.thisPlayer.side,
+      this.team
+    );
 
     //Graphical position of the ship (in terms for the sprite)
     this.x = 0;
@@ -60,6 +68,7 @@ class Ship {
     // Ship Sprite
     const shipSprite = new PIXI.Sprite(this.movementTexture);
 
+    shipSprite.filters = [new OutlineFilter(2, this.teamColor)];
     shipSprite.zIndex = 3;
     const { spaceX, spaceY } = calculateGameToSpritePosition(this.vX, this.vY);
 
@@ -75,7 +84,7 @@ class Ship {
     shipMoveBar.drawRect(0, -30, totalBarWidth, this.barHeight);
     shipMoveBar.pivot.x = totalBarWidth / 2;
     shipMoveBar.pivot.y = this.barHeight / 2;
-    shipMoveBar.zIndex = 4;
+    shipMoveBar.zIndex = 41;
 
     const spriteBarBody = this.game.mapBody.addSprite(
       shipMoveBar,
@@ -90,7 +99,7 @@ class Ship {
     shipFillBar.drawRect(-6, -30, 0, this.barHeight);
     shipFillBar.pivot.x = this.barSectionWidth;
     shipFillBar.pivot.y = this.barHeight / 2;
-    shipFillBar.zIndex = 5;
+    shipFillBar.zIndex = 41;
     shipFillBar.endFill();
 
     const fillBarBody = this.game.mapBody.addSprite(
@@ -140,15 +149,23 @@ class Ship {
     };
 
     // Ship Name Text
-    const textStyle = new PIXI.TextStyle({ fontSize: 14 });
+    const textStyle = new PIXI.TextStyle({
+      fontFamily: "Saira",
+      fontSize: 14,
+      fontWeight: "bold",
+      letterSpacing: 1,
+      fill: this.teamColor,
+      stroke: "black",
+      strokeThickness: 2,
+    });
     const shipNameText = new PIXI.Text(this.playerName, textStyle);
-    shipNameText.zIndex = 4;
+    shipNameText.zIndex = 41;
     shipNameText.anchor.x = 0.5;
     shipNameText.anchor.y = 0.5;
     const nameBody = this.game.mapBody.addSprite(
       shipNameText,
       spaceX + 64,
-      spaceY - 67
+      spaceY - 68
     );
     this.setNamePosition = nameBody.setSpriteOffset;
 
@@ -174,7 +191,7 @@ class Ship {
     const { spaceX, spaceY } = calculateGameToSpritePosition(x, y);
     this.setSpritePosition(spaceX, spaceY);
     this.setSpriteBarPosition(spaceX, spaceY - 20);
-    this.setNamePosition(spaceX, spaceY - 67);
+    this.setNamePosition(spaceX, spaceY - 68);
     this.setFillBarPosition(spaceX, spaceY - 20);
   }
 

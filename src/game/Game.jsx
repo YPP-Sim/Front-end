@@ -145,10 +145,17 @@ class Game extends Component {
   };
 
   initPlayerShips() {
-    const shh = this.addShip("Artysh", "WAR_FRIG", 1, 1, Orientation.SOUTH);
+    const shh = this.addShip(
+      "Artysh",
+      "WAR_FRIG",
+      1,
+      1,
+      Orientation.SOUTH,
+      "DEFENDER"
+    );
     // shh.moveLeft(false, true);
     // shh.moveForward(false);
-    shh.playSinkingAnimation();
+    // shh.playSinkingAnimation();
     // shh.shoot([true, true], "left", 3, true);
     // shh.shoot([true], "right", 2, true);
     for (let player of this.gameData.attackers) {
@@ -159,7 +166,8 @@ class Game extends Component {
         shipData.shipType,
         shipData.boardX,
         shipData.boardY,
-        shipData.orientation
+        shipData.orientation,
+        "ATTACKER"
       );
     }
     for (let player of this.gameData.defenders) {
@@ -170,7 +178,8 @@ class Game extends Component {
         shipData.shipType,
         shipData.boardX,
         shipData.boardY,
-        shipData.orientation
+        shipData.orientation,
+        "DEFENDER"
       );
     }
   }
@@ -206,13 +215,20 @@ class Game extends Component {
    * @param {number} boardX   The x position on the map board.
    * @param {number} boardY   The y position on the map boar
    */
-  addShip(shipId, type, boardX, boardY, orientation = Orientation.SOUTH) {
+  addShip(
+    shipId,
+    type,
+    boardX,
+    boardY,
+    orientation = Orientation.SOUTH,
+    team = "UNDECIDED"
+  ) {
     if (!this.setupLoaded) {
       console.log("Tried to add ship before textures were loaded...");
       return;
     }
 
-    const ship = new Ship(ShipType.warFrig, this, shipId);
+    const ship = new Ship(ShipType.warFrig, this, shipId, team);
     ship.loadSprites();
     if (typeof orientation === "string")
       ship.setOrientation(getOrientationByName(orientation));
@@ -1100,7 +1116,7 @@ class Game extends Component {
         rockData.y
       );
       const rockSprite = new PIXI.Sprite(this.getCellTexture(rockData.id));
-      rockSprite.zIndex = 50;
+      rockSprite.zIndex = 40;
       // Center rocks onto tiles.
       switch (rockData.id) {
         case 13:
