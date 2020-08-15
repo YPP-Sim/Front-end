@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import playerIcon from "../../SVGs/playerIcon.svg";
 import mapIcon from "../../SVGs/mapIcon.svg";
 import unlockedIcon from "../../SVGs/unlockedIcon.svg";
 import lockedIcon from "../../SVGs/lockedIcon.svg";
 import Divider from "../Divider";
+
+import Backdrop from "../Backdrop";
+import ChooseUsernameForm from "./ChooseUsernameForm";
 
 const Root = styled.div`
   width: 238px;
@@ -101,10 +104,17 @@ const GameCard = ({
   maxPlayers,
   map,
   hasPassword,
-  onClick,
+  onJoin,
 }) => {
+  const [usernameFormOpen, setUsernameFormOpen] = useState(false);
+
   return (
-    <Root onClick={onClick}>
+    <Root onClick={() => setUsernameFormOpen(true)}>
+      {usernameFormOpen && (
+        <Backdrop>
+          <ChooseUsernameForm onJoin={onJoin} />
+        </Backdrop>
+      )}
       <GameTitle>{title}</GameTitle>
       <Divider mt="21px" mb="31px" />
       <FlexContainer mb="24px">
@@ -118,7 +128,7 @@ const GameCard = ({
         <InfoText>{map}</InfoText>
       </FlexContainer>
       <FlexContainer>
-        <Icon mr="18px" src={unlockedIcon} />
+        <Icon mr="18px" src={hasPassword ? lockedIcon : unlockedIcon} />
         <InfoText>{hasPassword ? "Locked" : "Unlocked"}</InfoText>
       </FlexContainer>
       <StatusBar status={status}>{getStatusDescription(status)}</StatusBar>

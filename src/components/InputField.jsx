@@ -15,7 +15,11 @@ const Root = styled.input`
 
   outline: none;
 
-  width: 250px;
+  width: ${(props) => props.width || "250px"};
+  box-sizing: border-box;
+
+  margin-bottom: ${(props) => props.mb};
+  margin-top: ${(props) => props.mt};
 `;
 
 const InputField = (props) => {

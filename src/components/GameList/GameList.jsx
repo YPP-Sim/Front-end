@@ -6,6 +6,7 @@ import CreateGameForm from "./CreateGameForm";
 import Backdrop from "../Backdrop";
 import { useHistory } from "react-router-dom";
 import CreateGameCard from "./CreateGameCard";
+import ChooseUsernameForm from "./ChooseUsernameForm";
 
 const Root = styled.div`
   width: 100%;
@@ -56,7 +57,7 @@ function refreshGameList(setGames) {
 const GameList = () => {
   const [games, setGames] = useState([]);
 
-  const [formOpen, setFormOpen] = useState(false);
+  const [createGameFormOpen, setCreateGameFormOpen] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -64,7 +65,7 @@ const GameList = () => {
   }, []);
 
   const handleCreateGameClick = () => {
-    setFormOpen(true);
+    setCreateGameFormOpen(true);
   };
 
   return (
@@ -82,14 +83,14 @@ const GameList = () => {
               maxPlayers={game.maxPlayers}
               hasPassword={game.locked}
               key={key}
-              onClick={() => history.push(`/games/${game.name}`)}
+              onJoin={() => history.push(`/games/${game.name}`)}
             />
           ))}
         </GridContainer>
 
-        {formOpen && (
+        {createGameFormOpen && (
           <Backdrop>
-            <CreateGameForm onClose={() => setFormOpen(false)} />
+            <CreateGameForm onClose={() => setCreateGameFormOpen(false)} />
           </Backdrop>
         )}
       </FlexCenterContainer>

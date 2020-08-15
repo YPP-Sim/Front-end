@@ -81,8 +81,9 @@ const SelectField = styled.select`
   outline: none;
 
   min-width: 188px;
-  width: 270px;
+  width: 250px;
   padding: 0px 10px;
+  box-sizing: border-box;
 `;
 
 const InputContainer = styled.div`

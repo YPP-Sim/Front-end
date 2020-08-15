@@ -17,10 +17,14 @@ function getDefaultName() {
   return "";
 }
 
+function setDefaultName(name) {
+  localStorage.setItem("playerName", name);
+}
+
 const App = () => {
   const [playerName, setPlayerName] = useState(getDefaultName());
   return (
-    <PlayerProvider value={{ playerName, setPlayerName }}>
+    <PlayerProvider value={{ playerName, setPlayerName, setDefaultName }}>
       <Root>
         <Route exact path="/">
           <NavBar />
