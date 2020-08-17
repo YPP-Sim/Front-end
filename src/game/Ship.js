@@ -251,7 +251,7 @@ class Ship {
       const cannonSprite = new PIXI.Sprite(gunTexture);
       cannonSprite.anchor.x = 0.5;
       cannonSprite.anchor.y = 0.5;
-      cannonSprite.zIndex = 2;
+      cannonSprite.zIndex = 48;
 
       const cannonBody = this.game.mapBody.addSprite(
         cannonSprite,
