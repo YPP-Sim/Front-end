@@ -8,7 +8,19 @@ const theme = {
   color3: "#252525;",
   textColor: "#FFFFFF",
 
-  pageMargins: "0px 100px",
+  size: {
+    mobileS: "320px",
+    mobileM: "375px",
+    mobileL: "425px",
+    tablet: "820px",
+    desktopS: "1024",
+    desktopM: "1440px",
+    desktopL: "2560px",
+  },
+
+  pageMargins: "200px",
+  pageMarginsTablet: "100px",
+  pageMarginsMobile: "50px",
   pageMaxWidth: "1800px",
 
   buttonBg: "linear-gradient(88.42deg, #609ACF -8.65%, #29B3BC 99.01%);",

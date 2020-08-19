@@ -5,13 +5,16 @@ import Button from "../Button";
 import gameImg from "../../images/Game.png";
 
 const Root = styled.div`
-  margin: 100px 200px;
+  margin: 100px ${({ theme }) => theme.pageMargins};
+
+  @media (max-width: 1024px) {
+    margin: 100px ${({ theme }) => theme.pageMarginsTablet};
+  }
 `;
 
 const CenterContainer = styled.div`
   display: flex;
   flex-direction: row;
-  // max-width: 1250px;
   justify-content: center;
   align-items: center;
   width: 100%;
