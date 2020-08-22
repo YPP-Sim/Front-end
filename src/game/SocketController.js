@@ -23,6 +23,7 @@ class SocketController {
       this.game.preventMovementInteraction = true;
       await this.game.executeGameTurns(turnData.playerMovements);
       this.game.updateShipPositions(turnData.playerData);
+      this.game.updateFlags(turnData.flags);
     });
 
     socket.on("gameTick", (tick) => {

@@ -64,6 +64,11 @@ class Flag {
 
   /**
    * Sets the captured/contested status of the flag and will update the texture.
+   * 0: Not contested,
+   * 1: attacker captured,
+   * 2: defender captured,
+   * 3: both captured,
+   * 4: your team captured
    * @param {number} statusCode
    */
   setCapturedStatus(statusCode) {

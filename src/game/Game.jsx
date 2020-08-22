@@ -79,7 +79,6 @@ class Game extends Component {
 
     this.gameData = props.gameData;
     this.flags = {};
-    console.log("Game data: ", this.gameData);
 
     if (this.gameData.thisPlayer && this.gameData.thisPlayer.shipData)
       this.playerMoves = new PlayerMoves(
@@ -93,8 +92,6 @@ class Game extends Component {
     for (let flag of this.gameData.flags) {
       this.flags[flag.id] = new Flag(flag.x, flag.y, flag.pointValue, this);
     }
-
-    console.log(this.flags);
   }
 
   resize() {
@@ -156,21 +153,6 @@ class Game extends Component {
   };
 
   initPlayerShips() {
-    const shh = this.addShip(
-      "Artysh",
-      "WAR_FRIG",
-      1,
-      1,
-      Orientation.SOUTH,
-      "DEFENDER"
-    );
-    // shh.moveLeft(false, true);
-    shh.moveForward(false);
-    setTimeout(() => {
-      shh.playSinkingAnimation();
-    }, 2500);
-    // shh.shoot([true, true], "left", 3, true);
-    // shh.shoot([true], "right", 2, true);
     for (let player of this.gameData.attackers) {
       const { playerName, shipData } = player;
       if (!shipData) continue;
@@ -259,6 +241,33 @@ class Game extends Component {
    */
   getShip(shipId) {
     return this.ships[shipId];
+  }
+
+  updateFlags(flagDataArray) {
+    for (let flag of flagDataArray) {
+      const clientFlag = this.flags[flag.id];
+      if (!flag.attackersContesting && !flag.defendersContesting) {
+        clientFlag.setCapturedStatus(0);
+        continue;
+      }
+
+      if (flag.attackersContesting && flag.defendersContesting) {
+        clientFlag.setCapturedStatus(3);
+        continue;
+      }
+
+      const side = this.gameData.thisPlayer.side;
+      if (flag.attackersContesting) {
+        if (side === "ATTACKER") clientFlag.setCapturedStatus(4);
+        else clientFlag.setCapturedStatus(1);
+        continue;
+      }
+
+      if (flag.defendersContesting) {
+        if (side === "DEFENDER") clientFlag.setCapturedStatus(4);
+        else clientFlag.setCapturedStatus(2);
+      }
+    }
   }
 
   loadMapSpritesheets(resources) {

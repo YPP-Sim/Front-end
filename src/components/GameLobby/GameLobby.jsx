@@ -75,7 +75,6 @@ function organizeGameData(gameData, thisPlayerName) {
     }
   }
 
-  console.log("Incoming flags: ", gameData);
   return {
     attackers,
     defenders,
@@ -149,7 +148,6 @@ const GameLobby = () => {
     socketController.registerEvent("startGame", (gameData) => {
       setMap(gameData.map);
       setGameData(organizeGameData(gameData, playerName));
-      console.log("GameDATA: ", gameData);
     });
 
     return () => {
