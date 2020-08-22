@@ -8,6 +8,7 @@ import resourcePairs from "./resources";
 import SocketController from "./SocketController";
 import styled from "styled-components";
 import WindType from "./WindType";
+import Flag from "./Flag";
 import PlayerMoves from "./PlayerMoves";
 
 let loaderLoaded = false;
@@ -74,9 +75,10 @@ class Game extends Component {
     this.socketController = new SocketController(this.socket, this);
 
     this.setupLoaded = false;
-    this.gameData = props.gameData;
-
     this.currentGameTick = 0;
+
+    this.gameData = props.gameData;
+    this.flags = {};
     console.log("Game data: ", this.gameData);
 
     if (this.gameData.thisPlayer && this.gameData.thisPlayer.shipData)
@@ -85,6 +87,14 @@ class Game extends Component {
       );
 
     this.preventMovementInteraction = false;
+  }
+
+  initFlags() {
+    for (let flag of this.gameData.flags) {
+      this.flags[flag.id] = new Flag(flag.x, flag.y, flag.pointValue, this);
+    }
+
+    console.log(this.flags);
   }
 
   resize() {
@@ -140,6 +150,7 @@ class Game extends Component {
       this.loadShipUI(resources);
       this.oldTime = Date.now();
       this.initPlayerShips();
+      this.initFlags();
       requestAnimationFrame(this.animate.bind(this));
     });
   };

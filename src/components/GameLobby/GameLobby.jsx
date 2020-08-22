@@ -75,6 +75,7 @@ function organizeGameData(gameData, thisPlayerName) {
     }
   }
 
+  console.log("Incoming flags: ", gameData);
   return {
     attackers,
     defenders,
@@ -82,6 +83,7 @@ function organizeGameData(gameData, thisPlayerName) {
     thisPlayer,
     gameOwner: gameData.gameOwner,
     status: gameData.status,
+    flags: gameData.flags,
   };
 }
 
