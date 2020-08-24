@@ -13,10 +13,6 @@ import {
   getTeamColor,
 } from "./util";
 
-// TESTING COMMANDS:
-// addShip -- shipId: art, boardX: 1, boardY: 1, shipType: warFrig, orientation: SOUTH, team: "ATTACKER"
-// moveShip -- shipId: art, moveType: SOUTH
-
 class Ship {
   constructor(shipType, game, playerName, team = "UNDECIDED") {
     this.type = shipType;
@@ -226,7 +222,9 @@ class Ship {
   }
 
   /**
-   *
+   * Will animate a cannon shot turn.
+   * Example input data:
+   * shoot([true,true], "left", 3, false);
    * @param {Array.<boolean>} gunData
    * @param {string} side
    */
@@ -300,6 +298,11 @@ class Ship {
     }
   }
 
+  /**
+   * Will play an explosion (hit) effect on the board at x/y coordinate.
+   * @param {number} boardX
+   * @param {number} boardY
+   */
   _playHitEffect(boardX, boardY) {
     const hitTexture = PIXI.Loader.shared.resources["hit"].texture;
     const hitSprite = new PIXI.Sprite(new PIXI.Texture(hitTexture));
@@ -338,6 +341,11 @@ class Ship {
     ticker.start();
   }
 
+  /**
+   * Will play/animate a missing effect (cannon splash) on the board at x/y coordinate.
+   * @param {number} boardX
+   * @param {number} boardY
+   */
   _playMissEffect(boardX, boardY) {
     const missTexture =
       PIXI.Loader.shared.resources[this.type.cannonType.missTexture].texture;
@@ -377,6 +385,10 @@ class Ship {
     ticker.start();
   }
 
+  /**
+   * Will play/animate a shooting effect (smoke from initial cannon shot) on top of the ship
+   * @param {CannonType} cannonType
+   */
   _playShootEffect(cannonType) {
     const expTexture =
       PIXI.Loader.shared.resources[cannonType.explosionTexture].texture;
@@ -416,6 +428,9 @@ class Ship {
     ticker.start();
   }
 
+  /**
+   * Will start the sinking animation of this ship.
+   */
   playSinkingAnimation() {
     const orientations = this.type.sinkingOrientations.orientations;
 
