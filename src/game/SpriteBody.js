@@ -57,6 +57,7 @@ class SpriteBody {
     };
 
     const removeSprite = () => {
+      sprite.destroy();
       delete this.children[spriteIdentifier];
     };
 

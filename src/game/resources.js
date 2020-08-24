@@ -49,12 +49,17 @@ import whirl from "../assets/sea/whirl.png";
 import wind from "../assets/sea/wind.png";
 
 import flags from "../assets/cade/buoy.png";
+import flag_symbols from "../assets/cade/buoy_symbols.png";
 
 //Ships
 import wfShip from "../assets/vessel/wf/spritesheet.png";
 import wfSinking from "../assets/vessel/wf/sinking2.png";
 
 const resourcePairs = [
+  {
+    name: "flagSymbols",
+    image: flag_symbols,
+  },
   {
     name: "flags",
     image: flags,

@@ -47,6 +47,9 @@ class Ship {
 
     this.barSectionWidth = 11;
     this.barHeight = 6;
+
+    this.flagSymbols = [];
+    this.flagSymbolsSprites = [];
   }
 
   loadSprites() {
@@ -174,6 +177,56 @@ class Ship {
   }
 
   /**
+   * will update the contest buoys/flags on top of the ship with the given point array
+   *
+   */
+  updateContestedFlags() {
+    // Clear out previous sprites
+    for (let symbolSpriteHandler of this.flagSymbolsSprites) {
+      symbolSpriteHandler.removeSprite();
+    }
+    this.flagSymbolsSprites = [];
+
+    const loader = PIXI.Loader.shared;
+
+    let xOffset = 0;
+    const yOffset = -83;
+
+    for (let flag of this.flagSymbols) {
+      const flagSymbolTexture = new PIXI.Texture(
+        loader.resources["flagSymbols"].texture
+      );
+      const flagSymbolTextureFrame = new PIXI.Rectangle(0, 0, 10, 13);
+      const flagSymbolSprite = new PIXI.Sprite(flagSymbolTexture);
+      flagSymbolSprite.texture.frame = flagSymbolTextureFrame;
+      // Set texture frame based off of side and flag/buoy point value
+      flagSymbolSprite.anchor.x = 0.5;
+      flagSymbolSprite.anchor.y = 0.5;
+      // flagSymbolSprite.zIndex = 48;
+      flagSymbolSprite.zIndex = 99;
+
+      const { spaceX, spaceY } = calculateGameToSpritePosition(this.x, this.y);
+      const { removeSprite, setSpriteOffset } = this.game.mapBody.addSprite(
+        flagSymbolSprite,
+        spaceX + xOffset,
+        spaceY + yOffset
+      );
+
+      const spriteHandler = {
+        sprite: flagSymbolSprite,
+        removeSprite,
+        setPosition: (x, y) => {
+          setSpriteOffset(x + xOffset, y + yOffset);
+        },
+      };
+      this.flagSymbolsSprites.push(spriteHandler);
+      this.game.stage.addChild(flagSymbolSprite);
+
+      xOffset += 14;
+    }
+  }
+
+  /**
    *  Set's the sprites position, used mainly for animations.
    * This does not set the actual board position and is purely for
    * graphics
@@ -188,6 +241,12 @@ class Ship {
     this.setSpriteBarPosition(spaceX, spaceY - 20);
     this.setNamePosition(spaceX, spaceY - 68);
     this.setFillBarPosition(spaceX, spaceY - 20);
+
+    // Update position of flag symbols above ship
+    for (let spriteHandler of this.flagSymbolsSprites) {
+      const { setPosition } = spriteHandler;
+      setPosition(spaceX, spaceY);
+    }
   }
 
   /**

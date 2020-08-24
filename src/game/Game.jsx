@@ -245,6 +245,12 @@ class Game extends Component {
 
   updateFlags(flagDataArray) {
     for (let flag of flagDataArray) {
+      for (let contestingPlayer of flag.playersContesting) {
+        const ship = this.getShip(contestingPlayer);
+        if (!ship) continue;
+        ship.flagSymbols.push(flag);
+      }
+
       const clientFlag = this.flags[flag.id];
       if (!flag.attackersContesting && !flag.defendersContesting) {
         clientFlag.setCapturedStatus(0);
@@ -267,6 +273,16 @@ class Game extends Component {
         if (side === "DEFENDER") clientFlag.setCapturedStatus(4);
         else clientFlag.setCapturedStatus(2);
       }
+    }
+
+    // update Ship flag symbols
+    this._updateShipFlagSymbols();
+  }
+
+  _updateShipFlagSymbols() {
+    for (let shipName in this.ships) {
+      const ship = this.getShip(shipName);
+      ship.updateContestedFlags();
     }
   }
 
