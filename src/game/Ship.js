@@ -189,8 +189,12 @@ class Ship {
 
     const loader = PIXI.Loader.shared;
 
-    let xOffset = 0;
     const yOffset = -83;
+    const paddingLength = (this.flagSymbols.length - 1) * 2;
+    const flagsLength = this.flagSymbols.length * 10;
+    const totalLength = paddingLength + flagsLength;
+    // Start as a negative xOffset to be put in middle.
+    let xOffset = -(totalLength / 2);
 
     for (let flag of this.flagSymbols) {
       const flagSymbolTexture = new PIXI.Texture(
@@ -215,8 +219,10 @@ class Ship {
       const spriteHandler = {
         sprite: flagSymbolSprite,
         removeSprite,
+        xOffset,
+        yOffset,
         setPosition: (x, y) => {
-          setSpriteOffset(x + xOffset, y + yOffset);
+          setSpriteOffset(x, y);
         },
       };
       this.flagSymbolsSprites.push(spriteHandler);
@@ -244,8 +250,8 @@ class Ship {
 
     // Update position of flag symbols above ship
     for (let spriteHandler of this.flagSymbolsSprites) {
-      const { setPosition } = spriteHandler;
-      setPosition(spaceX, spaceY);
+      const { setPosition, xOffset, yOffset } = spriteHandler;
+      setPosition(spaceX + xOffset, spaceY + yOffset);
     }
   }
 

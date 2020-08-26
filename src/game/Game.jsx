@@ -244,6 +244,13 @@ class Game extends Component {
   }
 
   updateFlags(flagDataArray) {
+    // Clear flag symbols for all players to start out
+    for (let shipName in this.ships) {
+      const ship = this.getShip(shipName);
+      if (!ship) continue;
+      ship.flagSymbols = [];
+    }
+
     for (let flag of flagDataArray) {
       for (let contestingPlayer of flag.playersContesting) {
         const ship = this.getShip(contestingPlayer);
