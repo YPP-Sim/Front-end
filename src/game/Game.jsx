@@ -14,11 +14,12 @@ import PlayerMoves from "./PlayerMoves";
 let loaderLoaded = false;
 
 const GameContainer = styled.div`
-  height: 100%;
+  width: 100%;
+  height: 20%;
 `;
 
 function sleep(milliseconds) {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
 function isRock(cell_id) {
@@ -48,19 +49,28 @@ class Game extends Component {
     super(props);
 
     this.pixi_cnt = null;
-    const renderer = new PIXI.Renderer({
-      width: props.width || 600,
-      height: props.height || 600,
+    const width = props.width || 600;
+    const height = props.height || 600;
+    const realApp = new PIXI.Application({
+      // width,
+      // height,
       transparent: false,
       backgroundColor: 0x6a819c, // A hex color code
       resolution: window.devicePixelRatio,
+      autoResize: true
     });
+    this.resizeRatio = width / height;
 
+    this.realApp = realApp;
     this.stage = new PIXI.Container();
     this.stage.sortableChildren = true;
-    this.app = renderer;
+    this.app = realApp.renderer;
     this.state = { app: this.app };
     this.loader = null;
+
+    //TODO eventually scale code will be apart of zooming in/out feature!
+    this.stage.scale.x = 1;
+    this.stage.scale.y = 1;
 
     // Will save some textures from spritesheets for later use.
     this.textures = {};
@@ -95,10 +105,16 @@ class Game extends Component {
   }
 
   resize() {
-    const elem = document.getElementById("game");
-    if (!elem) return;
-    if (this.app)
-      this.app.resize(window.innerWidth - 300, elem.clientHeight - 4);
+    const parent = this.app.view.parentNode;
+
+    // Resize the renderer
+
+    const toW = window.innerWidth - 300;
+    const toH = parent.clientHeight - 3;
+    this.app.resize(toW, toH);
+
+    // Move the movesBody/shiphand UI
+    if (this.movesBody) this.movesBody.setPosition(175, toH - 95);
   }
 
   componentDidMount() {
@@ -115,7 +131,7 @@ class Game extends Component {
     this.pixi_cnt.removeEventListener("contextmenu", removeContextMenu);
   }
 
-  updatePixiContainer = (el) => {
+  updatePixiContainer = el => {
     this.pixi_cnt = el;
 
     if (this.pixi_cnt && this.pixi_cnt.children.length <= 0)
@@ -477,7 +493,7 @@ class Game extends Component {
     // Texts ---------------------
 
     const textStyle = new PIXI.TextStyle({
-      fontSize: 14,
+      fontSize: 14
     });
 
     const autoText = new PIXI.Text("Auto", textStyle);
@@ -548,7 +564,10 @@ class Game extends Component {
     this.setCenterAnchor(rightSprite);
     this.sprites["rightTokens"] = rightSprite;
 
-    const movesBody = new SpriteBody(movesBgSprite, 175, this.app.height - 95);
+    const parent = this.app.view.parentNode;
+
+    const initialY = parent.clientHeight - 3;
+    const movesBody = new SpriteBody(movesBgSprite, 175, initialY - 95);
     this.movesBody = movesBody;
     leftSprite.zIndex = 52;
     rightSprite.zIndex = 52;
@@ -569,14 +588,14 @@ class Game extends Component {
     sandBotMask.zIndex = 100;
     sandBot.mask = sandBotMask;
 
-    this.setMaskPosition = (tick) => {
-      let maskY = this.app.height - 92 + (tick / 35) * 43;
+    this.setMaskPosition = tick => {
+      let maskY = initialY - 92 + (tick / 35) * 43;
       sandTopMask.y = maskY;
 
-      maskY = this.app.height - 91 - (tick / 35) * 43;
+      maskY = initialY - 91 - (tick / 35) * 43;
       sandBotMask.y = maskY;
 
-      maskY = this.app.height - 68 - (tick / 35) * 43;
+      maskY = initialY - 68 - (tick / 35) * 43;
       sandTrickleMask.y = maskY;
     };
 
@@ -666,7 +685,7 @@ class Game extends Component {
 
     damageSprite.mask = damageMask;
 
-    this.setDamageUIPercent = (percent) => {
+    this.setDamageUIPercent = percent => {
       const angleToAdd = percent * 180;
 
       damageMask.angle = 270 + angleToAdd;
@@ -694,7 +713,7 @@ class Game extends Component {
 
     bilgeSprite.mask = bilgeMask;
 
-    this.setBilgeUIPercent = (percent) => {
+    this.setBilgeUIPercent = percent => {
       const angleToSubtract = percent * 180;
 
       bilgeMask.angle = 90 - angleToSubtract;
@@ -712,7 +731,7 @@ class Game extends Component {
     const turnFrameRect = new PIXI.Rectangle(84, 0, 28, 28);
     turnSprite.texture.frame = turnFrameRect;
     turnSprite.interactive = true;
-    turnSprite.on("pointerdown", (event) => {
+    turnSprite.on("pointerdown", event => {
       if (this.preventMovementInteraction) return;
 
       const buttonType = event.data.originalEvent.button;
@@ -742,8 +761,8 @@ class Game extends Component {
           moveNumber: turnNumber,
           direction: turnDirection,
           leftGuns: [false, false],
-          rightGuns: [false, false],
-        },
+          rightGuns: [false, false]
+        }
       });
 
       turnSprite.texture.frame = turnFrameRect;
@@ -798,7 +817,7 @@ class Game extends Component {
       gunSprite.on("pointerdown", () => {
         if (this.preventMovementInteraction) return;
 
-        playerMoves.incrementNumberedTurnGuns(gunTurn, side, (gunData) => {
+        playerMoves.incrementNumberedTurnGuns(gunTurn, side, gunData => {
           if (gunData[0]) filledGunFirstSprite.visible = true;
           else filledGunFirstSprite.visible = false;
 
@@ -813,7 +832,7 @@ class Game extends Component {
             playerName,
             numberedTurn: gunTurn,
             side,
-            gunData,
+            gunData
           });
         });
       });
@@ -912,14 +931,14 @@ class Game extends Component {
   }
 
   executeGameTurns(playerMovements) {
-    return new Promise(async (resolve) => {
+    return new Promise(async resolve => {
       await this._executeMoves(1, playerMovements);
       resolve();
     });
   }
 
   async _executeMoves(numberedTurn, playerMovements) {
-    return new Promise(async (resolve) => {
+    return new Promise(async resolve => {
       if (numberedTurn > 4) {
         resolve();
         return;
@@ -936,7 +955,7 @@ class Game extends Component {
           playerName,
           direction,
           cancelledMovement,
-          cancelledTurnal,
+          cancelledTurnal
         } = turn;
 
         const ship = this.getShip(playerName);
@@ -970,7 +989,7 @@ class Game extends Component {
             rightGunEnd,
             leftGunEnd,
             leftHit,
-            rightHit,
+            rightHit
           } = shotData;
           // Do gun shooting animation;
           if (leftGuns[0])
@@ -1124,7 +1143,7 @@ class Game extends Component {
     let startingY = 0;
 
     this.app.interactive = true;
-    this.app.plugins.interaction.on("pointerdown", (e) => {
+    this.app.plugins.interaction.on("pointerdown", e => {
       // Check if clicked on map and NOT ship UI
       if (this.bgClicked) return;
 
@@ -1139,7 +1158,7 @@ class Game extends Component {
       dragging = false;
     });
 
-    this.app.plugins.interaction.on("pointermove", (e) => {
+    this.app.plugins.interaction.on("pointermove", e => {
       if (!dragging) return;
 
       dX = e.data.global.x - startingX;
