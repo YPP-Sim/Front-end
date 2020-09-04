@@ -275,7 +275,10 @@ class Game extends Component {
       }
 
       const clientFlag = this.flags[flag.id];
-      if (!clientFlag) continue;
+      if (!clientFlag) {
+        console.error("Client flag does not exist?");
+        continue;
+      }
 
       if (!flag.attackersContesting && !flag.defendersContesting) {
         clientFlag.setCapturedStatus(0);
