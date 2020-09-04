@@ -176,6 +176,29 @@ class Ship {
     this.setTextureFromOrientation(this.faceDirection);
   }
 
+  _findFlagSymbolTextureOffset(attackersContesting, defendersContesting) {
+    if (attackersContesting && defendersContesting) {
+      // Black flags
+      return 120;
+    }
+
+    const side = this.game.gameData.thisPlayer.side;
+
+    if (attackersContesting) {
+      if (side === "ATTACKER")
+        // Same team flags (blue)
+        return 0;
+      else return 60; //Red flags
+    }
+
+    if (defendersContesting) {
+      if (side === "DEFENDER")
+        // Same team flags (blue)
+        return 0;
+      else return 30; // Green flags
+    }
+  }
+
   /**
    * will update the contest buoys/flags on top of the ship with the given point array
    *
@@ -200,7 +223,22 @@ class Ship {
       const flagSymbolTexture = new PIXI.Texture(
         loader.resources["flagSymbols"].texture
       );
-      const flagSymbolTextureFrame = new PIXI.Rectangle(0, 0, 10, 13);
+
+      const flagTextureX =
+        10 * (flag.pointValue - 1) +
+        this._findFlagSymbolTextureOffset(
+          flag.attackersContesting,
+          flag.defendersContesting
+        );
+      const flagTextureY = 0;
+
+      const flagSymbolTextureFrame = new PIXI.Rectangle(
+        flagTextureX,
+        flagTextureY,
+        10,
+        13
+      );
+
       const flagSymbolSprite = new PIXI.Sprite(flagSymbolTexture);
       flagSymbolSprite.texture.frame = flagSymbolTextureFrame;
       // Set texture frame based off of side and flag/buoy point value
