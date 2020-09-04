@@ -275,6 +275,8 @@ class Game extends Component {
       }
 
       const clientFlag = this.flags[flag.id];
+      if (!clientFlag) continue;
+
       if (!flag.attackersContesting && !flag.defendersContesting) {
         clientFlag.setCapturedStatus(0);
         continue;
