@@ -320,8 +320,8 @@ class Game extends Component {
 
     // Container/Box
     const box = new PIXI.Graphics();
-    box.beginFill(0x5dd8ff);
-    box.alpha = 0.7;
+    box.beginFill(0x00d8ff);
+    box.alpha = 0.45;
     box.drawRect(0, 0, 150, 100);
     box.zIndex = 41;
     box.endFill();

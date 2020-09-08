@@ -27,7 +27,6 @@ class SocketController {
     });
 
     socket.on("gameTime", (time) => {
-      console.log("Time : ", time);
       if (this.game.updateTimeNumber) this.game.updateTimeNumber(time);
     });
 
