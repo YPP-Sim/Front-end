@@ -26,6 +26,11 @@ class SocketController {
       this.game.updateFlags(turnData.flags);
     });
 
+    socket.on("gameTime", (time) => {
+      console.log("Time : ", time);
+      if (this.game.updateTimeNumber) this.game.updateTimeNumber(time);
+    });
+
     socket.on("gameTick", (tick) => {
       this.game.currentGameTick = tick;
 

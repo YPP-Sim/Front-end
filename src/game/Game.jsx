@@ -49,17 +49,12 @@ class Game extends Component {
     super(props);
 
     this.pixi_cnt = null;
-    const width = props.width || 600;
-    const height = props.height || 600;
     const realApp = new PIXI.Application({
-      // width,
-      // height,
       transparent: false,
       backgroundColor: 0x6a819c, // A hex color code
       resolution: window.devicePixelRatio,
       autoResize: true,
     });
-    this.resizeRatio = width / height;
 
     this.realApp = realApp;
     this.stage = new PIXI.Container();
@@ -105,8 +100,6 @@ class Game extends Component {
   }
 
   resize() {
-    const parent = this.app.view.parentNode;
-
     // Resize the renderer
 
     const toW = window.innerWidth - 300;
@@ -115,6 +108,8 @@ class Game extends Component {
 
     // Move the movesBody/shiphand UI
     if (this.movesBody) this.movesBody.setPosition(175, toH - 95);
+    if (this.setInfoDisplayPosition)
+      this.setInfoDisplayPosition(this.app.width - 100, 50);
   }
 
   componentDidMount() {
@@ -164,6 +159,7 @@ class Game extends Component {
       this.oldTime = Date.now();
       this.initPlayerShips();
       this.initFlags();
+      this.createInfoDisplay();
       requestAnimationFrame(this.animate.bind(this));
     });
   };
@@ -312,6 +308,63 @@ class Game extends Component {
       const ship = this.getShip(shipName);
       ship.updateContestedFlags();
     }
+  }
+
+  createInfoDisplay() {
+    const textStyle = new PIXI.TextStyle({
+      fontFamily: "Saira",
+      fontSize: 16,
+      letterSpacing: 1,
+      fill: "white",
+    });
+
+    // Container/Box
+    const box = new PIXI.Graphics();
+    box.beginFill(0x5dd8ff);
+    box.alpha = 0.7;
+    box.drawRect(0, 0, 150, 100);
+    box.zIndex = 41;
+    box.endFill();
+
+    const timeText = new PIXI.Text("Time: ", textStyle);
+    timeText.zIndex = 41;
+    timeText.anchor.x = 0.5;
+    timeText.anchor.y = 0.5;
+    timeText.x = this.app.width - 100;
+    timeText.y = 50;
+
+    const timeNumber = new PIXI.Text("", textStyle);
+    timeNumber.zIndex = 41;
+    timeNumber.anchor.x = 0.5;
+    timeNumber.anchor.y = 0.5;
+    timeNumber.x = this.app.width - 50;
+    timeNumber.y = 50;
+
+    this.setInfoDisplayPosition = (x, y) => {
+      box.x = x - 60;
+      box.y = y - 40;
+
+      timeText.x = x - 10;
+      timeText.y = y - 20;
+
+      timeNumber.x = x + 40;
+      timeNumber.y = y - 20;
+    };
+
+    this.setInfoDisplayPosition(this.app.width - 100, 50);
+
+    this.updateTimeNumber = (timeInSeconds) => {
+      let minutes = parseInt(timeInSeconds / 60, 10);
+      let seconds = parseInt(timeInSeconds % 60, 10);
+
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+      timeNumber.text = minutes + ":" + seconds;
+    };
+
+    this.stage.addChild(box);
+    this.stage.addChild(timeText);
+    this.stage.addChild(timeNumber);
   }
 
   loadMapSpritesheets(resources) {
