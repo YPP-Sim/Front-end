@@ -326,20 +326,42 @@ class Game extends Component {
     box.zIndex = 41;
     box.endFill();
 
+    // Time
     const timeText = new PIXI.Text("Time: ", textStyle);
     timeText.zIndex = 41;
     timeText.anchor.x = 0.5;
     timeText.anchor.y = 0.5;
-    timeText.x = this.app.width - 100;
-    timeText.y = 50;
 
     const timeNumber = new PIXI.Text("", textStyle);
     timeNumber.zIndex = 41;
     timeNumber.anchor.x = 0.5;
     timeNumber.anchor.y = 0.5;
-    timeNumber.x = this.app.width - 50;
-    timeNumber.y = 50;
 
+    // ---- Scores -----
+
+    // Defenders
+    const defenderText = new PIXI.Text("Defenders: ", textStyle);
+    defenderText.zIndex = 41;
+    defenderText.anchor.x = 0.5;
+    defenderText.anchor.y = 0.5;
+
+    const defenderScore = new PIXI.Text("0", textStyle);
+    defenderScore.zIndex = 41;
+    defenderScore.anchor.x = 0.5;
+    defenderScore.anchor.y = 0.5;
+
+    // Attackers
+    const attackerText = new PIXI.Text("Attackers: ", textStyle);
+    attackerText.zIndex = 41;
+    attackerText.anchor.x = 0.5;
+    attackerText.anchor.y = 0.5;
+
+    const attackerScore = new PIXI.Text("0", textStyle);
+    attackerScore.zIndex = 41;
+    attackerScore.anchor.x = 0.5;
+    attackerScore.anchor.y = 0.5;
+
+    // Repositioning function to change position of this display
     this.setInfoDisplayPosition = (x, y) => {
       box.x = x - 60;
       box.y = y - 40;
@@ -349,10 +371,32 @@ class Game extends Component {
 
       timeNumber.x = x + 40;
       timeNumber.y = y - 20;
+
+      defenderText.x = x;
+      defenderText.y = y + 10;
+
+      defenderScore.x = x + 68;
+      defenderScore.y = y + 10;
+
+      attackerText.x = x - 3;
+      attackerText.y = y + 30;
+
+      attackerScore.x = x + 68;
+      attackerScore.y = y + 30;
+    };
+
+    // Score changing functions to update display
+    this.setAttackerScore = (score) => {
+      attackerScore.text = score;
+    };
+
+    this.setDefenderScore = (score) => {
+      defenderScore.text = score;
     };
 
     this.setInfoDisplayPosition(this.app.width - 100, 50);
 
+    // Time changing function to update display
     this.updateTimeNumber = (timeInSeconds) => {
       let minutes = parseInt(timeInSeconds / 60, 10);
       let seconds = parseInt(timeInSeconds % 60, 10);
@@ -362,8 +406,13 @@ class Game extends Component {
       timeNumber.text = minutes + ":" + seconds;
     };
 
+    // Add to stage
     this.stage.addChild(box);
     this.stage.addChild(timeText);
+    this.stage.addChild(attackerText);
+    this.stage.addChild(defenderText);
+    this.stage.addChild(attackerScore);
+    this.stage.addChild(defenderScore);
     this.stage.addChild(timeNumber);
   }
 
