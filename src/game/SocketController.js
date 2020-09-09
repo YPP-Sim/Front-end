@@ -30,6 +30,13 @@ class SocketController {
       if (this.game.updateTimeNumber) this.game.updateTimeNumber(time);
     });
 
+    socket.on("updatePoints", (scores) => {
+      if (scores.attackerScore)
+        this.game.setAttackerScore(scores.attackerScore);
+      if (scores.defenderScore)
+        this.game.setDefenderScore(scores.defenderScore);
+    });
+
     socket.on("gameTick", (tick) => {
       this.game.currentGameTick = tick;
 
