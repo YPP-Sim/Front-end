@@ -22,6 +22,8 @@ import damageStatus from "../assets/ui/damage.png";
 import gunToken from "../assets/ui/grapplecannon.png";
 
 import moves from "../assets/ui/move.png";
+import movesEmpty from "../assets/ui/move_empty.png";
+
 import shiphandMoves from "../assets/ui/move_shiphand.png";
 
 // Cannonballs
@@ -56,6 +58,10 @@ import wfShip from "../assets/vessel/wf/spritesheet.png";
 import wfSinking from "../assets/vessel/wf/sinking2.png";
 
 const resourcePairs = [
+  {
+    name: "movesEmpty",
+    image: movesEmpty,
+  },
   {
     name: "flagSymbols",
     image: flag_symbols,

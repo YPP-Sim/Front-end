@@ -605,30 +605,14 @@ class Game extends Component {
 
     const autoText = new PIXI.Text("Auto", textStyle);
 
-    const rightTokenAmount = new PIXI.Text("x1", textStyle);
+    const rightTokenAmount = new PIXI.Text("x2", textStyle);
     this.setCenterAnchor(rightTokenAmount);
-    const leftTokenAmount = new PIXI.Text("x1", textStyle);
+    const leftTokenAmount = new PIXI.Text("x2", textStyle);
     this.setCenterAnchor(leftTokenAmount);
-    const forwardTokenAmount = new PIXI.Text("x1", textStyle);
+    const forwardTokenAmount = new PIXI.Text("x4", textStyle);
     this.setCenterAnchor(forwardTokenAmount);
     const gunTokenAmount = new PIXI.Text("x1", textStyle);
     this.setCenterAnchor(gunTokenAmount);
-
-    this.setLeftTokens = (amount) => {
-      leftTokenAmount.text = `x${amount}`;
-    };
-
-    this.setForwardTokens = (amount) => {
-      forwardTokenAmount.text = `x${amount}`;
-    };
-
-    this.setRightTokens = (amount) => {
-      rightTokenAmount.text = `x${amount}`;
-    };
-
-    this.setCannonsAmount = (amount) => {
-      gunTokenAmount.text = `x${amount};`;
-    };
 
     autoText.zIndex = 52;
     gunTokenAmount.zIndex = 52;
@@ -686,6 +670,47 @@ class Game extends Component {
     const rightSprite = new PIXI.Sprite(rightTexture);
     this.setCenterAnchor(rightSprite);
     this.sprites["rightTokens"] = rightSprite;
+
+    const emptyMovesTexture = resources["movesEmpty"].texture;
+
+    this.textures["leftEmptyToken"] = new PIXI.Texture(
+      emptyMovesTexture,
+      new PIXI.Rectangle(0, 0, 28, 28)
+    );
+
+    this.textures["forwardEmptyToken"] = new PIXI.Texture(
+      emptyMovesTexture,
+      new PIXI.Rectangle(28, 0, 28, 28)
+    );
+
+    this.textures["rightEmptyToken"] = new PIXI.Texture(
+      emptyMovesTexture,
+      new PIXI.Rectangle(56, 0, 28, 28)
+    );
+
+    this.setLeftTokens = (amount) => {
+      leftTokenAmount.text = `x${amount}`;
+
+      if (amount <= 0) leftSprite.texture = this.textures["leftEmptyToken"];
+      else leftSprite.texture = this.textures["leftToken"];
+    };
+
+    this.setForwardTokens = (amount) => {
+      forwardTokenAmount.text = `x${amount}`;
+      if (amount <= 0)
+        forwardSprite.texture = this.textures["forwardEmptyToken"];
+      else forwardSprite.texture = this.textures["forwardToken"];
+    };
+
+    this.setRightTokens = (amount) => {
+      rightTokenAmount.text = `x${amount}`;
+      if (amount <= 0) rightSprite.texture = this.textures["rightEmptyToken"];
+      else rightSprite.texture = this.textures["rightToken"];
+    };
+
+    this.setCannonsAmount = (amount) => {
+      gunTokenAmount.text = `x${amount};`;
+    };
 
     const parent = this.app.view.parentNode;
 
