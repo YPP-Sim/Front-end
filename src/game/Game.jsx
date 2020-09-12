@@ -709,7 +709,7 @@ class Game extends Component {
     };
 
     this.setCannonsAmount = (amount) => {
-      gunTokenAmount.text = `x${amount};`;
+      gunTokenAmount.text = `x${amount}`;
     };
 
     const parent = this.app.view.parentNode;
