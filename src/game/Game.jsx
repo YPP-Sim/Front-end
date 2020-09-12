@@ -614,6 +614,22 @@ class Game extends Component {
     const gunTokenAmount = new PIXI.Text("x1", textStyle);
     this.setCenterAnchor(gunTokenAmount);
 
+    this.setLeftTokens = (amount) => {
+      leftTokenAmount.text = `x${amount}`;
+    };
+
+    this.setForwardTokens = (amount) => {
+      forwardTokenAmount.text = `x${amount}`;
+    };
+
+    this.setRightTokens = (amount) => {
+      rightTokenAmount.text = `x${amount}`;
+    };
+
+    this.setCannonsAmount = (amount) => {
+      gunTokenAmount.text = `x${amount};`;
+    };
+
     autoText.zIndex = 52;
     gunTokenAmount.zIndex = 52;
     forwardTokenAmount.zIndex = 52;

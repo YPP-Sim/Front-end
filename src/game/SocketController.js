@@ -37,6 +37,23 @@ class SocketController {
         this.game.setDefenderScore(scores.defenderScore);
     });
 
+    socket.on("playMove", (moveData) => {
+      console.log("move data: ", moveData);
+    });
+
+    socket.on("updateTokens", (tokenData) => {
+      const { moves, cannons } = tokenData;
+      if (moves) {
+        this.game.setLeftTokens(moves.LEFT);
+        this.game.setForwardTokens(moves.FORWARD);
+        this.game.setRightTokens(moves.RIGHT);
+      }
+
+      if (cannons) {
+        this.game.setCannonsAmount(cannons);
+      }
+    });
+
     socket.on("gameTick", (tick) => {
       this.game.currentGameTick = tick;
 
