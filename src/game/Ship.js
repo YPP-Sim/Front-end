@@ -245,7 +245,7 @@ class Ship {
       flagSymbolSprite.anchor.x = 0.5;
       flagSymbolSprite.anchor.y = 0.5;
       // flagSymbolSprite.zIndex = 48;
-      flagSymbolSprite.zIndex = 99;
+      flagSymbolSprite.zIndex = 49;
 
       const { spaceX, spaceY } = calculateGameToSpritePosition(this.x, this.y);
       const { removeSprite, setSpriteOffset } = this.game.mapBody.addSprite(
