@@ -20,6 +20,7 @@ import bilgeStatus from "../assets/ui/bilge.png";
 import damageStatus from "../assets/ui/damage.png";
 
 import gunToken from "../assets/ui/grapplecannon.png";
+import emptyGuns from "../assets/ui/grapplecannon_empty.png";
 
 import moves from "../assets/ui/move.png";
 import movesEmpty from "../assets/ui/move_empty.png";
@@ -58,6 +59,10 @@ import wfShip from "../assets/vessel/wf/spritesheet.png";
 import wfSinking from "../assets/vessel/wf/sinking2.png";
 
 const resourcePairs = [
+  {
+    name: "cannonsEmpty",
+    image: emptyGuns,
+  },
   {
     name: "movesEmpty",
     image: movesEmpty,

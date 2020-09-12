@@ -573,6 +573,8 @@ class Game extends Component {
       new PIXI.Rectangle(25, 0, 25, 25)
     );
 
+    this.textures["gunToken"] = gunTokenTexture;
+
     const autoButtonSprite = this.createSprite("autoOn");
     autoButtonSprite.interactive = true;
     autoButtonSprite.zIndex = 52;
@@ -688,11 +690,10 @@ class Game extends Component {
       new PIXI.Rectangle(56, 0, 28, 28)
     );
 
-    this.leftTokens = 2;
-    this.forwardTokens = 4;
-    this.rightTokens = 2;
-
-    this.cannons = 4;
+    this.textures["regCannonsEmpty"] = new PIXI.Texture(
+      resources["cannonsEmpty"].texture,
+      new PIXI.Rectangle(25, 0, 25, 25)
+    );
 
     this.setLeftTokens = (amount) => {
       leftTokenAmount.text = `x${amount}`;
@@ -722,10 +723,18 @@ class Game extends Component {
     };
 
     this.setCannonsAmount = (amount) => {
-      this.cannons = 4;
-
+      this.cannons = amount;
       gunTokenAmount.text = `x${amount}`;
+
+      if (amount <= 0)
+        gunTokenSprite.texture = this.textures["regCannonsEmpty"];
+      else gunTokenSprite.texture = this.textures["gunToken"];
     };
+
+    this.setLeftTokens(2);
+    this.setForwardTokens(4);
+    this.setRightTokens(2);
+    this.setCannonsAmount(0);
 
     const parent = this.app.view.parentNode;
 
