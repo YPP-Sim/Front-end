@@ -688,8 +688,16 @@ class Game extends Component {
       new PIXI.Rectangle(56, 0, 28, 28)
     );
 
+    this.leftTokens = 2;
+    this.forwardTokens = 4;
+    this.rightTokens = 2;
+
+    this.cannons = 4;
+
     this.setLeftTokens = (amount) => {
       leftTokenAmount.text = `x${amount}`;
+
+      this.leftTokens = amount;
 
       if (amount <= 0) leftSprite.texture = this.textures["leftEmptyToken"];
       else leftSprite.texture = this.textures["leftToken"];
@@ -697,18 +705,25 @@ class Game extends Component {
 
     this.setForwardTokens = (amount) => {
       forwardTokenAmount.text = `x${amount}`;
+
+      this.forwardTokens = amount;
+
       if (amount <= 0)
         forwardSprite.texture = this.textures["forwardEmptyToken"];
       else forwardSprite.texture = this.textures["forwardToken"];
     };
 
     this.setRightTokens = (amount) => {
+      this.rightTokens = amount;
+
       rightTokenAmount.text = `x${amount}`;
       if (amount <= 0) rightSprite.texture = this.textures["rightEmptyToken"];
       else rightSprite.texture = this.textures["rightToken"];
     };
 
     this.setCannonsAmount = (amount) => {
+      this.cannons = 4;
+
       gunTokenAmount.text = `x${amount}`;
     };
 
@@ -886,15 +901,38 @@ class Game extends Component {
       this.bgClicked = true;
       if (buttonType === 0) {
         // Left click
-        if (turnFrameRect.x >= 84) turnFrameRect.x = 0;
-        else turnFrameRect.x += 28;
+        let xAdder = turnFrameRect.x;
+
+        if (xAdder >= 84) xAdder = 0;
+        else xAdder += 28;
+
+        // Go to forward token if no lefts
+        if (xAdder === 0 && this.leftTokens <= 0) xAdder += 28;
+        // Go to right token if no forwards
+        if (xAdder === 28 && this.forwardTokens <= 0) xAdder += 28;
+        // Go back to empty if no rights
+        if (xAdder === 56 && this.rightTokens <= 0) xAdder += 28;
+
+        turnFrameRect.x = xAdder;
       } else if (buttonType === 1) {
         // Middle mouse click
-        turnFrameRect.x = 28;
+        if (turnFrameRect.x === 28) turnFrameRect.x = 84;
+        else if (this.forwardTokens <= 0) turnFrameRect.x = 84;
+        else turnFrameRect.x = 28;
       } else if (buttonType === 2) {
         // Right Click
-        if (turnFrameRect.x <= 0) turnFrameRect.x = 84;
-        else turnFrameRect.x -= 28;
+        let xSubtractor = turnFrameRect.x;
+        if (xSubtractor <= 0) xSubtractor = 84;
+        else xSubtractor -= 28;
+
+        // Go to forward token if no rights
+        if (xSubtractor === 56 && this.rightTokens <= 0) xSubtractor -= 28;
+        // Go to left token if no forwards
+        if (xSubtractor === 28 && this.forwardTokens <= 0) xSubtractor -= 28;
+        // Go back to empty if no lefts
+        if (xSubtractor === 0 && this.leftTokens <= 0) xSubtractor -= 28;
+
+        turnFrameRect.x = xSubtractor;
       }
 
       let turnDirection = null;
@@ -908,8 +946,6 @@ class Game extends Component {
         moveData: {
           moveNumber: turnNumber,
           direction: turnDirection,
-          leftGuns: [false, false],
-          rightGuns: [false, false],
         },
       });
 
