@@ -4,7 +4,6 @@ import orientation from "./Orientation";
 import { calculateGameToSpritePosition } from "./Game";
 import Orientation from "./Orientation";
 import {
-  getMovementAnimData,
   updateLinearAnimation,
   getSideVelocity,
   updateTextureAnimation,
@@ -671,34 +670,27 @@ class Ship {
     let targetY = 0;
     let toOrientation = orientation.NORTH;
 
-    let xFirst = false;
-    let yFirst = false;
-
     const turnalDistance = cancelledTurnal ? 0 : 1;
 
     switch (this.faceDirection) {
       case orientation.SOUTH:
         targetX = this.vX - turnalDistance;
         targetY = this.vY + 1;
-        yFirst = true;
         toOrientation = orientation.WEST;
         break;
       case orientation.NORTH:
         targetX = this.vX + turnalDistance;
         targetY = this.vY - 1;
-        yFirst = true;
         toOrientation = orientation.EAST;
         break;
       case orientation.WEST:
         targetX = this.vX - 1;
         targetY = this.vY - turnalDistance;
-        xFirst = true;
         toOrientation = orientation.NORTH;
         break;
       case orientation.EAST:
         targetX = this.vX + 1;
         targetY = this.vY + turnalDistance;
-        xFirst = true;
         toOrientation = orientation.SOUTH;
         break;
     }
@@ -755,9 +747,6 @@ class Ship {
     const toAngle = (fromOrientation.angleOffset * Math.PI) / 2;
     const fromAngle = (fromOrientation[toSide].angleOffset * Math.PI) / 2;
 
-    // const fromAngle = (1 * Math.PI) / 2;
-    // const toAngle = (0 * Math.PI) / 2;
-
     let currentAngle = fromAngle;
 
     const ORIGIN_X = this.vX + fromOrientation[toSide].x;
@@ -793,34 +782,27 @@ class Ship {
     let targetY = 0;
     let toOrientation = orientation.NORTH;
 
-    let xFirst = false;
-    let yFirst = false;
-
     const turnalDistance = cancelledTurnal ? 0 : 1;
 
     switch (this.faceDirection) {
       case orientation.SOUTH:
         targetX = this.vX + turnalDistance;
         targetY = this.vY + 1;
-        yFirst = true;
         toOrientation = orientation.EAST;
         break;
       case orientation.NORTH:
         targetX = this.vX - turnalDistance;
         targetY = this.vY - 1;
-        yFirst = true;
         toOrientation = orientation.WEST;
         break;
       case orientation.WEST:
         targetX = this.vX - 1;
         targetY = this.vY + turnalDistance;
-        xFirst = true;
         toOrientation = orientation.SOUTH;
         break;
       case orientation.EAST:
         targetX = this.vX + 1;
         targetY = this.vY - turnalDistance;
-        xFirst = true;
         toOrientation = orientation.NORTH;
         break;
     }
@@ -830,7 +812,6 @@ class Ship {
     // Movement
     if (cancelledMovement) return;
 
-    // this._startMovementAnim(xFirst, yFirst, targetX, targetY);
     this._startMovementAnim(targetX, targetY, "LEFT");
   }
 
