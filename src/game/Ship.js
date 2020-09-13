@@ -741,7 +741,7 @@ class Ship {
 
     const fromOrientation = this.faceDirection;
     const deltaInterval =
-      (fromOrientation.angleOffset - fromOrientation[toSide].angleOffset) / 60;
+      (fromOrientation.angleOffset - fromOrientation[toSide].angleOffset) / 25;
 
     const toAngle = (fromOrientation.angleOffset * Math.PI) / 2;
     const fromAngle = (fromOrientation[toSide].angleOffset * Math.PI) / 2;
@@ -753,7 +753,7 @@ class Ship {
 
     const animationTicker = new PIXI.Ticker();
     animationTicker.add((deltaTime) => {
-      currentAngle += deltaInterval;
+      currentAngle += deltaInterval * deltaTime;
 
       const toX = ORIGIN_X + Math.cos(currentAngle);
       const toY = ORIGIN_Y + Math.sin(currentAngle);
