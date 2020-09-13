@@ -165,6 +165,18 @@ class Game extends Component {
   };
 
   initPlayerShips() {
+    const testShip = this.addShip(
+      "TestShip",
+      ShipType.warFrig,
+      1,
+      1,
+      Orientation.NORTH,
+      "DEFENDER"
+    );
+    setTimeout(() => {
+      testShip.moveForward(true);
+    }, 500);
+
     for (let player of this.gameData.attackers) {
       const { playerName, shipData } = player;
       if (!shipData) continue;

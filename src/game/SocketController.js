@@ -15,7 +15,6 @@ class SocketController {
   registerEvents() {
     const socket = this.socket;
     socket.on("gameTurn", async (turnData) => {
-      console.log("Turn data:", turnData);
       socket.emit("requestShipStats", {
         playerName: this.game.gameData.thisPlayer.playerName,
         gameId: this.game.gameId,

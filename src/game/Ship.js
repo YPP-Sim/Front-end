@@ -370,7 +370,6 @@ class Ship {
         lastElapsedTime: 0, // Init to 0
         ticker: shotTicker,
         onComplete: () => {
-          console.log("Animation completed");
           this.game.stage.removeChild(cannonSprite);
           cannonBody.removeSprite();
           if (hit) this._playHitEffect(targetX, targetY);
@@ -646,7 +645,7 @@ class Ship {
             lastElapsedTime: 0,
             totalTime: 10,
             initialPosition: { x: this.x, y: this.y },
-            finalPosition: { x: originalY, y: originalX },
+            finalPosition: { x: originalX, y: originalY },
             setPosition: (incrementX, incrementY) => {
               this.setGamePosition(this.x + incrementX, this.y + incrementY);
             },
