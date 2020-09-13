@@ -6,11 +6,14 @@ const ORIENTATIONS = {
     left: {
       x: -1,
       y: 0,
+      angleOffset: 4,
     },
     right: {
       x: 1,
       y: 0,
+      angleOffset: 2,
     },
+    angleOffset: 3,
   },
   SOUTH: {
     name: "SOUTH",
@@ -19,11 +22,14 @@ const ORIENTATIONS = {
     left: {
       x: 1,
       y: 0,
+      angleOffset: 2,
     },
     right: {
       x: -1,
       y: 0,
+      angleOffset: 0,
     },
+    angleOffset: 1,
   },
   WEST: {
     name: "WEST",
@@ -32,11 +38,14 @@ const ORIENTATIONS = {
     left: {
       x: 0,
       y: 1,
+      angleOffset: 3,
     },
     right: {
       x: 0,
       y: -1,
+      angleOffset: 1,
     },
+    angleOffset: 2,
   },
   EAST: {
     name: "EAST",
@@ -45,11 +54,14 @@ const ORIENTATIONS = {
     left: {
       x: 0,
       y: -1,
+      angleOffset: 5,
     },
     right: {
       x: 0,
       y: 1,
+      angleOffset: 3,
     },
+    angleOffset: 4,
   },
 };
 export default ORIENTATIONS;

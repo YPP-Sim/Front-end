@@ -710,7 +710,7 @@ class Ship {
     if (cancelledMovement) return;
 
     // Movement
-    this._startMovementAnim(xFirst, yFirst, targetX, targetY);
+    this._startMovementAnim(targetX, targetY, "RIGHT");
   }
 
   _startTextureAnim(toOrientation, toDirection) {
@@ -745,35 +745,41 @@ class Ship {
     }, this.textureChangeDelay);
   }
 
-  _startMovementAnim(xFirst, yFirst, targetX, targetY) {
-    let { incrementX, incrementY, xComplete, yComplete } = getMovementAnimData(
-      this.x,
-      this.y,
-      targetX,
-      targetY,
-      this.animationSmoothness
-    );
+  _startMovementAnim(targetX, targetY, toSide) {
+    toSide = toSide.toLowerCase();
+
+    const fromOrientation = this.faceDirection;
+    const deltaInterval =
+      (fromOrientation.angleOffset - fromOrientation[toSide].angleOffset) / 60;
+
+    const toAngle = (fromOrientation.angleOffset * Math.PI) / 2;
+    const fromAngle = (fromOrientation[toSide].angleOffset * Math.PI) / 2;
+
+    // const fromAngle = (1 * Math.PI) / 2;
+    // const toAngle = (0 * Math.PI) / 2;
+
+    let currentAngle = fromAngle;
+
+    const ORIGIN_X = this.vX + fromOrientation[toSide].x;
+    const ORIGIN_Y = this.vY + fromOrientation[toSide].y;
 
     const animationTicker = new PIXI.Ticker();
     animationTicker.add((deltaTime) => {
-      let toX = this.x;
-      let toY = this.y;
+      currentAngle += deltaInterval;
 
-      if ((xFirst || yComplete <= this.turnThreshold) && xComplete > 0) {
-        const toIncrementX = incrementX * deltaTime;
-        toX += toIncrementX;
-        xComplete -= Math.abs(toIncrementX);
-      }
-
-      if ((yFirst || xComplete <= this.turnThreshold) && yComplete > 0) {
-        const toIncrementY = incrementY * deltaTime;
-        toY += toIncrementY;
-        yComplete -= Math.abs(toIncrementY);
-      }
+      const toX = ORIGIN_X + Math.cos(currentAngle);
+      const toY = ORIGIN_Y + Math.sin(currentAngle);
 
       this.setGamePosition(toX, toY);
 
-      if (xComplete <= 0 && yComplete <= 0) {
+      // Stopping edge case
+      if (deltaInterval < 0) {
+        // Negative interval
+        if (currentAngle <= toAngle) {
+          animationTicker.stop();
+          this.setPosition(targetX, targetY);
+        }
+      } else if (currentAngle >= toAngle) {
         animationTicker.stop();
         this.setPosition(targetX, targetY);
       }
@@ -824,7 +830,8 @@ class Ship {
     // Movement
     if (cancelledMovement) return;
 
-    this._startMovementAnim(xFirst, yFirst, targetX, targetY);
+    // this._startMovementAnim(xFirst, yFirst, targetX, targetY);
+    this._startMovementAnim(targetX, targetY, "LEFT");
   }
 
   setTextureFromOrientation(orient = Orientation.SOUTH) {
