@@ -1,6 +1,7 @@
 class PlayerMoves {
-  constructor(dualCannon) {
+  constructor(dualCannon, game) {
     this.initialMoveData = { rightGuns: [], leftGuns: [] };
+    this.game = game;
 
     if (dualCannon) {
       this.initialMoveData.rightGuns = [false, false];
@@ -30,7 +31,10 @@ class PlayerMoves {
     const selectedMove = this["move" + numberedTurn];
     const selectedGuns = selectedMove[side + "Guns"];
 
-    if (selectedGuns[0] === false) {
+    if (this.game.cannons <= 0) {
+      selectedGuns[0] = false;
+      if (selectedGuns[1]) selectedGuns[1] = false;
+    } else if (selectedGuns[0] === false) {
       selectedGuns[0] = true;
     } else {
       if (selectedGuns.length === 2) {

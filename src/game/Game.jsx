@@ -87,7 +87,8 @@ class Game extends Component {
 
     if (this.gameData.thisPlayer && this.gameData.thisPlayer.shipData)
       this.playerMoves = new PlayerMoves(
-        this.gameData.thisPlayer.shipData.dualCannon
+        this.gameData.thisPlayer.shipData.dualCannon,
+        this
       );
 
     this.preventMovementInteraction = false;
