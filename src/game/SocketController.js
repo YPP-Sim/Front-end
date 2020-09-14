@@ -49,7 +49,8 @@ class SocketController {
       }
 
       if (cannons) {
-        this.game.setCannonsAmount(cannons);
+        if (cannons === -1) this.game.setCannonsAmount(0);
+        else this.game.setCannonsAmount(cannons);
       }
     });
 
