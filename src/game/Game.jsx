@@ -84,6 +84,7 @@ class Game extends Component {
 
     this.gameData = props.gameData;
     this.flags = {};
+    this.autoSelect = true;
 
     if (this.gameData.thisPlayer && this.gameData.thisPlayer.shipData)
       this.playerMoves = new PlayerMoves(
@@ -98,6 +99,10 @@ class Game extends Component {
     for (let flag of this.gameData.flags) {
       this.flags[flag.id] = new Flag(flag.x, flag.y, flag.pointValue, this);
     }
+  }
+
+  getThisPlayer() {
+    return this.gameData.thisPlayer;
   }
 
   resize() {
@@ -582,8 +587,17 @@ class Game extends Component {
     autoButtonSprite.buttonMode = true;
     autoButtonSprite.on("pointerdown", () => {
       //Toggle
-      this.shipData.autoTokens = !this.shipData.autoTokens;
-      if (this.shipData.autoTokens) {
+      this.autoSelect = !this.autoSelect;
+      const eventObj = {
+        gameId: this.gameId,
+        playerName: this.getThisPlayer().playerName,
+        autoBool: this.autoSelect,
+      };
+      this.socket.emit("autoSelectUpdate", eventObj);
+    });
+
+    this.setAutoSelectTexture = (autoSelectBool) => {
+      if (autoSelectBool) {
         autoButtonSprite.texture = resources["autoOn"].texture;
         this.sprites["selectToken"].texture = this.textures["graySelectToken"];
       } else {
@@ -592,7 +606,7 @@ class Game extends Component {
           "brightSelectToken"
         ];
       }
-    });
+    };
 
     this.sprites["autoButton"] = autoButtonSprite;
 
@@ -657,22 +671,48 @@ class Game extends Component {
     const leftSprite = new PIXI.Sprite(leftTexture);
     this.setCenterAnchor(leftSprite);
     this.sprites["leftTokens"] = leftSprite;
+    leftSprite.interactive = true;
+
+    this.sendSelectedTokenUpdate = (selectedToken) => {
+      if (this.autoSelect === false) {
+        const eventObj = {
+          gameId: this.gameId,
+          playerName: this.getThisPlayer().playerName,
+          selectedToken,
+        };
+        this.socket.emit("updateSelectedToken", eventObj);
+      }
+    };
+
+    leftSprite.on("pointerdown", () => {
+      this.sendSelectedTokenUpdate("LEFT");
+    });
 
     // Forward token
     moveRect.x += 28;
     const forwardTexture = new PIXI.Texture(movesTexture, moveRect);
     this.textures["forwardToken"] = forwardTexture;
     const forwardSprite = new PIXI.Sprite(forwardTexture);
+    forwardSprite.interactive = true;
     this.setCenterAnchor(forwardSprite);
     this.sprites["forwardTokens"] = forwardSprite;
+
+    forwardSprite.on("pointerdown", () => {
+      this.sendSelectedTokenUpdate("FORWARD");
+    });
 
     // Right Token
     moveRect.x += 28;
     const rightTexture = new PIXI.Texture(movesTexture, moveRect);
     this.textures["rightToken"] = rightTexture;
     const rightSprite = new PIXI.Sprite(rightTexture);
+    rightSprite.interactive = true;
     this.setCenterAnchor(rightSprite);
     this.sprites["rightTokens"] = rightSprite;
+
+    rightSprite.on("pointerdown", () => {
+      this.sendSelectedTokenUpdate("RIGHT");
+    });
 
     const emptyMovesTexture = resources["movesEmpty"].texture;
 
@@ -795,8 +835,29 @@ class Game extends Component {
     movesBody.addSprite(leftSprite, -75, 10);
     movesBody.addSprite(forwardSprite, -45, 10);
     movesBody.addSprite(rightSprite, -15, 10);
-    movesBody.addSprite(selectTokenSprite, -45, 10);
+    const selectSpriteConfig = movesBody.addSprite(selectTokenSprite, -45, 10);
+    this.setSelectedToken = (direction) => {
+      let xOffset = 0; // forward default
+      switch (direction) {
+        case "LEFT":
+          xOffset = -75;
+          break;
+        case "FORWARD":
+          xOffset = -45;
+          break;
+        case "RIGHT":
+          xOffset = -15;
+          break;
+        default:
+          xOffset = -45;
+          console.error(
+            "Used default edge case in switch statement for setSelectedToken. Means invalid input"
+          );
+          break;
+      }
 
+      selectSpriteConfig.setSpriteOffset(xOffset, 10);
+    };
     movesBody.addSprite(leftTokenAmount, -75, 35);
     movesBody.addSprite(forwardTokenAmount, -45, 35);
     movesBody.addSprite(rightTokenAmount, -15, 35);

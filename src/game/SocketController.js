@@ -54,6 +54,14 @@ class SocketController {
       }
     });
 
+    socket.on("updateAutoSelect", (autoSelectBool) => {
+      this.game.setAutoSelectTexture(autoSelectBool);
+    });
+
+    socket.on("updateSelectedToken", (selectedToken) => {
+      this.game.setSelectedToken(selectedToken);
+    });
+
     socket.on("gameTick", (tick) => {
       this.game.currentGameTick = tick;
 
