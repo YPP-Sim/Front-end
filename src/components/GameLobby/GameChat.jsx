@@ -3,16 +3,17 @@ import styled from "styled-components";
 import PlayerContext from "../../contexts/PlayerContext";
 
 const Root = styled.div`
-  background-color: #fff;
+  background: rgba(196, 196, 196, 0.1);
+  border-radius: 12px;
+
   min-height: 300px;
   width: 100%;
   height: 100%;
-  max-width: 250px;
+  max-width: 276px;
   min-width: 200px;
   max-height: 1000px;
 
-  border-radius: 5px;
-  padding: 10px;
+  padding: 28px;
   box-sizing: border-box;
 
   display: flex;
@@ -23,34 +24,64 @@ const Root = styled.div`
 
 const MessagesContainer = styled.div`
   overflow-y: auto;
-  max-height: 350px;
+  max-height: 550px;
 
   padding-bottom: 10px;
+
+  &::-webkit-scrollbar {
+    width: 5.48px;
+    background-color: red;
+    background: rgba(196, 196, 196, 0.1);
+    border-radius: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    width: 5.48px;
+    background: rgba(196, 196, 196, 0.25);
+    border-radius: 2px;
+  }
 `;
 
 const MessageInputField = styled.input`
   width: 100%;
   margin: 0;
   border: 0;
-  background-color: #ededed;
-  padding: 5px;
+
+  background: rgba(196, 196, 196, 0.1);
+  border-radius: 6px;
+
+  color: rgba(255, 255, 255, 0.5);
+
+  padding: 12px 16px;
   box-sizing: border-box;
-  border-radius: 5px;
-  font-size: 16px;
+  font-size: 14px;
   font-family: ${({ theme }) => theme.textFont};
 `;
 
 const Message = styled.p`
   margin: 0;
+  font-family: ${({ theme }) => theme.textFont};
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 21px;
+
+  color: #ffffff;
+
+  margin-bottom: 7px;
 `;
 
 const MessageSender = styled.span`
-  font-weight: bold;
+  font-weight: 600;
 `;
 
 const SystemMessage = styled(Message)`
-  color: #999;
-  font-weight: bold;
+  color: rgba(196, 196, 196, 0.5);
+
+  font-weight: 500;
+  font-famil: ${({ theme }) => theme.textFont};
+  font-size: 14px;
+  margin-bottom: 7px;
 `;
 
 const GameChat = ({ socket, gameId }) => {
@@ -101,7 +132,7 @@ const GameChat = ({ socket, gameId }) => {
       </MessagesContainer>
       <MessageInputField
         type="text"
-        placeholder="Message others here"
+        placeholder="Type a message..."
         onKeyDown={handleSubmitMessage}
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
