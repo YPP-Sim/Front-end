@@ -56,6 +56,7 @@ const MessageInputField = styled.input`
   box-sizing: border-box;
   font-size: 14px;
   font-family: ${({ theme }) => theme.textFont};
+  outline: none;
 `;
 
 const Message = styled.p`
