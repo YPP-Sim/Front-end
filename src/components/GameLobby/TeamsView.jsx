@@ -91,10 +91,6 @@ const ShipName = styled(JoinName)`
   color: rgba(255, 255, 255, 0.75);
 `;
 
-function repeatSection(amount) {
-  return ["", "", "", "", "", "", ""];
-}
-
 function transformShipTypeToIndex(shipType) {
   switch (shipType) {
     case "WAR_FRIG":
