@@ -98,7 +98,7 @@ const ShipSelection = ({ onSelect, disabled, hideArrow }) => {
     "Choose Ship",
     "War Frig",
     "War Brig",
-    "Xebec",
+    // "Xebec",
   ]);
 
   const onDropDown = () => {

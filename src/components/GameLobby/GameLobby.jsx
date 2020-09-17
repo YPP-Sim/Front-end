@@ -22,6 +22,8 @@ const MainContainer = styled.div`
   width: 100%;
   height: 100%;
   margin-right: 10px;
+
+  min-height: 500px;
 `;
 
 const TopContainer = styled.div`
@@ -89,7 +91,6 @@ function getViewByStatus(gameData, onJoinTeam, onSelect, socket, map, gameId) {
         {map.length > 0 ? (
           <Game map={map} gameData={gameData} socket={socket} gameId={gameId} />
         ) : (
-          // <TestBox />
           <p>loading...</p>
         )}
       </MainContainer>
@@ -103,6 +104,7 @@ function getViewByStatus(gameData, onJoinTeam, onSelect, socket, map, gameId) {
           undecided={gameData.undecided}
           onJoinTeam={onJoinTeam}
           player={gameData.thisPlayer}
+          onSelect={onSelect}
         />
       </MainContainer>
     );

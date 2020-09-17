@@ -5,8 +5,7 @@ import ShipSelection from "./ShipSelection";
 
 const Root = styled.div`
   width: 100%;
-  display: flex;
-  justify-content: space-between;
+  height: 100%;
 `;
 
 const TeamContainer = styled.div`
@@ -20,6 +19,28 @@ const TeamContainer = styled.div`
   box-sizing: border-box;
 
   max-width: 383px;
+
+  margin-left: ${(props) => (props.right ? "14px" : "0px")};
+
+  @media (max-width: 1000px) {
+    margin-left: 0px;
+    margin-bottom: 20px;
+    max-width: 500px;
+  }
+`;
+
+const Teams = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 795px;
+
+  margin: 0 auto;
+
+  @media (max-width: 1000px) {
+    flex-direction: column;
+    max-width: 500px;
+  }
 `;
 
 const TeamTitle = styled.h2`
@@ -48,34 +69,43 @@ const JoinButton = styled(Button)`
 `;
 
 function repeatSection(amount) {
-  return ["", "", "", "", "", "", "", ""];
+  return ["", "", "", "", "", "", ""];
 }
 
-const TeamsView = ({ attackers, defenders, undecided, player, onJoinTeam }) => {
+const TeamsView = ({
+  attackers,
+  defenders,
+  undecided,
+  player,
+  onJoinTeam,
+  onSelect,
+}) => {
   return (
     <Root>
-      <TeamContainer>
-        <TeamTitle>Attackers</TeamTitle>
-        {repeatSection(2).map(() => (
-          <JoinSection>
-            <JoinButton width="151px" height="42px" noShadow={true}>
-              Join
-            </JoinButton>
-            <ShipSelection disabled={true} />
-          </JoinSection>
-        ))}
-      </TeamContainer>
-      <TeamContainer>
-        <TeamTitle>Defenders</TeamTitle>
-        {repeatSection(2).map(() => (
-          <JoinSection>
-            <JoinButton width="151px" height="42px" noShadow={true}>
-              Join
-            </JoinButton>
-            <ShipSelection />
-          </JoinSection>
-        ))}
-      </TeamContainer>
+      <Teams>
+        <TeamContainer>
+          <TeamTitle>Attackers</TeamTitle>
+          {repeatSection(2).map(() => (
+            <JoinSection>
+              <JoinButton width="151px" height="42px" noShadow={true}>
+                Join
+              </JoinButton>
+              <ShipSelection onSelect={onSelect} disabled={true} />
+            </JoinSection>
+          ))}
+        </TeamContainer>
+        <TeamContainer right>
+          <TeamTitle>Defenders</TeamTitle>
+          {repeatSection(2).map(() => (
+            <JoinSection>
+              <JoinButton width="151px" height="42px" noShadow={true}>
+                Join
+              </JoinButton>
+              <ShipSelection onSelect={onSelect} />
+            </JoinSection>
+          ))}
+        </TeamContainer>
+      </Teams>
     </Root>
   );
 };
