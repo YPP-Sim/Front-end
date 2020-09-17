@@ -9,7 +9,6 @@ import Game from "../../game/Game";
 import TeamsView from "./TeamsView";
 import LobbySocketController from "./LobbySocketController";
 import { useState } from "react";
-import ShipSelection from "./ShipSelection";
 import Button from "../Button";
 
 const Root = styled.div`
@@ -25,23 +24,10 @@ const MainContainer = styled.div`
   margin-right: 10px;
 `;
 
-const Title = styled.h2`
-  font-family: ${({ theme }) => theme.textFont};
-  font-size: 19px;
-  text-align: center;
-  color: ${({ theme }) => theme.textColor};
-`;
-
 const TopContainer = styled.div`
   height: 100%;
   display: flex;
   justify-content: space-between;
-`;
-
-const TestBox = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: red;
 `;
 
 const SideContainer = styled.div`
@@ -89,7 +75,7 @@ function organizeGameData(gameData, thisPlayerName) {
     thisPlayer,
     gameOwner: gameData.gameOwner,
     status: gameData.status,
-    flags: gameData.flags
+    flags: gameData.flags,
   };
 }
 
@@ -118,8 +104,6 @@ function getViewByStatus(gameData, onJoinTeam, onSelect, socket, map, gameId) {
           onJoinTeam={onJoinTeam}
           player={gameData.thisPlayer}
         />
-        <Title>Ship Selection</Title>
-        <ShipSelection onSelect={onSelect} />
       </MainContainer>
     );
 }
@@ -132,7 +116,7 @@ const GameLobby = () => {
     map: [],
     gameOwner: "",
     status: "WAITING",
-    thisPlayer: {}
+    thisPlayer: {},
   });
   const [map, setMap] = useState([]);
   const history = useHistory();
@@ -146,14 +130,14 @@ const GameLobby = () => {
     socketController.registerEvents();
     socket.emit("joinGame", { gameId, playerName });
 
-    socketController.registerEvent("gameData", gameData => {
+    socketController.registerEvent("gameData", (gameData) => {
       setGameData(organizeGameData(gameData, playerName));
     });
 
-    socketController.registerEvent("gameMap", gMap => {
+    socketController.registerEvent("gameMap", (gMap) => {
       setMap(gMap);
     });
-    socketController.registerEvent("startGame", gameData => {
+    socketController.registerEvent("startGame", (gameData) => {
       setMap(gameData.map);
       setGameData(organizeGameData(gameData, playerName));
     });
@@ -164,7 +148,7 @@ const GameLobby = () => {
     };
   }, [gameId, playerName, history]);
 
-  const onJoinTeam = team => {
+  const onJoinTeam = (team) => {
     switch (team) {
       case "ATTACKER":
         socket.emit("joinTeam", { playerName, side: "ATTACKER", gameId });
@@ -182,11 +166,11 @@ const GameLobby = () => {
     socket.emit("startGame", { gameId });
   };
 
-  const onSelect = ship => {
+  const onSelect = (ship) => {
     socket.emit("playerChangeShip", {
       playerName,
       gameId,
-      shipType: ship
+      shipType: ship,
     });
   };
 
