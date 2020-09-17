@@ -1,9 +1,15 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import dropdownArrow from "../../SVGs/dropdown_arrow.svg";
 
 const Root = styled.div`
-  background: rgba(196, 196, 196, 0.25);
+  background: rgba(
+    196,
+    196,
+    196,
+    ${(props) => (props.isThisPlayer ? "0.5" : "0.25")}
+  );
   border-radius: 6px;
   padding: 10px 22px;
   box-sizing: border-box;
@@ -89,7 +95,13 @@ function getServerItemFromSelect(selectedIndex) {
   }
 }
 
-const ShipSelection = ({ onSelect, disabled, hideArrow }) => {
+const ShipSelection = ({
+  onSelect,
+  disabled,
+  hideArrow,
+  defaultSelected,
+  isThisPlayer,
+}) => {
   const [isSelecting, setSelecting] = useState(false);
   // Selected index
   const [selected, setSelected] = useState(0);
@@ -100,6 +112,12 @@ const ShipSelection = ({ onSelect, disabled, hideArrow }) => {
     "War Brig",
     // "Xebec",
   ]);
+
+  useEffect(() => {
+    if (defaultSelected) {
+      setSelected(defaultSelected);
+    }
+  }, []);
 
   const onDropDown = () => {
     if (!disabled) setSelecting(!isSelecting);
@@ -112,10 +130,10 @@ const ShipSelection = ({ onSelect, disabled, hideArrow }) => {
   };
 
   return (
-    <Root onClick={onDropDown} disabled={disabled}>
+    <Root isThisPlayer={isThisPlayer} onClick={onDropDown} disabled={disabled}>
       <DisplayTextContainer>
         <DisplayText>{selectList[selected]}</DisplayText>
-        {!hideArrow && <ArrowIcon src={dropdownArrow} />}
+        {isThisPlayer && <ArrowIcon src={dropdownArrow} />}
       </DisplayTextContainer>
       {isSelecting && (
         <DropDownMenu>

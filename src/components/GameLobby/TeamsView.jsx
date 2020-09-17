@@ -66,10 +66,99 @@ const JoinButton = styled(Button)`
   border-radius: 6px;
   font-size: 14px;
   width: 50%;
+  height: 42px;
+`;
+
+const JoinName = styled.div`
+  background: rgba(196, 196, 196, 0.5);
+  border-radius: 6px;
+  font-size: 14px;
+  width: 50%;
+  height: 42px;
+
+  display: flex;
+  justify-content: center;
+  font-weight: 500;
+  align-items: center;
+  font-family: ${({ theme }) => theme.textFont};
+  color: ${({ theme }) => theme.textColor};
+`;
+
+const ShipName = styled(JoinName)`
+  margin-left: 16px;
+  font-weight: normal;
+  background: rgba(196, 196, 196, 0.5);
+  color: rgba(255, 255, 255, 0.75);
 `;
 
 function repeatSection(amount) {
   return ["", "", "", "", "", "", ""];
+}
+
+function transformShipTypeToIndex(shipType) {
+  switch (shipType) {
+    case "WAR_FRIG":
+      return 1;
+    case "WAR_BRIG":
+      return 2;
+    default:
+      return "Unknown";
+  }
+}
+
+function transformShipTypeToName(shipType) {
+  switch (shipType) {
+    case "WAR_FRIG":
+      return "War Frig";
+    case "WAR_BRIG":
+      return "War Brig";
+    default:
+      return "Unknown";
+  }
+}
+
+function renderTeamViewList(playerList, player, onSelect, onJoinTeam, side) {
+  const totalSpots = 7;
+  const components = playerList.map((attacker, i) => {
+    const isThisPlayer = attacker.playerName === player.playerName;
+    return (
+      <JoinSection key={attacker.playerName}>
+        <JoinName>{attacker.playerName}</JoinName>
+        {isThisPlayer ? (
+          <ShipSelection
+            onSelect={onSelect}
+            defaultSelected={
+              attacker.shipData
+                ? transformShipTypeToIndex(attacker.shipData.shipType)
+                : null
+            }
+            isThisPlayer={attacker.playerName === player.playerName}
+          />
+        ) : (
+          <ShipName>
+            {attacker.shipData
+              ? transformShipTypeToName(attacker.shipData.shipType)
+              : "Unknown"}
+          </ShipName>
+        )}
+      </JoinSection>
+    );
+  });
+
+  const remaining = totalSpots - playerList.length;
+
+  for (let i = 0; i < remaining; i++) {
+    components.push(
+      <JoinSection key={i}>
+        <JoinButton onClick={() => onJoinTeam(side)} noShadow={true}>
+          Join
+        </JoinButton>
+        <ShipSelection onSelect={onSelect} disabled />
+      </JoinSection>
+    );
+  }
+
+  return components;
 }
 
 const TeamsView = ({
@@ -85,25 +174,23 @@ const TeamsView = ({
       <Teams>
         <TeamContainer>
           <TeamTitle>Attackers</TeamTitle>
-          {repeatSection(2).map(() => (
-            <JoinSection>
-              <JoinButton width="151px" height="42px" noShadow={true}>
-                Join
-              </JoinButton>
-              <ShipSelection onSelect={onSelect} disabled={true} />
-            </JoinSection>
-          ))}
+          {renderTeamViewList(
+            attackers,
+            player,
+            onSelect,
+            onJoinTeam,
+            "ATTACKER"
+          )}
         </TeamContainer>
         <TeamContainer right>
           <TeamTitle>Defenders</TeamTitle>
-          {repeatSection(2).map(() => (
-            <JoinSection>
-              <JoinButton width="151px" height="42px" noShadow={true}>
-                Join
-              </JoinButton>
-              <ShipSelection onSelect={onSelect} />
-            </JoinSection>
-          ))}
+          {renderTeamViewList(
+            defenders,
+            player,
+            onSelect,
+            onJoinTeam,
+            "DEFENDER"
+          )}
         </TeamContainer>
       </Teams>
     </Root>
