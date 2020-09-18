@@ -1001,7 +1001,7 @@ class Game extends Component {
         // Go to left token if no forwards
         if (xSubtractor === 28 && this.forwardTokens <= 0) xSubtractor -= 28;
         // Go back to empty if no lefts
-        if (xSubtractor === 0 && this.leftTokens <= 0) xSubtractor -= 28;
+        if (xSubtractor === 0 && this.leftTokens <= 0) xSubtractor = 84;
 
         turnFrameRect.x = xSubtractor;
       }
