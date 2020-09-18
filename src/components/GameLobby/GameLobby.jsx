@@ -9,7 +9,6 @@ import Game from "../../game/Game";
 import TeamsView from "./TeamsView";
 import LobbySocketController from "./LobbySocketController";
 import { useState } from "react";
-import Button from "../Button";
 
 const Root = styled.div`
   height: 100%;
@@ -38,10 +37,6 @@ const SideContainer = styled.div`
   max-width: 250px;
   flex-direction: column;
   justify-content: space-between;
-`;
-
-const StartButton = styled(Button)`
-  margin-top: 10px;
 `;
 
 const ENDPOINT = "http://127.0.0.1:4000";
@@ -81,7 +76,15 @@ function organizeGameData(gameData, thisPlayerName) {
   };
 }
 
-function getViewByStatus(gameData, onJoinTeam, onSelect, socket, map, gameId) {
+function getViewByStatus(
+  gameData,
+  onJoinTeam,
+  onSelect,
+  socket,
+  map,
+  gameId,
+  onStart
+) {
   if (map.length === 0) {
     socket.emit("requestMap", { gameId });
   }
@@ -99,12 +102,14 @@ function getViewByStatus(gameData, onJoinTeam, onSelect, socket, map, gameId) {
     return (
       <MainContainer>
         <TeamsView
+          gameData={gameData}
           attackers={gameData.attackers}
           defenders={gameData.defenders}
           undecided={gameData.undecided}
           onJoinTeam={onJoinTeam}
           player={gameData.thisPlayer}
           onSelect={onSelect}
+          onStart={onStart}
         />
       </MainContainer>
     );
@@ -179,14 +184,17 @@ const GameLobby = () => {
   return (
     <Root>
       <TopContainer>
-        {getViewByStatus(gameData, onJoinTeam, onSelect, socket, map, gameId)}
+        {getViewByStatus(
+          gameData,
+          onJoinTeam,
+          onSelect,
+          socket,
+          map,
+          gameId,
+          handleStart
+        )}
         <SideContainer>
           <GameChat gameId={gameId} socket={socket} />
-          {gameData.gameOwner === playerName && gameData.status === "WAITING" && (
-            <StartButton onClick={handleStart} backgroundColor="#29ca5a">
-              START
-            </StartButton>
-          )}
         </SideContainer>
       </TopContainer>
     </Root>

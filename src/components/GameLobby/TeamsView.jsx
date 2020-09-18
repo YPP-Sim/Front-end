@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import Button from "../Button";
 import ShipSelection from "./ShipSelection";
+import PlayerContext from "../../contexts/PlayerContext";
+import { useContext } from "react";
 
 const Root = styled.div`
   width: 100%;
@@ -47,7 +49,7 @@ const TeamTitle = styled.h2`
   font-family: ${({ theme }) => theme.textFont};
   font-size: 24px;
   margin: 0;
-  font-weight: bold;
+  font-weight: 500;
 
   text-align: center;
   color: ${({ theme }) => theme.textColor};
@@ -157,14 +159,35 @@ function renderTeamViewList(playerList, player, onSelect, onJoinTeam, side) {
   return components;
 }
 
-const TeamsView = ({
-  attackers,
-  defenders,
-  undecided,
-  player,
-  onJoinTeam,
-  onSelect,
-}) => {
+const StartButton = styled(Button)`
+// background: rgba(196, 196, 196, 0.25);
+background: linear-gradient(88.42deg, #609ACF -8.65%, #29B3BC 99.01%);
+border-radius: 12px;
+width: 100%;
+height:  40px
+
+font-family: ${({ theme }) => theme.textFont};
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+
+color: ${({ theme }) => theme.textColor};
+margin-top: 32px;
+`;
+
+const TeamsView = (props) => {
+  const { playerName } = useContext(PlayerContext);
+
+  const {
+    attackers,
+    defenders,
+    undecided,
+    player,
+    onJoinTeam,
+    onSelect,
+    onStart,
+    gameData,
+  } = props;
   return (
     <Root>
       <Teams>
@@ -177,6 +200,11 @@ const TeamsView = ({
             onJoinTeam,
             "ATTACKER"
           )}
+          {gameData.gameOwner === playerName && (
+            <StartButton noShadow onClick={onStart}>
+              Start
+            </StartButton>
+          )}
         </TeamContainer>
         <TeamContainer right>
           <TeamTitle>Defenders</TeamTitle>
@@ -186,6 +214,11 @@ const TeamsView = ({
             onSelect,
             onJoinTeam,
             "DEFENDER"
+          )}
+          {gameData.gameOwner === playerName && (
+            <StartButton noShadow onClick={onStart}>
+              Start
+            </StartButton>
           )}
         </TeamContainer>
       </Teams>
