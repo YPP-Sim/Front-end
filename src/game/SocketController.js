@@ -71,8 +71,8 @@ class SocketController {
 
     socket.on("updateShipStats", (shipStats) => {
       const { bilge, damage } = shipStats;
-      this.game.setDamageUIPercent(damage);
-      this.game.setBilgeUIPercent(bilge);
+      if (damage) this.game.setDamageUIPercent(damage);
+      if (bilge) this.game.setBilgeUIPercent(bilge);
     });
 
     socket.on("clearShips", () => {
