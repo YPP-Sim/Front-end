@@ -112,7 +112,11 @@ const GameCard = ({
     <Root onClick={() => setUsernameFormOpen(true)}>
       {usernameFormOpen && (
         <Backdrop>
-          <ChooseUsernameForm onJoin={onJoin} />
+          <ChooseUsernameForm
+            onJoin={onJoin}
+            hasPassword={hasPassword}
+            gameId={title}
+          />
         </Backdrop>
       )}
       <GameTitle>{title}</GameTitle>

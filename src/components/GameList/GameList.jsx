@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import PlayerContext from "../../contexts/PlayerContext";
 import styled from "styled-components";
 import GameCard from "./GameCard";
 import axios from "../../axios-config";
@@ -6,7 +7,6 @@ import CreateGameForm from "./CreateGameForm";
 import Backdrop from "../Backdrop";
 import { useHistory } from "react-router-dom";
 import CreateGameCard from "./CreateGameCard";
-import ChooseUsernameForm from "./ChooseUsernameForm";
 
 const Root = styled.div`
   width: 100%;
@@ -56,6 +56,7 @@ function refreshGameList(setGames) {
 
 const GameList = () => {
   const [games, setGames] = useState([]);
+  const { playerName } = useContext(PlayerContext);
 
   const [createGameFormOpen, setCreateGameFormOpen] = useState(false);
   const history = useHistory();
@@ -66,6 +67,25 @@ const GameList = () => {
 
   const handleCreateGameClick = () => {
     setCreateGameFormOpen(true);
+  };
+
+  const handleJoin = (gameId, password) => {
+    // Ask server first before we can join.
+    console.log("Sending: ", gameId, password, playerName);
+    axios
+      .post("/games/join-game-request", {
+        gameId,
+        requestedPlayerName: playerName,
+        password,
+      })
+      .then((response) => {
+        console.log("Successful response: ", response);
+        sessionStorage.setItem("token", response.data.token);
+        history.push(`/games/${gameId}`);
+      })
+      .catch((err) => {
+        console.log("Error: ", err.response);
+      });
   };
 
   return (
@@ -83,7 +103,7 @@ const GameList = () => {
               maxPlayers={game.maxPlayers}
               hasPassword={game.locked}
               key={key}
-              onJoin={() => history.push(`/games/${game.name}`)}
+              onJoin={handleJoin}
             />
           ))}
         </GridContainer>

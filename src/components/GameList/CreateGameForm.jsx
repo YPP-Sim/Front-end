@@ -138,6 +138,14 @@ const CreateGameForm = (props) => {
       .post("/games/create-game", body)
       .then(() => {
         props.onClose();
+        return axios.post("/games/join-game-request", {
+          gameId: roomName,
+          requestedPlayerName: playerName,
+          password,
+        });
+      })
+      .then((response) => {
+        sessionStorage.setItem("token", response.data.token);
         history.push(`/games/${roomName}`);
       })
       .catch((err) => {

@@ -1,4 +1,5 @@
 import React, { useEffect, useContext } from "react";
+import { IO_ENDPOINT as ENDPOINT } from "../../config";
 import PlayerContext from "../../contexts/PlayerContext";
 import { useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -39,7 +40,6 @@ const SideContainer = styled.div`
   justify-content: space-between;
 `;
 
-const ENDPOINT = "http://127.0.0.1:4000";
 const socket = io(ENDPOINT, { autoConnect: false });
 const socketController = new LobbySocketController(socket);
 
@@ -135,7 +135,11 @@ const GameLobby = () => {
 
     if (socket.disconnected) socket.open();
     socketController.registerEvents();
-    socket.emit("joinGame", { gameId, playerName });
+    socket.emit("joinGame", {
+      gameId,
+      playerName,
+      token: sessionStorage.getItem("token"),
+    });
 
     socketController.registerEvent("gameData", (gameData) => {
       setGameData(organizeGameData(gameData, playerName));

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import InputField from "../InputField";
 import PlayerContext from "../../contexts/PlayerContext";
@@ -47,10 +47,11 @@ const InputLabel = styled.label`
   color: ${({ theme }) => theme.textColor};
 `;
 
-const ChooseUsernameForm = ({ onJoin }) => {
+const ChooseUsernameForm = ({ onJoin, hasPassword, gameId }) => {
   const { playerName, setPlayerName, setDefaultName } = useContext(
     PlayerContext
   );
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     document.getElementById("userName").focus();
@@ -58,7 +59,7 @@ const ChooseUsernameForm = ({ onJoin }) => {
 
   const handleButtonClick = () => {
     setDefaultName(playerName);
-    onJoin();
+    onJoin(gameId, password);
   };
 
   return (
@@ -74,6 +75,20 @@ const ChooseUsernameForm = ({ onJoin }) => {
         value={playerName}
         onChange={(e) => setPlayerName(e.target.value)}
       />
+      {hasPassword && (
+        <React.Fragment>
+          <InputLabel htmlFor="password">Password:</InputLabel>
+          <InputField
+            width="100%"
+            mb="26px"
+            mt="8px"
+            name="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </React.Fragment>
+      )}
 
       <Button noShadow fontSize="18px" onClick={handleButtonClick}>
         Join game
