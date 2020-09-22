@@ -4,6 +4,7 @@ import styled from "styled-components";
 import InputField from "../InputField";
 import Button from "../Button";
 import axios from "../../axios-config";
+import GlobalLoader from "../loaders/GlobalLoader";
 import { useHistory } from "react-router-dom";
 
 const Root = styled.div`
@@ -96,7 +97,6 @@ const InputContainer = styled.div`
 const CreateGameForm = (props) => {
   const history = useHistory();
   const { playerName, setPlayerName } = useContext(PlayerContext);
-
   const [formData, setFormData] = useState({
     roomName: "",
     maxPlayers: 6,
@@ -105,6 +105,7 @@ const CreateGameForm = (props) => {
     userName: "",
   });
   const [availableMaps, setAvailableMaps] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     axios
@@ -134,6 +135,9 @@ const CreateGameForm = (props) => {
       password,
       gameOwner: playerName,
     };
+
+    setLoading(true);
+
     axios
       .post("/games/create-game", body)
       .then(() => {
@@ -145,6 +149,7 @@ const CreateGameForm = (props) => {
         });
       })
       .then((response) => {
+        setLoading(false);
         sessionStorage.setItem("token", response.data.token);
         history.push(`/games/${roomName}`);
       })
@@ -156,6 +161,14 @@ const CreateGameForm = (props) => {
   const handleUsernameChange = (e) => {
     setPlayerName(e.target.value);
   };
+
+  if (loading) {
+    return (
+      <Root>
+        <GlobalLoader />
+      </Root>
+    );
+  }
 
   return (
     <Root>
