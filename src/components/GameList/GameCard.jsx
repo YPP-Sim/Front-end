@@ -27,7 +27,7 @@ const StatusBar = styled.div`
   background: ${(props) => {
     switch (props.status) {
       case "WAITING":
-        return "#FFFFFF";
+        return "#C4C4C43F";
       case "INGAME":
         return "linear-gradient(88.42deg, #609ACF -8.65%, #29B3BC 99.01%);";
       case "ENDING":
@@ -38,7 +38,7 @@ const StatusBar = styled.div`
   }};
 
   color: ${(props) =>
-    props.status === "WAITING" ? "#29B3BC" : props.theme.textColor};
+    props.status === "WAITING" ? "#FFFFFF" : props.theme.textColor};
 
   width: 100%;
   height: 40px;
@@ -108,14 +108,19 @@ const GameCard = ({
 }) => {
   const [usernameFormOpen, setUsernameFormOpen] = useState(false);
 
+  const handleOpen = () => {
+    if (!usernameFormOpen) setUsernameFormOpen(true);
+  };
+
   return (
-    <Root onClick={() => setUsernameFormOpen(true)}>
+    <Root onClick={handleOpen}>
       {usernameFormOpen && (
         <Backdrop>
           <ChooseUsernameForm
             onJoin={onJoin}
             hasPassword={hasPassword}
             gameId={title}
+            onClose={() => setUsernameFormOpen(false)}
           />
         </Backdrop>
       )}

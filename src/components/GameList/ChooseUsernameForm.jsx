@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import InputField from "../InputField";
 import PlayerContext from "../../contexts/PlayerContext";
+import closeIconImg from "../../SVGs/close_icon.svg";
 import Button from "../Button";
 
 const Root = styled.div`
@@ -36,6 +37,20 @@ const Title = styled.h2`
   margin-bottom: 26px;
 `;
 
+const CloseIcon = styled.img`
+  width: 12px;
+  height: 12px;
+`;
+
+const IconContainer = styled.div`
+  position: absolute;
+
+  top: 16px;
+  right: 16px;
+
+  cursor: pointer;
+`;
+
 const InputLabel = styled.label`
   font-style: normal;
   font-weight: 400;
@@ -47,7 +62,7 @@ const InputLabel = styled.label`
   color: ${({ theme }) => theme.textColor};
 `;
 
-const ChooseUsernameForm = ({ onJoin, hasPassword, gameId }) => {
+const ChooseUsernameForm = ({ onJoin, hasPassword, gameId, onClose }) => {
   const { playerName, setPlayerName, setDefaultName } = useContext(
     PlayerContext
   );
@@ -64,6 +79,9 @@ const ChooseUsernameForm = ({ onJoin, hasPassword, gameId }) => {
 
   return (
     <Root>
+      <IconContainer onClick={onClose}>
+        <CloseIcon src={closeIconImg} />
+      </IconContainer>
       <Title>Choose user name</Title>
       <InputLabel htmlFor="userName">User name:</InputLabel>
       <InputField

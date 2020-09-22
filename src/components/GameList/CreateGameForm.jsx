@@ -1,11 +1,23 @@
 import React, { useState, useEffect, useContext } from "react";
 import PlayerContext from "../../contexts/PlayerContext";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import InputField from "../InputField";
 import Button from "../Button";
 import axios from "../../axios-config";
 import GlobalLoader from "../loaders/GlobalLoader";
 import { useHistory } from "react-router-dom";
+
+const slideIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translate(-50%, -70%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(-50%, -50%);
+  }
+`;
 
 const Root = styled.div`
   position: fixed;
@@ -32,6 +44,8 @@ const Root = styled.div`
   padding: 27px 42px;
 
   box-sizing: border-box;
+
+  animation: ${slideIn} 0.3s ease-in;
 `;
 
 const Title = styled.h2`
@@ -246,8 +260,8 @@ const CreateGameForm = (props) => {
           height="40px"
           width="180px"
           fontSize="18px"
-          color="#29B3BC"
-          backgroundColor="#FFFFFF"
+          color="#FFFFFF"
+          backgroundColor="#C4C4C43F"
           noShadow
           onClick={props.onClose}
         >
