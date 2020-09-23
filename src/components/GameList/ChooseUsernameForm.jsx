@@ -6,7 +6,6 @@ import closeIconImg from "../../SVGs/close_icon.svg";
 import ErrorMessage from "../ErrorMessage";
 import Button from "../Button";
 import GlobalLoader from "../loaders/GlobalLoader";
-import { Global } from "@emotion/core";
 
 const Root = styled.div`
   position: fixed;
