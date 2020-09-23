@@ -69,23 +69,20 @@ const GameList = () => {
     setCreateGameFormOpen(true);
   };
 
-  const handleJoin = (gameId, password) => {
+  const handleJoin = async (gameId, password) => {
     // Ask server first before we can join.
-    console.log("Sending: ", gameId, password, playerName);
-    axios
-      .post("/games/join-game-request", {
+
+    try {
+      const response = await axios.post("/games/join-game-request", {
         gameId,
         requestedPlayerName: playerName,
         password,
-      })
-      .then((response) => {
-        console.log("Successful response: ", response);
-        sessionStorage.setItem("token", response.data.token);
-        history.push(`/games/${gameId}`);
-      })
-      .catch((err) => {
-        console.log("Error: ", err.response);
       });
+      sessionStorage.setItem("token", response.data.token);
+      history.push(`/games/${gameId}`);
+    } catch (err) {
+      return err.response.data;
+    }
   };
 
   return (

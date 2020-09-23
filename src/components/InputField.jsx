@@ -20,6 +20,14 @@ const Root = styled.input`
 
   margin-bottom: ${(props) => props.mb};
   margin-top: ${(props) => props.mt};
+
+  ${(props) =>
+    props.error
+      ? `
+    border: 1px solid #EB5757;
+    color: #EB5757;
+  `
+      : ""};
 `;
 
 const InputField = (props) => {

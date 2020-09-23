@@ -6,6 +6,7 @@ import Button from "../Button";
 import axios from "../../axios-config";
 import GlobalLoader from "../loaders/GlobalLoader";
 import { useHistory } from "react-router-dom";
+import ErrorMessage from "../ErrorMessage";
 
 const slideIn = keyframes`
   from {
@@ -45,7 +46,7 @@ const Root = styled.div`
 
   box-sizing: border-box;
 
-  animation: ${slideIn} 0.3s ease-in;
+  animation: ${slideIn} 0.2s ease-in;
 `;
 
 const Title = styled.h2`
@@ -119,6 +120,7 @@ const CreateGameForm = (props) => {
     userName: "",
   });
   const [availableMaps, setAvailableMaps] = useState([]);
+  const [roomNameError, setRoomNameError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -163,12 +165,14 @@ const CreateGameForm = (props) => {
         });
       })
       .then((response) => {
-        setLoading(false);
+        // setLoading(false);
         sessionStorage.setItem("token", response.data.token);
         history.push(`/games/${roomName}`);
       })
       .catch((err) => {
         console.error(err.response);
+        setLoading(false);
+        if (err.response.status === 409) setRoomNameError(true);
       });
   };
 
@@ -201,18 +205,19 @@ const CreateGameForm = (props) => {
           <InputLabel htmlFor="roomName">Room name: </InputLabel>
           <InputField
             name="roomName"
+            error={roomNameError}
             id="roomName"
             onChange={handleFormChange}
             value={formData.roomName}
           />
         </InputContainer>
+        {roomNameError && <ErrorMessage>Room name already in use</ErrorMessage>}
         <InputContainer>
           <InputLabel htmlFor="maxPlayers">Max players: </InputLabel>
           <InputField
             name="maxPlayers"
             id="maxPlayers"
             type="number"
-            placeholder="Max Players"
             onChange={handleFormChange}
             value={formData.maxPlayers}
           />

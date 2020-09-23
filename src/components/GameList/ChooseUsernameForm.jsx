@@ -3,6 +3,7 @@ import styled from "styled-components";
 import InputField from "../InputField";
 import PlayerContext from "../../contexts/PlayerContext";
 import closeIconImg from "../../SVGs/close_icon.svg";
+import ErrorMessage from "../ErrorMessage";
 import Button from "../Button";
 
 const Root = styled.div`
@@ -67,14 +68,20 @@ const ChooseUsernameForm = ({ onJoin, hasPassword, gameId, onClose }) => {
     PlayerContext
   );
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
+  const [usernameError, setUsernameError] = useState(false);
 
   useEffect(() => {
     document.getElementById("userName").focus();
   }, []);
 
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     setDefaultName(playerName);
-    onJoin(gameId, password);
+    const errData = await onJoin(gameId, password);
+    if (errData) {
+      if (errData.usernameError) setUsernameError(errData.usernameError);
+      if (errData.passwordError) setPasswordError(errData.passwordError);
+    }
   };
 
   return (
@@ -90,15 +97,18 @@ const ChooseUsernameForm = ({ onJoin, hasPassword, gameId, onClose }) => {
         mt="8px"
         name="userName"
         id="userName"
+        error={usernameError}
         value={playerName}
         onChange={(e) => setPlayerName(e.target.value)}
       />
+      {usernameError && <ErrorMessage>{usernameError}</ErrorMessage>}
       {hasPassword && (
         <React.Fragment>
           <InputLabel htmlFor="password">Password:</InputLabel>
           <InputField
             width="100%"
             mb="26px"
+            error={passwordError}
             mt="8px"
             name="password"
             id="password"
@@ -107,6 +117,7 @@ const ChooseUsernameForm = ({ onJoin, hasPassword, gameId, onClose }) => {
           />
         </React.Fragment>
       )}
+      {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
 
       <Button noShadow fontSize="18px" onClick={handleButtonClick}>
         Join game
