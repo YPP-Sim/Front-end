@@ -5,6 +5,8 @@ import PlayerContext from "../../contexts/PlayerContext";
 import closeIconImg from "../../SVGs/close_icon.svg";
 import ErrorMessage from "../ErrorMessage";
 import Button from "../Button";
+import GlobalLoader from "../loaders/GlobalLoader";
+import { Global } from "@emotion/core";
 
 const Root = styled.div`
   position: fixed;
@@ -70,23 +72,34 @@ const ChooseUsernameForm = ({ onJoin, hasPassword, gameId, onClose }) => {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    document.getElementById("userName").focus();
+    const elem = document.getElementById("userName");
+    if (elem) elem.focus();
   }, []);
 
   const handleButtonClick = async () => {
-    // Reset form errors;
+    // Reset form errors
     setPasswordError(false);
     setUsernameError(false);
 
+    setLoading(true);
     setDefaultName(playerName);
     const errData = await onJoin(gameId, password);
     if (errData) {
       if (errData.usernameError) setUsernameError(errData.usernameError);
       if (errData.passwordError) setPasswordError(errData.passwordError);
     }
+    setLoading(false);
   };
+
+  if (loading)
+    return (
+      <Root>
+        <GlobalLoader />
+      </Root>
+    );
 
   return (
     <Root>
