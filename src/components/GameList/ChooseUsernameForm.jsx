@@ -76,6 +76,10 @@ const ChooseUsernameForm = ({ onJoin, hasPassword, gameId, onClose }) => {
   }, []);
 
   const handleButtonClick = async () => {
+    // Reset form errors;
+    setPasswordError(false);
+    setUsernameError(false);
+
     setDefaultName(playerName);
     const errData = await onJoin(gameId, password);
     if (errData) {
