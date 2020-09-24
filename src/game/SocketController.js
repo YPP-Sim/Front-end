@@ -38,7 +38,7 @@ class SocketController {
 
     socket.on("playMove", (moveData) => {
       console.log("move data: ", moveData);
-      this.game.setMove(moveData.index, moveData.direction);
+      this.game.setClientMove(moveData.index, moveData.direction);
     });
 
     socket.on("updateTokens", (tokenData) => {

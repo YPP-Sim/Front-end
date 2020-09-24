@@ -999,12 +999,29 @@ class Game extends Component {
     }
   }
 
-  setMove(index, directionString) {
+  setClientMove(index, directionString) {
     let toDirecton = null;
     if (!directionString) toDirecton = Direction.NONE;
     else toDirecton = Direction[directionString];
     this["move" + index] = toDirecton;
-    this._setTurnSpriteTexture(this.turnSprites[index], directionString);
+
+    const turnSprite = this.turnSprites[index];
+    this._setTurnSpriteTexture(turnSprite, directionString);
+    turnSprite.alpha = 1;
+  }
+
+  setServerMove(index, directionString) {
+    const turnSprite = this.turnSprites[index];
+    this._setTurnSpriteTexture(turnSprite, directionString);
+    turnSprite.alpha = 0.5;
+    this.socket.emit("setMove", {
+      gameId: this.gameId,
+      playerName: this.gameData.thisPlayer.playerName,
+      moveData: {
+        moveNumber: index,
+        direction: directionString,
+      },
+    });
   }
 
   _createTurnSprite(turnNumber, yOffset, resources, movesBody) {
@@ -1069,15 +1086,7 @@ class Game extends Component {
 
       this._setTurnSpriteTexture(turnSprite, toDirection.name);
       this["move" + turnNumber] = toDirection;
-
-      this.socket.emit("setMove", {
-        gameId: this.gameId,
-        playerName: this.gameData.thisPlayer.playerName,
-        moveData: {
-          moveNumber: turnNumber,
-          direction: toDirection.name,
-        },
-      });
+      this.setServerMove(turnNumber, toDirection.name);
     });
 
     turnSprite.zIndex = 55;
