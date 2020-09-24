@@ -1,11 +1,12 @@
 import * as PIXI from "pixi.js";
+import Direction from "./Direction";
 
 // The distance that the mouse needs to move when holding down left click to be considered 'dragging'
 const DRAG_DETECTION_MOUSE_OFFSET = 10;
 
 class DragDropHandler {
   constructor(game) {
-    this.currentHeldToken = null;
+    this.selectedToken = null;
     this.game = game;
     this.startDetect = false;
     this.isDragging = false;
@@ -94,7 +95,8 @@ class DragDropHandler {
    *    either "LEFT", "RIGHT", "FORWARD", or "STALL" as possible inputs
    * @param {string} move
    */
-  setMoveTexture(move) {
+  setMove(move) {
+    this.selectedToken = move;
     const frame = this.dragSprite.texture.frame;
     switch (move) {
       case "LEFT":
