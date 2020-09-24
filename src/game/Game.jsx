@@ -1036,7 +1036,10 @@ class Game extends Component {
       if (buttonType === 0) {
         const x = event.data.global.x;
         const y = event.data.global.y;
-        this.dragHandler.startDetecting(x, y);
+        if (this["move" + turnNumber].name !== null) {
+          this.dragHandler.startDetecting(x, y);
+          this.dragHandler.setMoveTexture(this["move" + turnNumber].name);
+        }
       }
       this.bgClicked = true;
     });
