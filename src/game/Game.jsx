@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import * as PIXI from "pixi.js";
 import SpriteBody from "./SpriteBody";
 import Ship from "./Ship";
+import Direction from "./Direction";
 import ShipType from "./ShipType";
 import Orientation, { getOrientationByName } from "./Orientation";
 import resourcePairs from "./resources";
@@ -10,6 +11,7 @@ import styled from "styled-components";
 import WindType from "./WindType";
 import Flag from "./Flag";
 import PlayerMoves from "./PlayerMoves";
+import DragDropHandler from "./DragDropHandler";
 
 let loaderLoaded = false;
 
@@ -82,6 +84,9 @@ class Game extends Component {
     this.setupLoaded = false;
     this.currentGameTick = 0;
 
+    this.dragHandler = new DragDropHandler(this);
+
+    this.turnSprites = {};
     this.gameData = props.gameData;
     this.flags = {};
     this.autoSelect = true;
@@ -91,6 +96,11 @@ class Game extends Component {
         this.gameData.thisPlayer.shipData.dualCannon,
         this
       );
+
+    this.move1 = Direction.NONE;
+    this.move2 = Direction.NONE;
+    this.move3 = Direction.NONE;
+    this.move4 = Direction.NONE;
 
     this.preventMovementInteraction = false;
   }
@@ -166,6 +176,7 @@ class Game extends Component {
       this.initPlayerShips();
       this.initFlags();
       this.createInfoDisplay();
+      this.dragHandler.init();
       requestAnimationFrame(this.animate.bind(this));
     });
   };
@@ -777,6 +788,16 @@ class Game extends Component {
     this.setRightTokens(2);
     this.setCannonsAmount(0);
 
+    this.textures["stallToken"] = new PIXI.Texture(
+      resources["moves"].texture,
+      new PIXI.Rectangle(84, 0, 28, 28)
+    );
+
+    this.textures["noToken"] = new PIXI.Texture(
+      resources["movesShiphand"].texture,
+      new PIXI.Rectangle(84, 0, 28, 28)
+    );
+
     const parent = this.app.view.parentNode;
 
     const initialY = parent.clientHeight - 3;
@@ -958,79 +979,118 @@ class Game extends Component {
     this.stage.addChild(bilgeSprite);
   }
 
+  _setTurnSpriteTexture(sprite, directionToken) {
+    switch (directionToken) {
+      case "LEFT":
+        sprite.texture = this.textures["leftToken"];
+        break;
+      case "FORWARD":
+        sprite.texture = this.textures["forwardToken"];
+        break;
+      case "RIGHT":
+        sprite.texture = this.textures["rightToken"];
+        break;
+      case "STALL":
+        sprite.texture = this.textures["stallToken"];
+        break;
+      case null:
+        sprite.texture = this.textures["noToken"];
+        break;
+    }
+  }
+
+  setMove(index, directionString) {
+    let toDirecton = null;
+    if (!directionString) toDirecton = Direction.NONE;
+    else toDirecton = Direction[directionString];
+    this["move" + index] = toDirecton;
+    this._setTurnSpriteTexture(this.turnSprites[index], directionString);
+  }
+
   _createTurnSprite(turnNumber, yOffset, resources, movesBody) {
-    const turnSprite = new PIXI.Sprite(
-      new PIXI.Texture(resources["movesShiphand"].texture)
-    );
-    const turnFrameRect = new PIXI.Rectangle(84, 0, 28, 28);
-    turnSprite.texture.frame = turnFrameRect;
+    const turnSprite = new PIXI.Sprite(this.textures["noToken"]);
+    turnSprite.anchor.x = 0.5;
+    turnSprite.anchor.y = 0.5;
     turnSprite.interactive = true;
     turnSprite.on("pointerdown", (event) => {
       if (this.preventMovementInteraction) return;
 
       const buttonType = event.data.originalEvent.button;
-      this.bgClicked = true;
       if (buttonType === 0) {
-        // Left click
-        let xAdder = turnFrameRect.x;
+        const x = event.data.global.x;
+        const y = event.data.global.y;
+        this.dragHandler.startDetecting(x, y);
+      }
+      this.bgClicked = true;
+    });
 
-        if (xAdder >= 84) xAdder = 0;
-        else xAdder += 28;
+    turnSprite.on("pointerup", (event) => {
+      if (this.preventMovementInteraction) return;
+
+      const buttonType = event.data.originalEvent.button;
+      this.dragHandler.setDragging(false);
+      let toDirection = null;
+
+      if (buttonType === 0) {
+        toDirection = Direction[this["move" + turnNumber].leftNext];
 
         // Go to forward token if no lefts
-        if (xAdder === 0 && this.leftTokens <= 0) xAdder += 28;
+        if (toDirection.name === "LEFT" && this.leftTokens <= 0)
+          toDirection = Direction.FORWARD;
         // Go to right token if no forwards
-        if (xAdder === 28 && this.forwardTokens <= 0) xAdder += 28;
+        if (toDirection.name === "FORWARD" && this.forwardTokens <= 0)
+          toDirection = Direction.RIGHT;
         // Go back to empty if no rights
-        if (xAdder === 56 && this.rightTokens <= 0) xAdder += 28;
-
-        turnFrameRect.x = xAdder;
+        if (toDirection.name === "RIGHT" && this.rightTokens <= 0)
+          toDirection = Direction.NONE;
       } else if (buttonType === 1) {
         // Middle mouse click
-        if (turnFrameRect.x === 28) turnFrameRect.x = 84;
-        else if (this.forwardTokens <= 0) turnFrameRect.x = 84;
-        else turnFrameRect.x = 28;
+        if (this["move" + turnNumber].name === Direction.FORWARD.name)
+          toDirection = Direction.NONE;
+        else if (this.forwardTokens <= 0) toDirection = Direction.NONE;
+        else toDirection = Direction.FORWARD;
       } else if (buttonType === 2) {
         // Right Click
-        let xSubtractor = turnFrameRect.x;
-        if (xSubtractor <= 0) xSubtractor = 84;
-        else xSubtractor -= 28;
+        toDirection = Direction[this["move" + turnNumber].rightNext];
 
         // Go to forward token if no rights
-        if (xSubtractor === 56 && this.rightTokens <= 0) xSubtractor -= 28;
+        if (toDirection.name === Direction.RIGHT.name && this.rightTokens <= 0)
+          toDirection = Direction.FORWARD;
         // Go to left token if no forwards
-        if (xSubtractor === 28 && this.forwardTokens <= 0) xSubtractor -= 28;
+        if (
+          toDirection.name === Direction.FORWARD.name &&
+          this.forwardTokens <= 0
+        )
+          toDirection = Direction.LEFT;
         // Go back to empty if no lefts
-        if (xSubtractor === 0 && this.leftTokens <= 0) xSubtractor = 84;
-
-        turnFrameRect.x = xSubtractor;
+        if (toDirection.name === Direction.LEFT.name && this.leftTokens <= 0)
+          toDirection = Direction.NONE;
       }
 
-      let turnDirection = null;
-      if (turnFrameRect.x === 0) turnDirection = "LEFT";
-      else if (turnFrameRect.x === 28) turnDirection = "FORWARD";
-      else if (turnFrameRect.x === 56) turnDirection = "RIGHT";
+      this._setTurnSpriteTexture(turnSprite, toDirection.name);
+      this["move" + turnNumber] = toDirection;
 
       this.socket.emit("setMove", {
         gameId: this.gameId,
         playerName: this.gameData.thisPlayer.playerName,
         moveData: {
           moveNumber: turnNumber,
-          direction: turnDirection,
+          direction: toDirection.name,
         },
       });
-
-      turnSprite.texture.frame = turnFrameRect;
     });
+
     turnSprite.zIndex = 55;
     this.setCenterAnchor(turnSprite);
 
     movesBody.addSprite(turnSprite, 54, yOffset);
     this.stage.addChild(turnSprite);
 
+    this.turnSprites[turnNumber] = turnSprite;
+
     return () => {
-      turnFrameRect.x = 84;
-      turnSprite.texture.frame = turnFrameRect;
+      turnSprite.texture = this.textures["noToken"];
+      this["move" + turnNumber] = Direction.NONE;
     };
   }
 
@@ -1411,6 +1471,7 @@ class Game extends Component {
     this.app.plugins.interaction.on("pointerup", () => {
       this.bgClicked = false;
       dragging = false;
+      this.dragHandler.setDragging(false);
     });
 
     this.app.plugins.interaction.on("pointermove", (e) => {
