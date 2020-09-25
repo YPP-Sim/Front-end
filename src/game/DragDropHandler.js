@@ -7,6 +7,7 @@ const DRAG_DETECTION_MOUSE_OFFSET = 10;
 class DragDropHandler {
   constructor(game) {
     this.selectedToken = null;
+    this.selectedTokenIndex = 0;
     this.game = game;
     this.startDetect = false;
     this.isDragging = false;
@@ -95,8 +96,9 @@ class DragDropHandler {
    *    either "LEFT", "RIGHT", "FORWARD", or "STALL" as possible inputs
    * @param {string} move
    */
-  setMove(move) {
+  setMove(move, index) {
     this.selectedToken = move;
+    this.selectedTokenIndex = index;
     const frame = this.dragSprite.texture.frame;
     switch (move) {
       case "LEFT":

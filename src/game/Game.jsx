@@ -1038,7 +1038,7 @@ class Game extends Component {
         const y = event.data.global.y;
         if (this["move" + turnNumber].name !== null) {
           this.dragHandler.startDetecting(x, y);
-          this.dragHandler.setMove(this["move" + turnNumber].name);
+          this.dragHandler.setMove(this["move" + turnNumber].name, turnNumber);
         }
       }
       this.bgClicked = true;
@@ -1048,8 +1048,12 @@ class Game extends Component {
       if (this.preventMovementInteraction) return;
 
       const buttonType = event.data.originalEvent.button;
+
       // Detect if drag and drop input first
       if (this.dragHandler.isDragging) {
+        const prevIndex = this.dragHandler.selectedTokenIndex;
+        this.setServerMove(prevIndex, this["move" + turnNumber].name);
+
         this["move" + turnNumber] = Direction[this.dragHandler.selectedToken];
         this.setServerMove(turnNumber, this.dragHandler.selectedToken);
         return;
