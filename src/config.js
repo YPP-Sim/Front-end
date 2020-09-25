@@ -4,8 +4,8 @@ const configs = {
     SERVER_ENDPOINT: "http://localhost:4000",
   },
   production: {
-    IO_ENDPOINT: "prod",
-    SERVER_ENDPOINT: "prod",
+    IO_ENDPOINT: "http://167.172.9.113:4000/",
+    SERVER_ENDPOINT: "http://167.172.9.113:4000/",
   },
 };
 
