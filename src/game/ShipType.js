@@ -19,7 +19,7 @@ const shipTypes = {
   WAR_BRIG: {
     name: "War Brig",
     textureName: "wbShip",
-    sinkingTextureName: "wfSinking",
+    sinkingTextureName: "wbSinking",
     orientations: wbOrientations,
     sinkingOrientations: wbSinkingOrientations,
     hasStallToken: true,
