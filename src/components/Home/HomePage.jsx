@@ -7,6 +7,7 @@ import News from "./News";
 import flagImage from "../../images/buoy.png";
 import tokenImage from "../../images/gold_token.png";
 import shipImage from "../../images/wb.png";
+import patchData from "../../patchnotes";
 
 const Root = styled.div``;
 
@@ -126,21 +127,12 @@ const HomePage = () => {
           <ContentSection pt="157px">
             <ContentTitle mb="38px">Latest News</ContentTitle>
 
-            <News title="Patch Notes" date="8/5/20" linkTo="/games">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nibh sed
-              tristique eu consectetur malesuada non et aliquam congue. Lectus
-              ultrices mauris vitae porttitor magna orci. A facilisis quis metus
-              nisi in. Elit, vel proin et porttitor commodo. Blandit ornare
-              congue et luctus. Imperdiet tempor dui dui nunc, felis imperdiet.
-              Tincidunt tempor lacus nam aliquam etiam sed elit ut pulvinar.
-              Eget dui sed integer aenean donec enim pulvinar tincidunt
-              elementum. Morbi tellus facilisis purus gravida nibh id adipiscing
-              tortor. Mauris erat vel nunc urna. Amet, libero est elementum,
-              praesent ac. Neque, vitae hendrerit diam vitae morbi facilisi
-              ipsum commodo. Eleifend placerat ultrices eget scelerisque
-              imperdiet leo nec in mi. Risus fringilla ultricies ut semper.
-              Felis, amet fermentum commodo, faucibus. Maecenas sem magna duis
-              tempor ornare interdum. Amet, proin pharetra urna, ut.
+            <News
+              title={patchData[0].title}
+              date={patchData[0].date}
+              linkTo="/patchnotes"
+            >
+              {patchData[0].description}
             </News>
           </ContentSection>
         </MaxWidthContainer>

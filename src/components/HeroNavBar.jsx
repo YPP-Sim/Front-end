@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const Root = styled.div`
   width: 100%;
@@ -56,7 +57,7 @@ const NavBar = () => {
       <Container>
         <NavTitle>YPP-SIM</NavTitle>
         <LinksContainer>
-          <a href="">News</a>
+          <Link to="/patchnotes">News</Link>
           <a href="">About</a>
           <a href="https://github.com/YPP-Sim">Github</a>
         </LinksContainer>

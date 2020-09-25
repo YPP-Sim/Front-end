@@ -56,10 +56,6 @@ const ArrowIcon = styled.img`
   margin-left: 16px;
 `;
 
-const FlexContainer = styled.div`
-  display: flex;
-`;
-
 const PatchNotes = ({ title, children, linkTo }) => {
   return (
     <Root>
