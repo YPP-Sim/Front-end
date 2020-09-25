@@ -183,7 +183,6 @@ class Game extends Component {
   };
 
   initPlayerShips() {
-    console.log("ships: ", this.gameData);
     for (let player of this.gameData.attackers) {
       const { playerName, shipData } = player;
       if (!shipData) continue;
