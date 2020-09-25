@@ -20,6 +20,10 @@ const Container = styled.div`
   max-width: ${({ theme }) => theme.pageMaxWidth};
   font-family: ${(props) => props.theme.textFont};
   margin-top: 45px;
+
+  & a {
+    text-decoration: none;
+  }
 `;
 
 const LinksContainer = styled.div`
@@ -55,10 +59,12 @@ const NavBar = () => {
   return (
     <Root>
       <Container>
-        <NavTitle>YPP-SIM</NavTitle>
+        <Link to="/">
+          <NavTitle>YPP-SIM</NavTitle>
+        </Link>
         <LinksContainer>
           <Link to="/patchnotes">News</Link>
-          <a href="">About</a>
+          {/* <a href="">About</a> */}
           <a href="https://github.com/YPP-Sim">Github</a>
         </LinksContainer>
       </Container>
