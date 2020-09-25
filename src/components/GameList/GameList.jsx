@@ -12,6 +12,8 @@ const Root = styled.div`
   width: 100%;
   max-width: ${({ theme }) => theme.pageMaxWidth};
   margin: 0 auto;
+
+  padding-bottom: 200px;
 `;
 
 const FlexCenterContainer = styled.div`
