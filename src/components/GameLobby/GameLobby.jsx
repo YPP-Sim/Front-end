@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import { IO_ENDPOINT as ENDPOINT } from "../../config";
+import config from "../../config";
 import PlayerContext from "../../contexts/PlayerContext";
 import { useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -10,6 +10,8 @@ import Game from "../../game/Game";
 import TeamsView from "./TeamsView";
 import LobbySocketController from "./LobbySocketController";
 import { useState } from "react";
+
+const { IO_ENDPOINT } = config;
 
 const Root = styled.div`
   height: 100%;
@@ -40,7 +42,7 @@ const SideContainer = styled.div`
   justify-content: space-between;
 `;
 
-const socket = io(ENDPOINT, { autoConnect: false });
+const socket = io(IO_ENDPOINT, { autoConnect: false });
 const socketController = new LobbySocketController(socket);
 
 function organizeGameData(gameData, thisPlayerName) {
