@@ -6,129 +6,128 @@
       "y": 0,
       "width": 55,
       "height": 59,
-      "offsetx": 0,
-      "offsety": 15
+      "anchorx": 0.5,
+      "anchory": 0.7
     },
     "1": {
       "x": 55,
       "y": 0,
       "width": 55,
       "height": 59,
-      "offsetx": 0,
-      "offsety": 15
+      "anchorx": 0.5,
+      "anchory": 0.7
     },
     "2": {
       "x": 110,
       "y": 0,
       "width": 55,
       "height": 59,
-      "offsetx": 0,
-      "offsety": 15
+      "anchorx": 0.5,
+      "anchory": 0.7
     },
     "3": {
       "x": 165,
       "y": 0,
       "width": 55,
       "height": 59,
-      "offsetx": 0,
-      "offsety": 15
+      "anchorx": 0.5,
+      "anchory": 0.7
     },
     "4": {
       "x": 220,
       "y": 0,
       "width": 55,
       "height": 59,
-      "offsetx": 0,
-      "offsety": 15
-
+      "anchorx": 0.5,
+      "anchory": 0.7
     },
     "5": {
       "x": 275,
       "y": 0,
       "width": 55,
       "height": 59,
-      "offsetx": 0,
-      "offsety": 15
+      "anchorx": 0.5,
+      "anchory": 0.7
     },
     "6": {
       "x": 330,
       "y": 0,
       "width": 55,
       "height": 59,
-      "offsetx": 0,
-      "offsety": 15
+      "anchorx": 0.5,
+      "anchory": 0.7
     },
     "7": {
       "x": 385,
       "y": 0,
       "width": 55,
       "height": 59,
-      "offsetx": 0,
-      "offsety": 15
+      "anchorx": 0.5,
+      "anchory": 0.7
     },
     "8": {
       "x": 440,
       "y": 0,
       "width": 55,
       "height": 59,
-      "offsetx": 0,
-      "offsety": 15
+      "anchorx": 0.5,
+      "anchory": 0.7
     },
     "9": {
       "x": 495,
       "y": 0,
       "width": 55,
       "height": 59,
-      "offsetx": 0,
-      "offsety": 15
+      "anchorx": 0.5,
+      "anchory": 0.7
     },
     "10": {
       "x": 550,
       "y": 0,
       "width": 55,
       "height": 59,
-      "offsetx": 0,
-      "offsety": 15
+      "anchorx": 0.5,
+      "anchory": 0.7
     },
     "11": {
       "x": 605,
       "y": 0,
       "width": 55,
       "height": 59,
-      "offsetx": 0,
-      "offsety": 15
+      "anchorx": 0.5,
+      "anchory": 0.7
     },
     "12": {
       "x": 660,
       "y": 0,
       "width": 55,
       "height": 59,
-      "offsetx": 0,
-      "offsety": 15
+      "anchorx": 0.5,
+      "anchory": 0.7
     },
     "13": {
       "x": 715,
       "y": 0,
       "width": 55,
       "height": 59,
-      "offsetx": 0,
-      "offsety": 15
+      "anchorx": 0.5,
+      "anchory": 0.7
     },
     "14": {
       "x": 770,
       "y": 0,
       "width": 55,
       "height": 59,
-      "offsetx":0,
-      "offsety": 15
+      "anchorx": 0.5,
+      "anchory": 0.7
     },
     "15": {
       "x": 825,
       "y": 0,
       "width": 55,
       "height": 59,
-      "offsetx": 0,
-      "offsety": 15
+      "anchorx": 0.5,
+      "anchory": 0.7
     }
   }
 }

@@ -183,6 +183,7 @@ class Game extends Component {
   };
 
   initPlayerShips() {
+    console.log("ships: ", this.gameData);
     for (let player of this.gameData.attackers) {
       const { playerName, shipData } = player;
       if (!shipData) continue;
@@ -253,7 +254,7 @@ class Game extends Component {
       return;
     }
 
-    const ship = new Ship(ShipType.warFrig, this, shipId, team);
+    const ship = new Ship(ShipType[type], this, shipId, team);
     ship.loadSprites();
     if (typeof orientation === "string")
       ship.setOrientation(getOrientationByName(orientation));

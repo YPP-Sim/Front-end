@@ -58,7 +58,18 @@ import flag_symbols from "../assets/cade/buoy_symbols.png";
 import wfShip from "../assets/vessel/wf/spritesheet.png";
 import wfSinking from "../assets/vessel/wf/sinking2.png";
 
+import wbShip from "../assets/vessel/wb/spritesheet.png";
+import wbSinking from "../assets/vessel/wb/sinking.json";
+
 const resourcePairs = [
+  {
+    name: "wbShip",
+    image: wbShip,
+  },
+  {
+    name: "wbSinking",
+    image: wbSinking,
+  },
   {
     name: "cannonsEmpty",
     image: emptyGuns,
