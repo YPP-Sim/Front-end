@@ -177,6 +177,7 @@ class Game extends Component {
       this.initFlags();
       this.createInfoDisplay();
       this.dragHandler.init();
+      this._requestUpdatedMoves();
       requestAnimationFrame(this.animate.bind(this));
     });
   };
@@ -921,6 +922,13 @@ class Game extends Component {
     stage.addChild(autoButtonSprite);
   }
 
+  _requestUpdatedMoves() {
+    this.socket.emit("requestShipMoves", {
+      playerName: this.getThisPlayer().playerName,
+      gameId: this.gameId,
+    });
+  }
+
   createStatsDisplay(resources) {
     // ------------------ Damage ---------------------
     const damageSprite = new PIXI.Sprite(
@@ -1063,6 +1071,7 @@ class Game extends Component {
 
       this.dragHandler.setDragging(false);
       let toDirection = null;
+      if (this["move" + turnNumber].name === Direction.STALL.name) return;
 
       if (buttonType === 0) {
         toDirection = Direction[this["move" + turnNumber].leftNext];

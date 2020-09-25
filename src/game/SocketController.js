@@ -37,7 +37,6 @@ class SocketController {
     });
 
     socket.on("playMove", (moveData) => {
-      console.log("move data: ", moveData);
       this.game.setClientMove(moveData.index, moveData.direction);
     });
 
@@ -77,7 +76,10 @@ class SocketController {
     });
 
     socket.on("clearShips", () => {
-      this.game.clearShipHand();
+      socket.emit("requestShipMoves", {
+        playerName: this.game.gameData.thisPlayer.playerName,
+        gameId: this.game.gameId,
+      });
       this.game.clearActivityBars();
       if (this.game.clearUICannons) this.game.clearUICannons();
       if (this.game.playerMoves) this.game.playerMoves.clearCannons();
