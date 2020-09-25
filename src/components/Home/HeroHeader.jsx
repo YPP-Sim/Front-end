@@ -69,6 +69,12 @@ const ImageContainer = styled.div`
   background-position: center;
   background-size: contain;
   filter: drop-shadow(0px 10px 50px rgba(0, 0, 0, 0.25));
+
+  @media (max-width: 700px) {
+    visibility: hidden;
+    width: 0%;
+    height: 0px;
+  }
 `;
 
 const HeroHeader = () => {
