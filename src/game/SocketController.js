@@ -12,6 +12,7 @@ import UpdatePlayerActionsEvent from "./events/UpdatePlayerActionsEvent";
 import ShipPositionChangeEvent from "./events/ShipPositionChangeEvent";
 import ClearShipsEvent from "./events/ClearShipsEvent";
 import AddShipEvent from "./events/AddShipEvent";
+import GameFinishedEvent from "./events/GameFinishedEvent";
 class SocketController {
   /**
    *
@@ -40,6 +41,7 @@ class SocketController {
     this.events.push(new ShipPositionChangeEvent());
     this.events.push(new ClearShipsEvent());
     this.events.push(new AddShipEvent());
+    this.events.push(new GameFinishedEvent());
   }
 
   registerEvents() {
