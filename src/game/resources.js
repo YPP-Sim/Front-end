@@ -59,7 +59,7 @@ import wfShip from "../assets/vessel/wf/spritesheet.png";
 import wfSinking from "../assets/vessel/wf/sinking2.png";
 
 import wbShip from "../assets/vessel/wb/spritesheet.png";
-import wbSinking from "../assets/vessel/wb/sinking.json";
+import wbSinking from "../assets/vessel/wb/sinking.png";
 
 const resourcePairs = [
   {
