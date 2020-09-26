@@ -124,8 +124,7 @@ class Game extends Component {
 
     // Move the movesBody/shiphand UI
     if (this.movesBody) this.movesBody.setPosition(175, toH - 95);
-    if (this.setInfoDisplayPosition)
-      this.setInfoDisplayPosition(this.app.width - 100, 50);
+    if (this.setInfoDisplayPosition) this.setInfoDisplayPosition(70, 50);
   }
 
   componentDidMount() {
@@ -412,7 +411,7 @@ class Game extends Component {
       defenderScore.text = score;
     };
 
-    this.setInfoDisplayPosition(this.app.width - 100, 50);
+    this.setInfoDisplayPosition(70, 50);
 
     // Time changing function to update display
     this.updateTimeNumber = (timeInSeconds) => {
