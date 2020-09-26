@@ -78,6 +78,14 @@ const ChooseUsernameForm = ({ onJoin, hasPassword, gameId, onClose }) => {
     if (elem) elem.focus();
   }, []);
 
+  const handleEnterKeyDown = (event) => {
+    if (event.key === "Enter") {
+      // Click button
+      const btnElem = document.querySelector("#joinButton");
+      if (btnElem) btnElem.click();
+    }
+  };
+
   const handleButtonClick = async () => {
     // Reset form errors
     setPasswordError(false);
@@ -115,6 +123,7 @@ const ChooseUsernameForm = ({ onJoin, hasPassword, gameId, onClose }) => {
         id="userName"
         error={usernameError}
         value={playerName}
+        onKeyDown={handleEnterKeyDown}
         onChange={(e) => setPlayerName(e.target.value)}
       />
       {usernameError && <ErrorMessage>{usernameError}</ErrorMessage>}
@@ -128,6 +137,7 @@ const ChooseUsernameForm = ({ onJoin, hasPassword, gameId, onClose }) => {
             mt="8px"
             name="password"
             id="password"
+            onKeyDown={handleEnterKeyDown}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -135,7 +145,12 @@ const ChooseUsernameForm = ({ onJoin, hasPassword, gameId, onClose }) => {
       )}
       {passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
 
-      <Button noShadow fontSize="18px" onClick={handleButtonClick}>
+      <Button
+        id="joinButton"
+        noShadow
+        fontSize="18px"
+        onClick={handleButtonClick}
+      >
         Join game
       </Button>
     </Root>
