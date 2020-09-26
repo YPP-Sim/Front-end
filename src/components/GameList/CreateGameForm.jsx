@@ -7,6 +7,7 @@ import axios from "../../axios-config";
 import GlobalLoader from "../loaders/GlobalLoader";
 import { useHistory } from "react-router-dom";
 import ErrorMessage from "../ErrorMessage";
+import origAxios from "axios";
 
 const slideIn = keyframes`
   from {
@@ -119,20 +120,33 @@ const CreateGameForm = (props) => {
     password: "",
     userName: "",
   });
+  const [cancelToken, setCancelToken] = useState(
+    origAxios.CancelToken.source()
+  );
   const [availableMaps, setAvailableMaps] = useState([]);
   const [roomNameError, setRoomNameError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     axios
-      .get("/maps")
+      .get("/maps", {
+        cancelToken: cancelToken.token,
+      })
       .then((res) => {
         setFormData({ ...formData, mapName: res.data[0] });
         setAvailableMaps(res.data);
       })
       .catch((err) => {
-        console.error(err.response);
+        if (origAxios.isCancel(err)) {
+          console.log("Request canceled", err.message);
+        } else console.error(err.response);
       });
+
+    return () => {
+      cancelToken.cancel(
+        "Request cancelled because the CreateGameForm component unmounted"
+      );
+    };
   }, []);
 
   const handleFormChange = (e) => {

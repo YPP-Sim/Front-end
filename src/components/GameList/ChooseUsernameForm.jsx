@@ -97,8 +97,8 @@ const ChooseUsernameForm = ({ onJoin, hasPassword, gameId, onClose }) => {
     if (errData) {
       if (errData.usernameError) setUsernameError(errData.usernameError);
       if (errData.passwordError) setPasswordError(errData.passwordError);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   if (loading)
