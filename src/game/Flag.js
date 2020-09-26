@@ -25,7 +25,7 @@ class Flag {
     const texture = new PIXI.Texture(loader.resources["flags"].texture);
 
     const sprite = new PIXI.Sprite(texture);
-    sprite.zIndex = 20;
+    sprite.zIndex = 2;
     sprite.anchor.x = 0.5;
     sprite.anchor.y = 0.85;
 

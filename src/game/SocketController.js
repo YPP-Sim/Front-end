@@ -1,6 +1,17 @@
-import ShipType from "./ShipType";
 import Game from "./Game";
-import { getOrientationByName } from "./Orientation";
+import UpdatePointsEvent from "./events/UpdatePointsEvent";
+import GameTimeEvent from "./events/GameTimeEvent";
+import PlayMoveEvent from "./events/PlayMoveEvent";
+import UpdateTokensEvent from "./events/UpdateTokensEvent";
+import UpdateAutoSelectEvent from "./events/UpdateAutoSelect";
+import UpdateSelectedTokenEvent from "./events/UpdateSelectedTokenEvent";
+import GameTickEvent from "./events/GameTickEvent";
+import MessageEvent from "./events/MessageEvent";
+import UpdateShipStatsEvent from "./events/UpdateShipStatsEvent";
+import UpdatePlayerActionsEvent from "./events/UpdatePlayerActionsEvent";
+import ShipPositionChangeEvent from "./events/ShipPositionChangeEvent";
+import ClearShipsEvent from "./events/ClearShipsEvent";
+import AddShipEvent from "./events/AddShipEvent";
 class SocketController {
   /**
    *
@@ -10,10 +21,36 @@ class SocketController {
   constructor(socket, game) {
     this.game = game;
     this.socket = socket;
+    this.events = [];
+
+    this.init();
+  }
+
+  init() {
+    this.events.push(new UpdatePointsEvent());
+    this.events.push(new GameTimeEvent());
+    this.events.push(new PlayMoveEvent());
+    this.events.push(new UpdateTokensEvent());
+    this.events.push(new UpdateAutoSelectEvent());
+    this.events.push(new UpdateSelectedTokenEvent());
+    this.events.push(new GameTickEvent());
+    this.events.push(new MessageEvent());
+    this.events.push(new UpdateShipStatsEvent());
+    this.events.push(new UpdatePlayerActionsEvent());
+    this.events.push(new ShipPositionChangeEvent());
+    this.events.push(new ClearShipsEvent());
+    this.events.push(new AddShipEvent());
   }
 
   registerEvents() {
     const socket = this.socket;
+
+    for (let event of this.events) {
+      socket.on(event.eventName, (eventObj) => {
+        event.onEvent(this.game, socket, eventObj);
+      });
+    }
+    // Special async event
     socket.on("gameTurn", async (turnData) => {
       socket.emit("requestShipStats", {
         playerName: this.game.gameData.thisPlayer.playerName,
@@ -24,148 +61,10 @@ class SocketController {
       this.game.updateShipPositions(turnData.playerData);
       this.game.updateFlags(turnData.flags);
     });
-
-    socket.on("gameTime", (time) => {
-      if (this.game.updateTimeNumber) this.game.updateTimeNumber(time);
-    });
-
-    socket.on("updatePoints", (scores) => {
-      if (scores.attackerScore)
-        this.game.setAttackerScore(scores.attackerScore);
-      if (scores.defenderScore)
-        this.game.setDefenderScore(scores.defenderScore);
-    });
-
-    socket.on("playMove", (moveData) => {
-      this.game.setClientMove(moveData.index, moveData.direction);
-    });
-
-    socket.on("updateTokens", (tokenData) => {
-      const { moves, cannons } = tokenData;
-      if (moves) {
-        this.game.setLeftTokens(moves.LEFT);
-        this.game.setForwardTokens(moves.FORWARD);
-        this.game.setRightTokens(moves.RIGHT);
-      }
-
-      if (cannons) {
-        if (cannons === -1) this.game.setCannonsAmount(0);
-        else this.game.setCannonsAmount(cannons);
-      }
-    });
-
-    socket.on("updateAutoSelect", (autoSelectBool) => {
-      this.game.setAutoSelectTexture(autoSelectBool);
-    });
-
-    socket.on("updateSelectedToken", (selectedToken) => {
-      this.game.setSelectedToken(selectedToken);
-    });
-
-    socket.on("gameTick", (tick) => {
-      this.game.currentGameTick = tick;
-
-      const setMaskPosition = this.game.setMaskPosition;
-      if (setMaskPosition) setMaskPosition(tick);
-    });
-
-    socket.on("updateShipStats", (shipStats) => {
-      const { bilge, damage } = shipStats;
-      if (damage) this.game.setDamageUIPercent(damage);
-      if (bilge) this.game.setBilgeUIPercent(bilge);
-    });
-
-    socket.on("clearShips", () => {
-      socket.emit("requestShipMoves", {
-        playerName: this.game.gameData.thisPlayer.playerName,
-        gameId: this.game.gameId,
-      });
-      this.game.clearActivityBars();
-      if (this.game.clearUICannons) this.game.clearUICannons();
-      if (this.game.playerMoves) this.game.playerMoves.clearCannons();
-
-      this.game.preventMovementInteraction = false;
-    });
-
-    socket.on("updatePlayerActions", ({ playerName, turnAmount }) => {
-      const ship = this.game.getShip(playerName);
-      if (!ship) {
-        console.error(
-          "Player making moves but does not have a ship on the board."
-        );
-        return;
-      }
-      ship.setBarMovements(turnAmount);
-    });
-
-    socket.on("message", (e) => {
-      console.log("Received message from server: ", e);
-    });
-
-    socket.on("shipPositionChange", (data) => {
-      const { shipId, boardX, boardY, orientation } = data;
-      const ship = this.game.getShip(shipId);
-
-      ship.sprite.texture = ship.movementTexture;
-      ship.setPosition(boardX, boardY);
-      ship.setOrientation(getOrientationByName(orientation));
-    });
-
-    socket.on("moveShip", (data) => {
-      console.log("MOVE DATA: ", data);
-      const { shipId, moveType } = data;
-
-      const ship = this.game.getShip(shipId);
-
-      if (!ship) {
-        console.error(
-          "Server sent movement type for ship with id: " +
-            shipId +
-            ", but there is no ship with that Id"
-        );
-        return;
-      }
-
-      const move = moveType.toUpperCase();
-
-      switch (move) {
-        case "LEFT":
-          ship.moveLeft();
-          break;
-        case "RIGHT":
-          ship.moveRight();
-          break;
-        case "FORWARD":
-          ship.moveForward();
-          break;
-
-        default:
-          console.log("Unknown movement type: " + move);
-          break;
-      }
-    });
-
-    socket.on("addShip", (data) => {
-      const { shipId, type, boardX, boardY, orientation } = JSON.parse(data);
-      console.log("Adding ship with id: " + shipId);
-      this.game.addShip(
-        shipId,
-        ShipType[type],
-        parseInt(boardX),
-        parseInt(boardY),
-        orientation
-      );
-    });
   }
 
   unregisterEvents() {
-    const socket = this.socket;
-
-    socket.off("test");
-    socket.off("message");
-    socket.off("shipPositionChange");
-    socket.off("addShip");
-    socket.removeAllListeners();
+    this.socket.removeAllListeners();
   }
 }
 
