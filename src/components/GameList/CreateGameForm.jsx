@@ -258,7 +258,6 @@ const CreateGameForm = (props) => {
           <InputField
             name="password"
             id="password"
-            type="password"
             value={formData.password}
             placeholder="(optional)"
             onChange={handleFormChange}
