@@ -182,26 +182,6 @@ class Game extends Component {
   };
 
   initPlayerShips() {
-    const test = this.addShip(
-      "Test",
-      "WAR_FRIG",
-      1,
-      1,
-      Orientation.SOUTH,
-      "DEFENDER"
-    );
-
-    test.moveAngular(
-      {
-        origXOffset: -1,
-        origYOffset: 0,
-        targetX: 0,
-        targetY: 0,
-      },
-      4,
-      3
-    );
-
     for (let player of this.gameData.attackers) {
       const { playerName, shipData } = player;
       if (!shipData) continue;
@@ -1340,6 +1320,14 @@ class Game extends Component {
 
           if (windType.turn_direction) {
             const turn_direction = windType.turn_direction;
+
+            // Change orientation
+            const side = windType.clockwise ? "right" : "left";
+            const toOrientationName = ship.faceDirection[side].orientation;
+            ship._startTextureAnim(
+              Orientation[toOrientationName],
+              side.toUpperCase()
+            );
 
             const fromAngleOffset = windType.angleOffset;
             const toAngleOffset =
