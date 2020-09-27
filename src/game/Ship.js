@@ -670,7 +670,6 @@ class Ship {
     let toOrientation = orientation.NORTH;
 
     const turnalDistance = cancelledTurnal ? 0 : 1;
-
     switch (this.faceDirection) {
       case orientation.SOUTH:
         targetX = this.vX - turnalDistance;
@@ -702,6 +701,80 @@ class Ship {
 
     // Movement
     this._startMovementAnim(targetX, targetY, "RIGHT");
+  }
+
+  moveRightReverse(cancelledMovement, cancelledTurnal) {
+    let targetX = 0;
+    let targetY = 0;
+    let toOrientation = orientation.NORTH;
+
+    const turnalDistance = cancelledTurnal ? 0 : 1;
+
+    switch (this.faceDirection) {
+      case orientation.SOUTH:
+        targetX = this.vX - turnalDistance;
+        targetY = this.vY - 1;
+        toOrientation = orientation.EAST;
+        break;
+      case orientation.NORTH:
+        targetX = this.vX + turnalDistance;
+        targetY = this.vY + 1;
+        toOrientation = orientation.WEST;
+        break;
+      case orientation.WEST:
+        targetX = this.vX + 1;
+        targetY = this.vY - turnalDistance;
+        toOrientation = orientation.SOUTH;
+        break;
+      case orientation.EAST:
+        targetX = this.vX - 1;
+        targetY = this.vY + turnalDistance;
+        toOrientation = orientation.NORTH;
+        break;
+    }
+
+    // Animation
+    this._startTextureAnimReverse(toOrientation, "RIGHT");
+
+    // TODO Maybe add a 'small' bump animation for cancelled movements on turns
+    if (cancelledMovement) return;
+
+    // Movement
+    this._startMovementAnim(targetX, targetY, "RIGHT", true);
+  }
+
+  moveLeftReverse(cancelledMovement, cancelledTurnal) {}
+
+  _startTextureAnimReverse(toOrientation, toDirection) {
+    let currentFrameId = this.getFrameByOrientation(this.faceDirection);
+    const shipRect = new PIXI.Rectangle(0, 0, 0, 0);
+
+    let frameCounter = 0;
+    const textureAnimId = setInterval(() => {
+      if (toDirection === "RIGHT" && currentFrameId === 0) currentFrameId = 15;
+      else if (toDirection === "LEFT" && currentFrameId === 15)
+        currentFrameId = 0;
+
+      const { x, y, width, height } = this.type.orientations.orientations[
+        currentFrameId
+      ];
+
+      shipRect.x = x;
+      shipRect.y = y;
+      shipRect.width = width;
+      shipRect.height = height;
+
+      this.sprite.texture.frame = shipRect;
+      if (toDirection === "RIGHT") currentFrameId--;
+      else if (toDirection === "LEFT") currentFrameId++;
+
+      frameCounter++;
+
+      if (frameCounter > 4) {
+        clearInterval(textureAnimId);
+        this.setOrientation(toOrientation);
+      }
+    }, this.textureChangeDelay);
   }
 
   _startTextureAnim(toOrientation, toDirection) {
@@ -736,20 +809,16 @@ class Ship {
     }, this.textureChangeDelay);
   }
 
-  _startMovementAnim(targetX, targetY, toSide) {
-    toSide = toSide.toLowerCase();
+  moveAngular(moveSettings, fromAngleOffset, toAngleOffset) {
+    const { origXOffset, origYOffset, targetX, targetY } = moveSettings;
+    const ORIGIN_X = this.vX + origXOffset;
+    const ORIGIN_Y = this.vY + origYOffset;
 
-    const fromOrientation = this.faceDirection;
-    const deltaInterval =
-      (fromOrientation.angleOffset - fromOrientation[toSide].angleOffset) / 25;
-
-    const toAngle = (fromOrientation.angleOffset * Math.PI) / 2;
-    const fromAngle = (fromOrientation[toSide].angleOffset * Math.PI) / 2;
-
+    let fromAngle = (fromAngleOffset * Math.PI) / 2;
+    let toAngle = (toAngleOffset * Math.PI) / 2;
     let currentAngle = fromAngle;
 
-    const ORIGIN_X = this.vX + fromOrientation[toSide].x;
-    const ORIGIN_Y = this.vY + fromOrientation[toSide].y;
+    const deltaInterval = (toAngleOffset - fromAngleOffset) / 25;
 
     const animationTicker = new PIXI.Ticker();
     animationTicker.add((deltaTime) => {
@@ -774,6 +843,27 @@ class Ship {
     });
 
     animationTicker.start();
+  }
+
+  _startMovementAnim(targetX, targetY, toSide, reverse = false) {
+    toSide = toSide.toLowerCase();
+
+    let sideAngleOffset;
+    sideAngleOffset = toSide === "right" ? -1 : 1;
+
+    const fromOrientation = this.faceDirection;
+
+    let fromAngleOffset =
+      fromOrientation.angleOffset + (reverse ? sideAngleOffset : 0);
+    let toAngleOffset = fromAngleOffset + sideAngleOffset;
+
+    const moveSettings = {
+      targetX,
+      targetY,
+      origXOffset: fromOrientation[toSide].x,
+      origYOffset: fromOrientation[toSide].y,
+    };
+    this.moveAngular(moveSettings, toAngleOffset, fromAngleOffset);
   }
 
   moveLeft(cancelledMovement, cancelledTurnal) {

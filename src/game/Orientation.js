@@ -22,14 +22,14 @@ const ORIENTATIONS = {
     left: {
       x: 1,
       y: 0,
-      angleOffset: 2,
+      angleOffset: 6,
     },
     right: {
       x: -1,
       y: 0,
-      angleOffset: 0,
+      angleOffset: 4,
     },
-    angleOffset: 1,
+    angleOffset: 5,
   },
   WEST: {
     name: "WEST",

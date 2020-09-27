@@ -182,6 +182,26 @@ class Game extends Component {
   };
 
   initPlayerShips() {
+    const test = this.addShip(
+      "Test",
+      "WAR_FRIG",
+      1,
+      1,
+      Orientation.SOUTH,
+      "DEFENDER"
+    );
+
+    test.moveAngular(
+      {
+        origXOffset: -1,
+        origYOffset: 0,
+        targetX: 0,
+        targetY: 0,
+      },
+      4,
+      3
+    );
+
     for (let player of this.gameData.attackers) {
       const { playerName, shipData } = player;
       if (!shipData) continue;
@@ -1317,10 +1337,35 @@ class Game extends Component {
         for (let windMove of turnWinds) {
           const ship = this.getShip(windMove.playerName);
           const windType = WindType[windMove.windType.type];
-          ship.moveByOrientation(
-            windType.direction,
-            windMove.windType.cancelledMovement
-          );
+
+          if (windType.turn_direction) {
+            const turn_direction = windType.turn_direction;
+
+            const fromAngleOffset = windType.angleOffset;
+            const toAngleOffset =
+              fromAngleOffset + (windType.clockwise ? 1 : -1);
+
+            const targetX =
+              ship.vX + windType.direction.xDir + turn_direction.x;
+            const targetY =
+              ship.vY + windType.direction.yDir + turn_direction.y;
+
+            ship.moveAngular(
+              {
+                origXOffset: turn_direction.x,
+                origYOffset: turn_direction.y,
+                targetX,
+                targetY,
+              },
+              fromAngleOffset,
+              toAngleOffset
+            );
+          } else {
+            ship.moveByOrientation(
+              windType.direction,
+              windMove.windType.cancelledMovement
+            );
+          }
         }
 
         await sleep(800);
