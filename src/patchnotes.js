@@ -14,7 +14,7 @@ const patchNotes = [
       "Made angular movement code (ship turning, arc paths) cleaner and more easily reusable",
       "Whirlpools now functionally work",
       "Whirlpools now also change the orientation of the ship graphically (bug fix)",
-      "Fixed tmer bug where timers would still go after removing a game",
+      "Fixed timer bug where timers would still go after removing a game",
       "Points will no longer be awarded once timer is finished (although plays can still move)",
     ],
   },
