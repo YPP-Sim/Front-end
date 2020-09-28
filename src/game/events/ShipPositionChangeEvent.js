@@ -1,6 +1,5 @@
 import { getOrientationByName } from "../Orientation";
-
-const SocketEvent = require("./SocketEvent");
+import SocketEvent from "./SocketEvent";
 
 class ShipPositionChangeEvent extends SocketEvent {
   constructor() {

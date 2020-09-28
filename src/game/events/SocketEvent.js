@@ -10,4 +10,4 @@ class SocketEvent {
   onEvent(game, socket, eventData) {}
 }
 
-module.exports = SocketEvent;
+export default SocketEvent;

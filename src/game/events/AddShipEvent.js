@@ -1,5 +1,5 @@
 import ShipType from "../ShipType";
-const SocketEvent = require("./SocketEvent");
+import SocketEvent from "./SocketEvent";
 
 class AddShipEvent extends SocketEvent {
   constructor() {

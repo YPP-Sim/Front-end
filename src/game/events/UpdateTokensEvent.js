@@ -1,4 +1,4 @@
-const SocketEvent = require("./SocketEvent");
+import SocketEvent from "./SocketEvent";
 
 class UpdateTokensEvent extends SocketEvent {
   constructor() {
