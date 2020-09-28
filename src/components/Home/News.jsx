@@ -56,11 +56,11 @@ const ArrowIcon = styled.img`
   margin-left: 16px;
 `;
 
-const PatchNotes = ({ title, children, linkTo }) => {
+const PatchNotes = ({ title, children, linkTo, date }) => {
   return (
     <Root>
       <Title>{title}</Title>
-      <Date>8/5/20</Date>
+      <Date>{date}</Date>
       <Content>{children}</Content>
       {linkTo && (
         <StyledLink to={linkTo}>
