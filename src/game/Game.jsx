@@ -608,6 +608,7 @@ class Game extends Component {
     });
 
     this.setAutoSelectTexture = (autoSelectBool) => {
+      this.isAutoSelect = autoSelectBool;
       if (autoSelectBool) {
         autoButtonSprite.texture = resources["autoOn"].texture;
         this.sprites["selectToken"].texture = this.textures["graySelectToken"];
@@ -616,6 +617,21 @@ class Game extends Component {
         this.sprites["selectToken"].texture = this.textures[
           "brightSelectToken"
         ];
+      }
+
+      switch (this.selectedToken) {
+        case "LEFT":
+          this.setLeftRadio();
+          break;
+        case "FORWARD":
+          this.setForwardRadio();
+          break;
+        case "RIGHT":
+          this.setRightRadio();
+          break;
+        default:
+          this.setForwardRadio();
+          break;
       }
     };
 
@@ -798,6 +814,94 @@ class Game extends Component {
       new PIXI.Rectangle(84, 0, 28, 28)
     );
 
+    const radioRectangle = new PIXI.Rectangle(0, 0, 13, 13);
+
+    // Radio buttons textures
+    this.textures["radioDisabledOff"] = new PIXI.Texture(
+      resources["radioDisabledOff"].texture,
+      radioRectangle
+    );
+
+    this.textures["radioDisabledOn"] = new PIXI.Texture(
+      resources["radioDisabledOn"].texture,
+      radioRectangle
+    );
+
+    this.textures["radioEnabledOff"] = new PIXI.Texture(
+      resources["radioEnabledOff"].texture,
+      radioRectangle
+    );
+    this.textures["radioEnabledOn"] = new PIXI.Texture(
+      resources["radioEnabledOn"].texture,
+      radioRectangle
+    );
+
+    const leftRadioSprite = new PIXI.Sprite(this.textures["radioDisabledOff"]);
+    leftRadioSprite.zIndex = 100;
+    leftRadioSprite.anchor.x = 0.5;
+    leftRadioSprite.anchor.y = 0.5;
+    leftRadioSprite.interactive = true;
+
+    const forwardRadioSprite = new PIXI.Sprite(
+      this.textures["radioDisabledOn"]
+    );
+    forwardRadioSprite.zIndex = 100;
+    forwardRadioSprite.anchor.x = 0.5;
+    forwardRadioSprite.anchor.y = 0.5;
+    forwardRadioSprite.interactive = true;
+
+    const rightRadioSprite = new PIXI.Sprite(this.textures["radioDisabledOff"]);
+    rightRadioSprite.zIndex = 100;
+    rightRadioSprite.anchor.x = 0.5;
+    rightRadioSprite.anchor.y = 0.5;
+    rightRadioSprite.interactive = true;
+
+    leftRadioSprite.on("pointerdown", () =>
+      this.sendSelectedTokenUpdate("LEFT")
+    );
+    forwardRadioSprite.on("pointerdown", () =>
+      this.sendSelectedTokenUpdate("FORWARD")
+    );
+    rightRadioSprite.on("pointerdown", () =>
+      this.sendSelectedTokenUpdate("RIGHT")
+    );
+
+    this.setLeftRadio = () => {
+      forwardRadioSprite.texture = this.autoSelect
+        ? this.textures["radioDisabledOff"]
+        : this.textures["radioEnabledOff"];
+      rightRadioSprite.texture = this.autoSelect
+        ? this.textures["radioDisabledOff"]
+        : this.textures["radioEnabledOff"];
+      leftRadioSprite.texture = this.autoSelect
+        ? this.textures["radioDisabledOn"]
+        : this.textures["radioEnabledOn"];
+    };
+
+    this.setRightRadio = () => {
+      forwardRadioSprite.texture = this.autoSelect
+        ? this.textures["radioDisabledOff"]
+        : this.textures["radioEnabledOff"];
+      rightRadioSprite.texture = this.autoSelect
+        ? this.textures["radioDisabledOn"]
+        : this.textures["radioEnabledOn"];
+      leftRadioSprite.texture = this.autoSelect
+        ? this.textures["radioDisabledOff"]
+        : this.textures["radioEnabledOff"];
+    };
+
+    this.setForwardRadio = () => {
+      forwardRadioSprite.texture = this.autoSelect
+        ? this.textures["radioDisabledOn"]
+        : this.textures["radioEnabledOn"];
+      rightRadioSprite.texture = this.autoSelect
+        ? this.textures["radioDisabledOff"]
+        : this.textures["radioEnabledOff"];
+      leftRadioSprite.texture = this.autoSelect
+        ? this.textures["radioDisabledOff"]
+        : this.textures["radioEnabledOff"];
+    };
+
     const parent = this.app.view.parentNode;
 
     const initialY = parent.clientHeight - 3;
@@ -853,21 +957,29 @@ class Game extends Component {
     movesBody.addSprite(movesTitle, -60, -57);
     movesBody.addSprite(autoText, -145, -30);
 
+    movesBody.addSprite(leftRadioSprite, -75, -23);
+    movesBody.addSprite(forwardRadioSprite, -45, -23);
+    movesBody.addSprite(rightRadioSprite, -15, -23);
+
     movesBody.addSprite(leftSprite, -75, 10);
     movesBody.addSprite(forwardSprite, -45, 10);
     movesBody.addSprite(rightSprite, -15, 10);
     const selectSpriteConfig = movesBody.addSprite(selectTokenSprite, -45, 10);
     this.setSelectedToken = (direction) => {
       let xOffset = 0; // forward default
+      this.selectedToken = direction;
       switch (direction) {
         case "LEFT":
           xOffset = -75;
+          this.setLeftRadio();
           break;
         case "FORWARD":
           xOffset = -45;
+          this.setForwardRadio();
           break;
         case "RIGHT":
           xOffset = -15;
+          this.setRightRadio();
           break;
         default:
           xOffset = -45;
@@ -893,6 +1005,9 @@ class Game extends Component {
     stage.addChild(movesBgSprite);
     stage.addChild(shiphandSprite);
     stage.addChild(sandTop);
+    stage.addChild(leftRadioSprite);
+    stage.addChild(forwardRadioSprite);
+    stage.addChild(rightRadioSprite);
     stage.addChild(sandBot);
     stage.addChild(sandTrickleMask);
     stage.addChild(hourglassSprite);

@@ -4,8 +4,10 @@ import movesBg from "../assets/ui/moves-background.png";
 import movesTitle from "../assets/ui/title.png";
 import autoOn from "../assets/ui/auto-on.png";
 import autoOff from "../assets/ui/auto-off.png";
-import radioOn from "../assets/ui/radio-on.png";
-import radioOff from "../assets/ui/radio-off.png";
+import radioEnabledOn from "../assets/ui/radio-enabled-on.png";
+import radioEnabledOff from "../assets/ui/radio-enabled-off.png";
+import radioDisabledOn from "../assets/ui/radio-disabled-on.png";
+import radioDisabledOff from "../assets/ui/radio-disabled-off.png";
 import hourglass from "../assets/ui/hourglass.png";
 import sandTop from "../assets/ui/sand_top.png";
 import sandBot from "../assets/ui/sand_bot.png";
@@ -203,12 +205,20 @@ const resourcePairs = [
     image: autoOff,
   },
   {
-    name: "radioOn",
-    image: radioOn,
+    name: "radioDisabledOn",
+    image: radioDisabledOn,
   },
   {
-    name: "radioOff",
-    image: radioOff,
+    name: "radioDisabledOff",
+    image: radioDisabledOff,
+  },
+  {
+    name: "radioEnabledOn",
+    image: radioEnabledOn,
+  },
+  {
+    name: "radioEnabledOff",
+    image: radioEnabledOff,
   },
   {
     name: "bilgeStatus",
