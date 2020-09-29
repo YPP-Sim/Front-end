@@ -185,7 +185,7 @@ class Ship {
     );
     influenceSprite.endFill();
     influenceSprite.alpha = 0.5;
-    influenceSprite.visible = true;
+    influenceSprite.visible = false;
 
     const influenceBody = this.game.mapBody.addSprite(
       influenceSprite,
@@ -196,6 +196,16 @@ class Ship {
     this.setInfluenceVisibility = (bool) => {
       influenceSprite.visible = bool;
     };
+
+    shipSprite.interactive = true;
+    shipSprite.on("mouseover", () => {
+      // Single ship visibility, do all eventually.
+      this.game.showShipInfluences();
+    });
+
+    shipSprite.on("mouseout", () => {
+      this.game.hideShipInfluences();
+    });
 
     this.sprite = shipSprite;
     this.game.stage.addChild(shipNameText);

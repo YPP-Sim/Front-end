@@ -105,6 +105,20 @@ class Game extends Component {
     this.preventMovementInteraction = false;
   }
 
+  showShipInfluences() {
+    for (let shipName of Object.keys(this.ships)) {
+      const ship = this.getShip(shipName);
+      ship.setInfluenceVisibility(true);
+    }
+  }
+
+  hideShipInfluences() {
+    for (let shipName of Object.keys(this.ships)) {
+      const ship = this.getShip(shipName);
+      ship.setInfluenceVisibility(false);
+    }
+  }
+
   initFlags() {
     for (let flag of this.gameData.flags) {
       this.flags[flag.id] = new Flag(flag.x, flag.y, flag.pointValue, this);
