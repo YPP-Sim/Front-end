@@ -712,7 +712,7 @@ class Ship {
     let targetY = 0;
     let toOrientation = orientation.NORTH;
 
-    const turnalDistance = cancelledTurnal ? 0 : 1;
+    const turnalDistance = cancelledTurnal || cancelledMovement ? 0 : 1;
     switch (this.faceDirection) {
       case orientation.SOUTH:
         targetX = this.vX - turnalDistance;
@@ -743,7 +743,9 @@ class Ship {
     if (cancelledMovement) return;
 
     // Movement
-    this._startMovementAnim(targetX, targetY, "RIGHT");
+    if (cancelledTurnal) {
+      this.animateTo(this.x, this.y, targetX, targetY, false);
+    } else this._startMovementAnim(targetX, targetY, "RIGHT");
   }
 
   moveRightReverse(cancelledMovement, cancelledTurnal) {
@@ -785,8 +787,6 @@ class Ship {
     // Movement
     this._startMovementAnim(targetX, targetY, "RIGHT", true);
   }
-
-  moveLeftReverse(cancelledMovement, cancelledTurnal) {}
 
   _startTextureAnimReverse(toOrientation, toDirection) {
     let currentFrameId = this.getFrameByOrientation(this.faceDirection);
@@ -944,7 +944,9 @@ class Ship {
     // Movement
     if (cancelledMovement) return;
 
-    this._startMovementAnim(targetX, targetY, "LEFT");
+    if (cancelledTurnal) {
+      this.animateTo(this.x, this.y, targetX, targetY, false);
+    } else this._startMovementAnim(targetX, targetY, "LEFT");
   }
 
   setTextureFromOrientation(orient = Orientation.SOUTH) {
