@@ -15,6 +15,7 @@ const shipTypes = {
     sinkingOrientations: wfSinkingOrientations,
     hasStallToken: true,
     cannonType: CannonType.LARGE,
+    influenceRadius: 4,
   },
   WAR_BRIG: {
     name: "War Brig",
@@ -24,6 +25,7 @@ const shipTypes = {
     sinkingOrientations: wbSinkingOrientations,
     hasStallToken: true,
     cannonType: CannonType.MEDIUM,
+    influenceRadius: 3,
   },
 };
 

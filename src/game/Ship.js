@@ -166,11 +166,43 @@ class Ship {
     );
     this.setNamePosition = nameBody.setSpriteOffset;
 
+    // Ship influence circle
+    const influenceRatio = 0.75;
+    const influenceRadius = this.type.influenceRadius;
+    const influenceWidth = influenceRadius * 50 - 18;
+    const influenceHeight = influenceWidth * influenceRatio;
+
+    const influenceSprite = new PIXI.Graphics();
+    influenceSprite.zIndex = 30;
+    influenceSprite.pivot.x = 0.5;
+    influenceSprite.pivot.y = 0.5;
+    influenceSprite.lineStyle(2, this.teamColor);
+    influenceSprite.drawEllipse(
+      spaceX,
+      spaceY,
+      influenceWidth,
+      influenceHeight
+    );
+    influenceSprite.endFill();
+    influenceSprite.alpha = 0.5;
+    influenceSprite.visible = true;
+
+    const influenceBody = this.game.mapBody.addSprite(
+      influenceSprite,
+      spaceX,
+      spaceY
+    );
+    this.setInfluencePosition = influenceBody.setSpriteOffset;
+    this.setInfluenceVisibility = (bool) => {
+      influenceSprite.visible = bool;
+    };
+
     this.sprite = shipSprite;
     this.game.stage.addChild(shipNameText);
     this.game.stage.addChild(shipMoveBar);
     this.game.stage.addChild(shipSprite);
     this.game.stage.addChild(shipFillBar);
+    this.game.stage.addChild(influenceSprite);
     this.faceDirection = orientation.SOUTH;
     this.setTextureFromOrientation(this.faceDirection);
   }
@@ -284,6 +316,7 @@ class Ship {
     this.setSpriteBarPosition(spaceX, spaceY - 20);
     this.setNamePosition(spaceX, spaceY - 68);
     this.setFillBarPosition(spaceX, spaceY - 20);
+    this.setInfluencePosition(spaceX, spaceY);
 
     // Update position of flag symbols above ship
     for (let spriteHandler of this.flagSymbolsSprites) {
