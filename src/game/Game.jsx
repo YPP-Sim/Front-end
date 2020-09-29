@@ -30,6 +30,10 @@ function isRock(cell_id) {
     case 14:
     case 15:
     case 16:
+    case 20:
+    case 21:
+    case 22:
+    case 23:
       return true;
     default:
       return false;
@@ -544,6 +548,32 @@ class Game extends Component {
     this.textures["rocks2"] = rocks2;
     this.textures["rocks3"] = rocks3;
     this.textures["rocks4"] = rocks4;
+
+    const rocksSmRec = new PIXI.Rectangle(0, 0, 56.5, 50);
+    const smRocks1 = new PIXI.Texture(
+      resources["rocksSmall"].texture,
+      rocksSmRec
+    );
+    rocksSmRec.x += 56.5;
+    const smRocks2 = new PIXI.Texture(
+      resources["rocksSmall"].texture,
+      rocksSmRec
+    );
+    rocksSmRec.x += 56.5;
+    const smRocks3 = new PIXI.Texture(
+      resources["rocksSmall"].texture,
+      rocksSmRec
+    );
+    rocksSmRec.x += 56.5;
+    const smRocks4 = new PIXI.Texture(
+      resources["rocksSmall"].texture,
+      rocksSmRec
+    );
+
+    this.textures["smallRocks1"] = smRocks1;
+    this.textures["smallRocks2"] = smRocks2;
+    this.textures["smallRocks3"] = smRocks3;
+    this.textures["smallRocks4"] = smRocks4;
   }
 
   loadShipUI(resources) {
@@ -1565,42 +1595,38 @@ class Game extends Component {
         return this.textures["downWind"];
       case 4:
         return this.textures["leftWind"];
-
       case 5:
         return this.textures["whirl1"];
-
       case 6:
         return this.textures["whirl2"];
-
       case 7:
         return this.textures["whirl3"];
-
       case 8:
         return this.textures["whirl4"];
-
       case 9:
         return this.textures["revWhirl2"];
-
       case 10:
         return this.textures["revWhirl3"];
-
       case 11:
         return this.textures["revWhirl4"];
-
       case 12:
         return this.textures["revWhirl1"];
-
       case 13:
         return this.textures["rocks1"];
-
       case 14:
         return this.textures["rocks2"];
-
       case 15:
         return this.textures["rocks3"];
-
       case 16:
         return this.textures["rocks4"];
+      case 20:
+        return this.textures["smallRocks1"];
+      case 21:
+        return this.textures["smallRocks2"];
+      case 22:
+        return this.textures["smallRocks3"];
+      case 23:
+        return this.textures["smallRocks4"];
 
       default:
         return this.loader.resources["ocean"].texture;
@@ -1690,7 +1716,7 @@ class Game extends Component {
         rockData.y
       );
       const rockSprite = new PIXI.Sprite(this.getCellTexture(rockData.id));
-      rockSprite.zIndex = 40;
+      rockSprite.zIndex = 1;
       // Center rocks onto tiles.
       switch (rockData.id) {
         case 13:
@@ -1709,6 +1735,20 @@ class Game extends Component {
           rockSprite.anchor.x = 0.5;
           rockSprite.anchor.y = 0.7;
           break;
+        case 20:
+          rockSprite.anchor.x = 0.4;
+          rockSprite.anchor.y = 0.4;
+          break;
+        case 21:
+          rockSprite.anchor.x = 0.5;
+          rockSprite.anchor.y = 0.55;
+          break;
+        case 22:
+          rockSprite.anchor.x = 0.5;
+          rockSprite.anchor.y = 0.45;
+          break;
+        // case 23:
+        //   break;
         default:
           this.setCenterAnchor(rockSprite);
       }
