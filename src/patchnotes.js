@@ -1,5 +1,23 @@
 const patchNotes = [
   {
+    title: "Small Rocks, New Maps, Influence Circle, and More",
+    date: "9/30/20",
+    description:
+      "From the introduction of small rocks (rocks that you can shoot through) to new map additions based off of real Y!PP blockade maps. The influence circle of ships has been added and can now be seen by hovering over any ship to see all ship influences. Improved animations for the ship and some small user experience fixes have also been added. A bug where a ship was moving forward into another ship that was firing would not collide correctly. Also fixed the bug where the damage/bilge UI were not updating after being sunk",
+    changeList: [
+      "Added radio buttons above tokens display.",
+      "Added influence circle visualization in game",
+      "Added all small rock sprites",
+      "Small rocks now added and function as intended",
+      "Improved ramming animation for turns",
+      "Text from some buttons/navigation bar will no longer be highlighted/selected (an annoyance in game when clicking/double clicking)",
+      "Ram damage now applied to ships after being pushed into rocks by wind",
+      "Damage/Bilge UI now correctly resets/shows and updates on the client after sinking",
+      "Fixed collision bug when another ship is stationary and firing",
+      "Added new map: Ambush_Round_1",
+    ],
+  },
+  {
     title: "Whirlwinds, Bug fixes, Code refactor",
     date: "9/28/20",
     description:

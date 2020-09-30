@@ -6,10 +6,11 @@ const Root = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 25px;
+  padding: 28px;
   margin: 10px;
   max-width: 1200px;
   background-color: rgba(196, 196, 196, 0.07);
+  border-radius: 20px;
 `;
 
 const Title = styled.h3`
