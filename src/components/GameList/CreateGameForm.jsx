@@ -12,12 +12,12 @@ import origAxios from "axios";
 const slideIn = keyframes`
   from {
     opacity: 0;
-    transform: translate(-50%, -70%);
+    transform: translate(-50%, -50%) scale(0);
   }
 
   to {
     opacity: 1;
-    transform: translateY(-50%, -50%);
+    transform: translateY(-50%, -50%) scale(1);
   }
 `;
 
@@ -47,7 +47,7 @@ const Root = styled.div`
 
   box-sizing: border-box;
 
-  animation: ${slideIn} 0.2s ease-in;
+  animation: ${slideIn} 0.46s cubic-bezier(0.33, 0.41, 0.35, 1.5);
 `;
 
 const Title = styled.h2`
@@ -184,9 +184,12 @@ const CreateGameForm = (props) => {
         history.push(`/games/${roomName}`);
       })
       .catch((err) => {
-        console.error(err.response);
         setLoading(false);
-        if (err.response.status === 409) setRoomNameError(true);
+        if (err.message === "Network Error") {
+          console.log("Should display 'server down/network error' message");
+          return;
+        }
+        if (err.response && err.response.status === 409) setRoomNameError(true);
       });
   };
 
@@ -247,7 +250,6 @@ const CreateGameForm = (props) => {
             {availableMaps.map((map, key) => (
               <option key={key}>{map}</option>
             ))}
-            <option>test</option>
           </SelectField>
         </InputContainer>
 
