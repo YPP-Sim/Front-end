@@ -22,11 +22,13 @@ const Container = styled.button`
 
   ${(props) =>
     props.noShadow ? "" : "box-shadow: 2px 2px 10px rgba(21, 21, 21, 0.3);"}
-  
+
   border-radius: ${(props) => props.borderRadius || "12px"};
   cursor: pointer;
 
   transition: background-color linear 0.08s;
+
+  user-select: none;
 
   &:disabled {
     background-color: #555;

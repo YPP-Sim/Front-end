@@ -38,7 +38,7 @@ const LinksContainer = styled.div`
     font-weight: 500;
     font-size: 14px;
     color: ${({ theme }) => theme.textColor};
-
+    user-select: none;
     &:hover {
       color: ${({ theme }) => theme.accentColor};
     }
@@ -51,6 +51,7 @@ const NavTitle = styled.h3`
   font-weight: bold;
   font-size: 18px;
   line-height: 28px;
+  user-select: none;
 
   color: ${({ theme }) => theme.textColor};
 `;
