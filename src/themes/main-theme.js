@@ -8,6 +8,8 @@ const theme = {
   color3: "#252525;",
   textColor: "#FFFFFF",
 
+  infoPanelButtonColor: "#e9275b",
+
   size: {
     mobileS: "320px",
     mobileM: "375px",

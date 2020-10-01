@@ -10,6 +10,8 @@ import Game from "../../game/Game";
 import TeamsView from "./TeamsView";
 import LobbySocketController from "./LobbySocketController";
 import { useState } from "react";
+import InfoPanel from "./InfoPanel/InfoPanel";
+import { GameProvider } from "../../contexts/GameContext";
 
 const { IO_ENDPOINT } = config;
 
@@ -188,22 +190,25 @@ const GameLobby = () => {
   };
 
   return (
-    <Root>
-      <TopContainer>
-        {getViewByStatus(
-          gameData,
-          onJoinTeam,
-          onSelect,
-          socket,
-          map,
-          gameId,
-          handleStart
-        )}
-        <SideContainer>
-          <GameChat gameId={gameId} socket={socket} />
-        </SideContainer>
-      </TopContainer>
-    </Root>
+    <GameProvider value={{ gameId }}>
+      <Root>
+        <TopContainer>
+          {getViewByStatus(
+            gameData,
+            onJoinTeam,
+            onSelect,
+            socket,
+            map,
+            gameId,
+            handleStart
+          )}
+          <SideContainer>
+            <GameChat gameId={gameId} socket={socket} />
+          </SideContainer>
+        </TopContainer>
+        {gameData.status === "INGAME" && <InfoPanel socket={socket} />}
+      </Root>
+    </GameProvider>
   );
 };
 
