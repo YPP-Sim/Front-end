@@ -2,8 +2,14 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import GameContext from "../../../contexts/GameContext";
 import PlayerContext from "../../../contexts/PlayerContext";
+import IngameShipSelect from "../Ingame/IngameShipSelect";
 
 const Root = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr;
+  gap: 25px 25px;
+  grid-template-areas: "game-display action-center action-center";
   margin-top: 25px;
 `;
 
@@ -26,16 +32,29 @@ const Button = styled.button`
   }
 `;
 
+const GameStatsDisplay = styled.div`
+  grid-area: game-display;
+`;
+
+const ActionCenter = styled.div`
+  grid-area: action-center;
+`;
+
 const InfoPanel = ({ socket }) => {
   const { playerName } = useContext(PlayerContext);
   const { gameId } = useContext(GameContext);
   return (
     <Root>
-      <Button
-        onClick={() => socket.emit("shipDisengage", { playerName, gameId })}
-      >
-        Disengage
-      </Button>
+      <GameStatsDisplay>
+        <Button
+          onClick={() => socket.emit("shipDisengage", { playerName, gameId })}
+        >
+          Disengage
+        </Button>
+      </GameStatsDisplay>
+      <ActionCenter>
+        <IngameShipSelect socket={socket} />
+      </ActionCenter>
     </Root>
   );
 };

@@ -31,9 +31,9 @@ const Container = styled.button`
   user-select: none;
 
   &:disabled {
-    background-color: #555;
+    background: #77777744;
     cursor: default;
-    opacity: 0.7;
+    opacity: 0.95;
   }
 `;
 
