@@ -9,6 +9,7 @@ class UpdateGameDataEvent extends SocketEvent {
     const playerName = game.getThisPlayer().playerName;
     const organizedData = organizeGameData(data, playerName);
     game.updateGameData(organizedData);
+    game.updateTeamColors();
   }
 }
 export default UpdateGameDataEvent;

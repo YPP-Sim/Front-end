@@ -19,10 +19,7 @@ class Ship {
     this.playerName = playerName;
     this.team = team;
 
-    this.teamColor = getTeamColor(
-      this.game.gameData.thisPlayer.side,
-      this.team
-    );
+    this.updateTeamColor();
 
     //Graphical position of the ship (in terms for the sprite)
     this.x = 0;
@@ -49,6 +46,13 @@ class Ship {
 
     this.flagSymbols = [];
     this.flagSymbolsSprites = [];
+  }
+
+  updateTeamColor() {
+    this.teamColor = getTeamColor(
+      this.game.gameData.thisPlayer.side,
+      this.team
+    );
   }
 
   loadSprites() {
@@ -159,18 +163,81 @@ class Ship {
     shipNameText.zIndex = 41;
     shipNameText.anchor.x = 0.5;
     shipNameText.anchor.y = 0.5;
-    const nameBody = this.game.mapBody.addSprite(
+    let nameBody = this.game.mapBody.addSprite(
       shipNameText,
       spaceX + 64,
       spaceY - 68
     );
     this.setNamePosition = nameBody.setSpriteOffset;
 
-    // Ship influence circle
+    this.createInfluenceCircle();
+
+    this.updateSideColors = () => {
+      this.updateTeamColor();
+      // Ship name text
+      nameBody.removeSprite();
+
+      const newTextStyle = new PIXI.TextStyle({
+        fontFamily: "Saira",
+        fontSize: 13,
+        letterSpacing: 1,
+        fill: this.teamColor,
+        stroke: "black",
+        strokeThickness: 2,
+      });
+      const newNameText = new PIXI.Text(this.playerName, newTextStyle);
+      newNameText.zIndex = 41;
+      newNameText.anchor.x = 0.5;
+      newNameText.anchor.y = 0.5;
+      const { spaceX, spaceY } = calculateGameToSpritePosition(
+        this.vX,
+        this.vY
+      );
+
+      nameBody = this.game.mapBody.addSprite(
+        newNameText,
+        spaceX + 64,
+        spaceY - 68
+      );
+
+      this.game.stage.addChild(newNameText);
+      this.setNamePosition = nameBody.setSpriteOffset;
+
+      shipSprite.filters = [new OutlineFilter(1, this.teamColor)];
+
+      // Will remove the old circle and replace it with a more updated one.
+      this.createInfluenceCircle();
+    };
+
+    shipSprite.interactive = true;
+    shipSprite.on("mouseover", () => {
+      // Single ship visibility, do all eventually.
+      this.game.showShipInfluences();
+    });
+
+    shipSprite.on("mouseout", () => {
+      this.game.hideShipInfluences();
+    });
+
+    this.sprite = shipSprite;
+    this.game.stage.addChild(shipNameText);
+    this.game.stage.addChild(shipMoveBar);
+    this.game.stage.addChild(shipSprite);
+    this.game.stage.addChild(shipFillBar);
+    this.faceDirection = orientation.SOUTH;
+    this.setTextureFromOrientation(this.faceDirection);
+  }
+
+  // Ship influence circle
+  createInfluenceCircle() {
+    if (this.influenceBody) this.influenceBody.removeSprite();
+
     const influenceRatio = 0.75;
     const influenceRadius = this.type.influenceRadius;
     const influenceWidth = influenceRadius * 50 - 18;
     const influenceHeight = influenceWidth * influenceRatio;
+
+    const { spaceX, spaceY } = calculateGameToSpritePosition(this.vX, this.vY);
 
     const influenceSprite = new PIXI.Graphics();
     influenceSprite.zIndex = 30;
@@ -192,29 +259,12 @@ class Ship {
       spaceX,
       spaceY
     );
+    this.influenceBody = influenceBody;
     this.setInfluencePosition = influenceBody.setSpriteOffset;
     this.setInfluenceVisibility = (bool) => {
       influenceSprite.visible = bool;
     };
-
-    shipSprite.interactive = true;
-    shipSprite.on("mouseover", () => {
-      // Single ship visibility, do all eventually.
-      this.game.showShipInfluences();
-    });
-
-    shipSprite.on("mouseout", () => {
-      this.game.hideShipInfluences();
-    });
-
-    this.sprite = shipSprite;
-    this.game.stage.addChild(shipNameText);
-    this.game.stage.addChild(shipMoveBar);
-    this.game.stage.addChild(shipSprite);
-    this.game.stage.addChild(shipFillBar);
     this.game.stage.addChild(influenceSprite);
-    this.faceDirection = orientation.SOUTH;
-    this.setTextureFromOrientation(this.faceDirection);
   }
 
   _findFlagSymbolTextureOffset(attackersContesting, defendersContesting) {

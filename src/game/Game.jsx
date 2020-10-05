@@ -127,6 +127,13 @@ class Game extends Component {
     }
   }
 
+  updateTeamColors() {
+    for (let shipName of Object.keys(this.ships)) {
+      const ship = this.getShip(shipName);
+      ship.updateSideColors();
+    }
+  }
+
   initFlags() {
     for (let flag of this.gameData.flags) {
       this.flags[flag.id] = new Flag(flag.x, flag.y, flag.pointValue, this);
