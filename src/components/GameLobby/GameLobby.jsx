@@ -47,7 +47,7 @@ const SideContainer = styled.div`
 const socket = io(IO_ENDPOINT, { autoConnect: false });
 const socketController = new LobbySocketController(socket);
 
-function organizeGameData(gameData, thisPlayerName) {
+export function organizeGameData(gameData, thisPlayerName) {
   const attackers = [];
   const defenders = [];
   const undecided = [];

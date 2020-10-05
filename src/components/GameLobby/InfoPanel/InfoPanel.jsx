@@ -53,7 +53,11 @@ const InfoPanel = ({ socket }) => {
         </Button>
       </GameStatsDisplay>
       <ActionCenter>
-        <IngameShipSelect socket={socket} />
+        <IngameShipSelect
+          socket={socket}
+          playerName={playerName}
+          gameId={gameId}
+        />
       </ActionCenter>
     </Root>
   );

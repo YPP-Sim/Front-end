@@ -14,6 +14,7 @@ import ClearShipsEvent from "./events/ClearShipsEvent";
 import AddShipEvent from "./events/AddShipEvent";
 import GameFinishedEvent from "./events/GameFinishedEvent";
 import PlayerSunkEvent from "./events/PlayerSunkEvent";
+import UpdateGameDataEvent from "./events/UpdateGameDataEvent";
 class SocketController {
   /**
    *
@@ -44,6 +45,7 @@ class SocketController {
     this.events.push(new AddShipEvent());
     this.events.push(new GameFinishedEvent());
     this.events.push(new PlayerSunkEvent());
+    this.events.push(new UpdateGameDataEvent());
   }
 
   registerEvents() {

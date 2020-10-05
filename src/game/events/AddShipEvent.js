@@ -1,4 +1,3 @@
-import ShipType from "../ShipType";
 import SocketEvent from "./SocketEvent";
 
 class AddShipEvent extends SocketEvent {
@@ -7,14 +6,13 @@ class AddShipEvent extends SocketEvent {
   }
 
   onEvent(game, socket, data) {
-    const { shipId, type, boardX, boardY, orientation, side } = JSON.parse(
-      data
-    );
+    console.log("data: ", data);
+    const { shipId, type, boardX, boardY, orientation, side } = data;
     console.log("Adding ship with id: " + shipId);
 
     game.addShip(
       shipId,
-      ShipType[type],
+      type,
       parseInt(boardX),
       parseInt(boardY),
       orientation,

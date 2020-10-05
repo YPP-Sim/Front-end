@@ -73,14 +73,18 @@ const ButtonContainer = styled.div`
   box-sizing: border-box;
 `;
 
-const IngameShipSelect = ({ socket }) => {
+const IngameShipSelect = ({ socket, playerName, gameId }) => {
   const [selectedShip, setSelectedShip] = useState("");
   const [selectedSide, setSelectedSide] = useState("");
 
   const handleConfirm = () => {
     // Send packet to join game with selected ship type and side
-    // socket.emit("", {});
-    console.log("Confirmed");
+    socket.emit("playerJoinConfig", {
+      gameId,
+      playerName,
+      chosenShipType: selectedShip,
+      chosenSide: selectedSide,
+    });
   };
 
   return (

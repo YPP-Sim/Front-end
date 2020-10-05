@@ -53,7 +53,6 @@ function removeContextMenu(event) {
 class Game extends Component {
   constructor(props) {
     super(props);
-
     this.pixi_cnt = null;
     const realApp = new PIXI.Application({
       transparent: false,
@@ -91,15 +90,9 @@ class Game extends Component {
     this.dragHandler = new DragDropHandler(this);
 
     this.turnSprites = {};
-    this.gameData = props.gameData;
+    this.updateGameData(props.gameData);
     this.flags = {};
     this.autoSelect = true;
-
-    if (this.gameData.thisPlayer && this.gameData.thisPlayer.shipData)
-      this.playerMoves = new PlayerMoves(
-        this.gameData.thisPlayer.shipData.dualCannon,
-        this
-      );
 
     this.move1 = Direction.NONE;
     this.move2 = Direction.NONE;
@@ -107,6 +100,17 @@ class Game extends Component {
     this.move4 = Direction.NONE;
 
     this.preventMovementInteraction = false;
+  }
+
+  updateGameData(gameData) {
+    this.gameData = gameData;
+    if (this.gameData.thisPlayer && this.gameData.thisPlayer.shipData)
+      this.playerMoves = new PlayerMoves(
+        this.gameData.thisPlayer.shipData.dualCannon,
+        this
+      );
+
+    if (this.setupLoaded) this._addShiphandGuns(true, this.loader.resources);
   }
 
   showShipInfluences() {
@@ -1286,6 +1290,7 @@ class Game extends Component {
   }
 
   _addShiphandGuns(dualCannon, resources) {
+    if (this.removeCannonSprites) this.removeCannonSprites();
     if (!this.gameData.thisPlayer || !this.gameData.thisPlayer.shipData) return;
 
     const stage = this.stage;
@@ -1363,27 +1368,87 @@ class Game extends Component {
       stage.addChild(gunSprite);
       stage.addChild(filledGunFirstSprite);
 
-      return () => {
+      const removeSprite = () => {
+        stage.removeChild(filledGunFirstSprite);
+        stage.removeChild(filledGunSecondSprite);
+        stage.removeChild(gunSprite);
+      };
+
+      const clear = () => {
         filledGunFirstSprite.visible = false;
         if (dualCannon) {
           filledGunSecondSprite.visible = false;
         }
       };
+
+      return { clear, removeSprite };
     }
 
     const createGunSprite = createGunSprite_.bind(this);
 
-    const left1Clear = createGunSprite(40, -57, 1, "LEFT");
-    const right1Clear = createGunSprite(69, -57, 1, "RIGHT");
+    const { clear: left1Clear, removeSprite: left1Remove } = createGunSprite(
+      40,
+      -57,
+      1,
+      "LEFT"
+    );
+    const { clear: right1Clear, removeSprite: right1Remove } = createGunSprite(
+      69,
+      -57,
+      1,
+      "RIGHT"
+    );
 
-    const left2Clear = createGunSprite(40, -23, 2, "LEFT");
-    const right2Clear = createGunSprite(69, -23, 2, "RIGHT");
+    const { clear: left2Clear, removeSprite: left2Remove } = createGunSprite(
+      40,
+      -23,
+      2,
+      "LEFT"
+    );
+    const { clear: right2Clear, removeSprite: right2Remove } = createGunSprite(
+      69,
+      -23,
+      2,
+      "RIGHT"
+    );
 
-    const left3Clear = createGunSprite(40, 11, 3, "LEFT");
-    const right3Clear = createGunSprite(69, 11, 3, "RIGHT");
+    const { clear: left3Clear, removeSprite: left3Remove } = createGunSprite(
+      40,
+      11,
+      3,
+      "LEFT"
+    );
+    const { clear: right3Clear, removeSprite: right3Remove } = createGunSprite(
+      69,
+      11,
+      3,
+      "RIGHT"
+    );
 
-    const left4Clear = createGunSprite(40, 45, 4, "LEFT");
-    const right4Clear = createGunSprite(69, 45, 4, "RIGHT");
+    const { clear: left4Clear, removeSprite: left4Remove } = createGunSprite(
+      40,
+      45,
+      4,
+      "LEFT"
+    );
+    const { clear: right4Clear, removeSprite: right4Remove } = createGunSprite(
+      69,
+      45,
+      4,
+      "RIGHT"
+    );
+
+    this.removeCannonSprites = () => {
+      left1Remove();
+      left2Remove();
+      left3Remove();
+      left4Remove();
+
+      right1Remove();
+      right2Remove();
+      right3Remove();
+      right4Remove();
+    };
 
     this.clearUICannons = () => {
       left1Clear();
