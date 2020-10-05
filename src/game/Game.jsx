@@ -1691,6 +1691,10 @@ class Game extends Component {
         return this.textures["rocks3"];
       case 16:
         return this.textures["rocks4"];
+      case 17:
+      case 18:
+      case 19:
+        return this.textures["cell_3"];
       case 20:
         return this.textures["smallRocks1"];
       case 21:
