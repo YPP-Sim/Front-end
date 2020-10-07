@@ -100,6 +100,8 @@ class Game extends Component {
     this.move4 = Direction.NONE;
 
     this.preventMovementInteraction = false;
+
+    this.setShipConfigView = props.setShipConfigView;
   }
 
   updateGameData(gameData) {

@@ -87,7 +87,8 @@ function getViewByStatus(
   socket,
   map,
   gameId,
-  onStart
+  onStart,
+  setShipConfigView
 ) {
   if (map.length === 0) {
     socket.emit("requestMap", { gameId });
@@ -96,7 +97,13 @@ function getViewByStatus(
     return (
       <MainContainer>
         {map.length > 0 ? (
-          <Game map={map} gameData={gameData} socket={socket} gameId={gameId} />
+          <Game
+            map={map}
+            gameData={gameData}
+            socket={socket}
+            setShipConfigView={setShipConfigView}
+            gameId={gameId}
+          />
         ) : (
           <p>loading...</p>
         )}
@@ -129,6 +136,7 @@ const GameLobby = () => {
     status: "WAITING",
     thisPlayer: {},
   });
+  const [shipConfigView, setShipConfigView] = useState(false);
   const [map, setMap] = useState([]);
   const history = useHistory();
   const { gameId } = useParams();
@@ -154,7 +162,11 @@ const GameLobby = () => {
     });
     socketController.registerEvent("startGame", (gameData) => {
       setMap(gameData.map);
-      setGameData(organizeGameData(gameData, playerName));
+      const organizedData = organizeGameData(gameData, playerName);
+      setGameData(organizedData);
+      if (!organizedData.thisPlayer.shipData) {
+        setShipConfigView(true);
+      }
     });
 
     return () => {
@@ -200,13 +212,16 @@ const GameLobby = () => {
             socket,
             map,
             gameId,
-            handleStart
+            handleStart,
+            setShipConfigView
           )}
           <SideContainer>
             <GameChat gameId={gameId} socket={socket} />
           </SideContainer>
         </TopContainer>
-        {gameData.status === "INGAME" && <InfoPanel socket={socket} />}
+        {gameData.status === "INGAME" && (
+          <InfoPanel shipSelectView={shipConfigView} socket={socket} />
+        )}
       </Root>
     </GameProvider>
   );

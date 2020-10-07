@@ -40,24 +40,28 @@ const ActionCenter = styled.div`
   grid-area: action-center;
 `;
 
-const InfoPanel = ({ socket }) => {
+const InfoPanel = ({ socket, shipSelectView }) => {
   const { playerName } = useContext(PlayerContext);
   const { gameId } = useContext(GameContext);
   return (
     <Root>
       <GameStatsDisplay>
-        <Button
-          onClick={() => socket.emit("shipDisengage", { playerName, gameId })}
-        >
-          Disengage
-        </Button>
+        {!shipSelectView && (
+          <Button
+            onClick={() => socket.emit("shipDisengage", { playerName, gameId })}
+          >
+            Disengage
+          </Button>
+        )}
       </GameStatsDisplay>
       <ActionCenter>
-        <IngameShipSelect
-          socket={socket}
-          playerName={playerName}
-          gameId={gameId}
-        />
+        {shipSelectView && (
+          <IngameShipSelect
+            socket={socket}
+            playerName={playerName}
+            gameId={gameId}
+          />
+        )}
       </ActionCenter>
     </Root>
   );
