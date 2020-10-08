@@ -6,9 +6,7 @@ class AddShipEvent extends SocketEvent {
   }
 
   onEvent(game, socket, data) {
-    console.log("data: ", data);
     const { shipId, type, boardX, boardY, orientation, side } = data;
-    console.log("Adding ship with id: " + shipId);
 
     game.addShip(
       shipId,
