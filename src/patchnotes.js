@@ -1,5 +1,20 @@
 const patchNotes = [
   {
+    title:
+      "Hot joining, More Bug fixes, and continuous deployment setup for the server",
+    date: "10/12/2020",
+    description:
+      "Players are now able to join in the middle of a game. More bug fixes and crash fixes to make it more stable. Code deployment on the server has now become automated and easier.",
+    changeList: [
+      "Added a way for players to join in the middle of a game (via the bottom side box for players who don't yet have a ship in the game)",
+      "Fixed crashing bug with the repair generator",
+      "Fixed graphical bug when the radius influence visual was offset for other players when new players joined in",
+      "Flags no longer have the ocean tile underneath, instead a regular sea game tile",
+      "updating game data now changes colors based on team side of client user",
+      "Created a box section underneath game for side/ship selection for players who are not yet in but the game has started",
+    ],
+  },
+  {
     title: "Small Rocks, New Maps, Influence Circle, and More",
     date: "9/30/20",
     description:
