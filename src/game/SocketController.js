@@ -16,6 +16,7 @@ import GameFinishedEvent from "./events/GameFinishedEvent";
 import PlayerSunkEvent from "./events/PlayerSunkEvent";
 import UpdateGameDataEvent from "./events/UpdateGameDataEvent";
 import RequestShipConfigEvent from "./events/RequestShipConfigEvent";
+import PlayerLeaveEvent from "./events/PlayerLeaveEvent";
 class SocketController {
   /**
    *
@@ -48,6 +49,7 @@ class SocketController {
     this.events.push(new PlayerSunkEvent());
     this.events.push(new UpdateGameDataEvent());
     this.events.push(new RequestShipConfigEvent());
+    this.events.push(new PlayerLeaveEvent());
   }
 
   registerEvents() {

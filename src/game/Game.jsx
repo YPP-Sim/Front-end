@@ -303,6 +303,13 @@ class Game extends Component {
     return this.ships[shipId];
   }
 
+  removeShip(shipId) {
+    if (this.ships[shipId]) {
+      this.ships[shipId].remove();
+      delete this.ships[shipId];
+    }
+  }
+
   updateFlags(flagDataArray) {
     // Clear flag symbols for all players to start out
     for (let shipName in this.ships) {

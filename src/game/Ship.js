@@ -76,6 +76,7 @@ class Ship {
 
     const shipBody = this.game.mapBody.addSprite(shipSprite, spaceX, spaceY);
     this.setSpritePosition = shipBody.setSpriteOffset;
+    this.removeSprite = shipBody.removeSprite;
     // Movement bar
     const shipMoveBar = new PIXI.Graphics();
     shipMoveBar.lineStyle(1, 0x000000);
@@ -94,6 +95,8 @@ class Ship {
       spaceY - 20
     );
     this.setSpriteBarPosition = spriteBarBody.setSpriteOffset;
+    this.removeSpriteBar = spriteBarBody.removeSprite;
+    this.shipMoveBar = shipMoveBar;
 
     // filled movement bar
     const shipFillBar = new PIXI.Graphics();
@@ -104,13 +107,14 @@ class Ship {
     shipFillBar.zIndex = 41;
     shipFillBar.endFill();
 
+    this.shipFillBar = shipFillBar;
     const fillBarBody = this.game.mapBody.addSprite(
       shipFillBar,
       spaceX,
       spaceY - 20
     );
     this.setFillBarPosition = fillBarBody.setSpriteOffset;
-
+    this.removeSpriteFillBar = fillBarBody.removeSprite;
     this.setBarMovements = (moves) => {
       shipFillBar.clear();
       shipFillBar.beginFill(0xffffff);
@@ -168,8 +172,9 @@ class Ship {
       spaceX + 64,
       spaceY - 68
     );
+    this.shipNameText = shipNameText;
     this.setNamePosition = nameBody.setSpriteOffset;
-
+    this.removeSpriteName = nameBody.removeSprite;
     this.createInfluenceCircle();
 
     this.updateSideColors = () => {
@@ -193,7 +198,7 @@ class Ship {
         this.vX,
         this.vY
       );
-
+      this.shipNameText = newNameText;
       nameBody = this.game.mapBody.addSprite(
         newNameText,
         spaceX + 64,
@@ -202,7 +207,7 @@ class Ship {
 
       this.game.stage.addChild(newNameText);
       this.setNamePosition = nameBody.setSpriteOffset;
-
+      this.removeSpriteName = nameBody.removeSprite;
       shipSprite.filters = [new OutlineFilter(1, this.teamColor)];
 
       // Will remove the old circle and replace it with a more updated one.
@@ -261,6 +266,7 @@ class Ship {
     );
     this.influenceBody = influenceBody;
     this.setInfluencePosition = influenceBody.setSpriteOffset;
+    this.removeSpriteInfluence = influenceBody.removeSprite;
     this.setInfluenceVisibility = (bool) => {
       influenceSprite.visible = bool;
     };
@@ -288,6 +294,15 @@ class Ship {
         return 0;
       else return 30; // Green flags
     }
+  }
+
+  remove() {
+    this.game.stage.removeChild(this.sprite);
+    this.removeSprite();
+    this.removeSpriteBar();
+    this.removeSpriteFillBar();
+    this.removeSpriteInfluence();
+    this.removeSpriteName();
   }
 
   /**
