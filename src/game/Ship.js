@@ -241,8 +241,7 @@ class Ship {
     const influenceRadius = this.type.influenceRadius;
     const influenceWidth = influenceRadius * 50 - 18;
     const influenceHeight = influenceWidth * influenceRatio;
-
-    const { spaceX, spaceY } = calculateGameToSpritePosition(this.vX, this.vY);
+    const { spaceX, spaceY } = calculateGameToSpritePosition(0, 0);
 
     const influenceSprite = new PIXI.Graphics();
     influenceSprite.zIndex = 30;
@@ -270,7 +269,9 @@ class Ship {
     this.setInfluenceVisibility = (bool) => {
       influenceSprite.visible = bool;
     };
+
     this.game.stage.addChild(influenceSprite);
+    this.setGamePosition(this.x, this.y);
   }
 
   _findFlagSymbolTextureOffset(attackersContesting, defendersContesting) {
