@@ -4,8 +4,8 @@ const configs = {
     SERVER_ENDPOINT: "http://localhost:4000",
   },
   production: {
-    IO_ENDPOINT: "https://www.ypp-sim.markartishuk.com/",
-    SERVER_ENDPOINT: "https://www.ypp-sim.markartishuk.com/",
+    IO_ENDPOINT: "https://www.server.yppsim.com",
+    SERVER_ENDPOINT: "https://www.server.yppsim.com/",
   },
 };
 
