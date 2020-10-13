@@ -1,6 +1,19 @@
 const patchNotes = [
   {
     title:
+      "Shooting while sinking, taking damage in safezone, and more crash fixes",
+    date: "10/13/2020",
+    description:
+      "Ships will no longer shoot while sinking, damage will also not be applied anymore while sitting in the safezone. A weird bug that crashed the server was also fixed.",
+    changeList: [
+      "Ships no longer shoot cannons if they're sinking",
+      "Tweaked down the jobber quality numbers, primarily cannons per turn from 17 to 12",
+      "Ships no longer take damage when in safe zone",
+      "Fixed sinking texture bug",
+    ],
+  },
+  {
+    title:
       "Hot joining, More Bug fixes, and continuous deployment setup for the server",
     date: "10/12/2020",
     description:
