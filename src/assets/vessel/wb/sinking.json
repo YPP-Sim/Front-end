@@ -277,7 +277,7 @@
       "x": 1802,
       "y": 0,
       "width": 53,
-      "height": 71,
+      "height": 59,
       "anchorx": 0,
       "anchory": 8
     },
@@ -323,14 +323,6 @@
     },
     "40": {
       "x": 2120,
-      "y": 0,
-      "width": 53,
-      "height": 59,
-      "anchorx": 0,
-      "anchory": 8
-    },
-    "41": {
-      "x": 2173,
       "y": 0,
       "width": 53,
       "height": 59,
