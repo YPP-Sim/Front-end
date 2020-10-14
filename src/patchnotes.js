@@ -1,5 +1,14 @@
 const patchNotes = [
   {
+    title: "Token dusting",
+    date: "10/14/2020",
+    description:
+      "With the semi-release of the game, players have been able to stack tokens which is untraditional of the original battle navigation mechanics. Token dusting has now been introduced into YPP-SIM. After 5 turns of a token generating, that if that token has not been used, it will dust.",
+    changeList: [
+      "Tokens will now dust if not used for 5 turns after generation",
+    ],
+  },
+  {
     title:
       "Shooting while sinking, taking damage in safezone, and more crash fixes",
     date: "10/13/2020",
