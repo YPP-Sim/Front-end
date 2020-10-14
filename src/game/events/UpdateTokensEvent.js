@@ -8,9 +8,9 @@ class UpdateTokensEvent extends SocketEvent {
   onEvent(game, socket, tokenData) {
     const { moves, cannons } = tokenData;
     if (moves) {
-      game.setLeftTokens(moves.LEFT);
-      game.setForwardTokens(moves.FORWARD);
-      game.setRightTokens(moves.RIGHT);
+      game.setLeftTokens(moves.LEFT.amount);
+      game.setForwardTokens(moves.FORWARD.amount);
+      game.setRightTokens(moves.RIGHT.amount);
     }
 
     if (cannons) {
