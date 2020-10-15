@@ -7,6 +7,7 @@ import NavBar from "./components/HeroNavBar";
 import GameLobby from "./components/GameLobby/GameLobby";
 import { PlayerProvider } from "./contexts/PlayerContext";
 import PatchNotesPage from "./components/PatchNotes/PatchNotesPage";
+import LoginPage from "./components/Login/LoginPage";
 
 const Root = styled.div`
   height: 100%;
@@ -35,6 +36,11 @@ const App = () => {
         <Route exact path="/games">
           <NavBar />
           <GameList />
+        </Route>
+
+        <Route exact path="/login">
+          <NavBar />
+          <LoginPage />
         </Route>
 
         <Route exact path="/patchnotes">
