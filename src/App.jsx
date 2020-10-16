@@ -13,6 +13,7 @@ import { UserProvider } from "./contexts/UserContext";
 import axiosAuth from "./axios-config";
 import axiosIntercept from "./util/init_interceptors";
 import {getAccessToken, getRefreshToken, clear} from "./util/TokenStorage";
+import RegisterPage from "./components/Register/RegisterPage";
 axiosIntercept();
 
 const Root = styled.div`
@@ -28,8 +29,6 @@ function getDefaultName() {
 function setDefaultName(name) {
   localStorage.setItem("playerName", name);
 }
-
-
 
 const App = () => {
   const [playerName, setPlayerName] = useState(getDefaultName());
@@ -95,6 +94,11 @@ const App = () => {
           <Route exact path="/login">
             <NavBar />
             <LoginPage />
+          </Route>
+
+          <Route exact path="/register">
+            <NavBar />
+            <RegisterPage />
           </Route>
 
           <Route exact path="/patchnotes">
