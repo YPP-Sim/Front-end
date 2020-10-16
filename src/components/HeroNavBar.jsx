@@ -1,6 +1,9 @@
-import React from "react";
+import React, {useContext} from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import LinksDropdown from "./LinksDropdown/LinksDropdown";
+import UserContext from "../contexts/UserContext";
+import LinkItem from "./LinksDropdown/LinkItem";
 
 const Root = styled.div`
   width: 100%;
@@ -55,8 +58,16 @@ const NavTitle = styled.h3`
 
   color: ${({ theme }) => theme.textColor};
 `;
+const LinkText = styled.p`
+  margin: 0;
+  padding: 0;
+
+  margin-left: 15px;
+`;
+
 
 const NavBar = () => {
+  const {username, loggedIn, logout} = useContext(UserContext);
   return (
     <Root>
       <Container>
@@ -64,9 +75,19 @@ const NavBar = () => {
           <NavTitle>YPP-SIM</NavTitle>
         </Link>
         <LinksContainer>
+        <Link to="/">Home</Link>
           <Link to="/patchnotes">News</Link>
           {/* <a href="">About</a> */}
           <a href="https://github.com/YPP-Sim">Github</a>
+          {loggedIn ? (
+            <LinksDropdown title={username}>
+              <LinkItem onClick={() => console.log("Hi")}><LinkText>Profile</LinkText></LinkItem>
+              <LinkItem onClick={logout}><LinkText>Logout</LinkText></LinkItem>
+            </LinksDropdown>
+
+          ) : (
+            <Link to="/login">Login</Link>
+          )}
         </LinksContainer>
       </Container>
     </Root>
