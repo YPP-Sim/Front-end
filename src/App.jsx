@@ -14,6 +14,8 @@ import axiosAuth from "./axios-config";
 import axiosIntercept from "./util/init_interceptors";
 import {getAccessToken, getRefreshToken, clear} from "./util/TokenStorage";
 import RegisterPage from "./components/Register/RegisterPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import AccountSettingsPage from "./components/AccountSettings/AccountSettingsPage";
 axiosIntercept();
 
 const Root = styled.div`
@@ -110,6 +112,12 @@ const App = () => {
             <NavBar />
             <GameLobby />
           </Route>
+
+          <ProtectedRoute exact path="/account-settings">
+            <NavBar />
+            <AccountSettingsPage />
+          </ProtectedRoute>
+
         </Root>
       </PlayerProvider>
     </UserProvider>

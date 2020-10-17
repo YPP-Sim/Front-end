@@ -57,17 +57,18 @@ const LoginForm = () => {
             history.push("/");
         })
         .catch(err => {
-            console.log(err.response);
-            if(err.response.data && err.response.data.errors) {
-                const errors = err.response.data.errors;
-                for(let error of errors) {
-                    setErrorData({...errorData, [error.param + "Error"]: error.msg})
+            console.log(err);
+            if(err.response)
+                if(err.response.data && err.response.data.errors) {
+                    const errors = err.response.data.errors;
+                    for(let error of errors) {
+                        setErrorData({...errorData, [error.param + "Error"]: error.msg})
+                    }
+                } else if(err.response.data.usernameError) {
+                    setErrorData({...errorData, usernameError: err.response.data.usernameError});
+                } else if(err.response.data.passwordError) {
+                    setErrorData({...errorData, passwordError: err.response.data.passwordError});
                 }
-            } else if(err.response.data.usernameError) {
-                setErrorData({...errorData, usernameError: err.response.data.usernameError});
-            } else if(err.response.data.passwordError) {
-                setErrorData({...errorData, passwordError: err.response.data.passwordError});
-            }
             setLoading(false);
         });
     }
