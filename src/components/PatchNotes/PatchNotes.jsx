@@ -11,6 +11,8 @@ const Root = styled.div`
   max-width: 1200px;
   background-color: rgba(196, 196, 196, 0.07);
   border-radius: 20px;
+
+  border: 1px solid ${({theme}) => theme.accentColor};
 `;
 
 const Title = styled.h3`

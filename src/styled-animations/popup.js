@@ -2,7 +2,7 @@ import { keyframes } from "styled-components";
 
 const popup = keyframes`
     from {
-        transform: translateY(200px);
+        transform: translateY(100px);
         opacity: 0;
     }
 

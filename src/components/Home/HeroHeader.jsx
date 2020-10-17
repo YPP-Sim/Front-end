@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import Button from "../Button";
 import gameImg from "../../images/Game.png";
+import leftSlideAnim from "../../styled-animations/left-slide-in";
+import rightSlideAnim from "../../styled-animations/right-slide-in";
 
 const Root = styled.div`
   margin: 100px ${({ theme }) => theme.pageMargins};
@@ -59,6 +61,9 @@ const MaxWidthContainer = styled.div`
 
 const CTAContainer = styled.div`
   width: 100%;
+
+  
+  animation: ${leftSlideAnim} 0.8s ease-out;
 `;
 
 const ImageContainer = styled.div`
@@ -70,6 +75,7 @@ const ImageContainer = styled.div`
   background-size: contain;
   filter: drop-shadow(0px 10px 50px rgba(0, 0, 0, 0.25));
 
+  animation: ${rightSlideAnim} 0.8s ease-out;
   @media (max-width: 700px) {
     visibility: hidden;
     width: 0%;
