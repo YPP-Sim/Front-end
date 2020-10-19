@@ -1,18 +1,66 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import SettingsNav from "./SettingsNav";
+import { Route, useLocation} from "react-router-dom";
 
+// Links connected with routes and a view component
+export const links = [
+  {
+      route: "profile",
+      title: "Profile",
+      viewComponent: <h2>Profile</h2>
+  },
+  {
+    route: "security",
+    title: "Security",
+    viewComponent: <h2>Security</h2>
+}
+]
+
+//Styled components
 const Root = styled.div`
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     margin-top: 50px;
+    padding: 50px;
+    box-sizing: border-box;
 `;
 
+const SettingsView = styled.div`
+    background-color: #222222aa;
+    display: block;
+    width: 100%;
+
+    box-sizing: border-box;
+    padding: 30px;
+
+    color: ${({theme}) => theme.textColor};
+
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    `;
 
 const AccountSettingsPage = () => {
-  return <Root>
+  const [selected, setSelected] = useState(null);
+  const location = useLocation();
 
+  useEffect(() => {
+    const pathArray = location.pathname.split("/");
+    const selectedPath = pathArray[pathArray.length - 1];
+    setSelected(selectedPath);
+  }, [location]);
+
+
+  return <Root>
+    <SettingsNav selected={selected} />
+    <SettingsView>
+
+      {links.map((linkObj, key) => (
+        <Route exact path={`/account-settings/${linkObj.route}`} key={key}>
+          {linkObj.viewComponent}
+        </Route>
+      ))}
+
+    </SettingsView>
   </Root>;
 };
 

@@ -113,7 +113,7 @@ const App = () => {
             <GameLobby />
           </Route>
 
-          <ProtectedRoute exact path="/account-settings">
+          <ProtectedRoute path="/account-settings">
             <NavBar />
             <AccountSettingsPage />
           </ProtectedRoute>

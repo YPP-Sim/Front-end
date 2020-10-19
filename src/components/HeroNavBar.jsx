@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import LinksDropdown from "./LinksDropdown/LinksDropdown";
 import UserContext from "../contexts/UserContext";
 import LinkItem from "./LinksDropdown/LinkItem";
@@ -68,6 +68,8 @@ const LinkText = styled.p`
 
 const NavBar = () => {
   const {username, loggedIn, logout} = useContext(UserContext);
+  const history = useHistory();
+
   return (
     <Root>
       <Container>
@@ -81,7 +83,7 @@ const NavBar = () => {
           <a href="https://github.com/YPP-Sim">Github</a>
           {loggedIn ? (
             <LinksDropdown title={username}>
-              <LinkItem onClick={() => console.log("Hi")}><LinkText>Profile</LinkText></LinkItem>
+              <LinkItem onClick={() => history.push("/account-settings")}><LinkText>Settings</LinkText></LinkItem>
               <LinkItem onClick={logout}><LinkText>Logout</LinkText></LinkItem>
             </LinksDropdown>
 
