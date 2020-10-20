@@ -86,6 +86,11 @@ const AccountDetailsView = () => {
 
   const onSubmitChanges = (e) => {
     e.preventDefault();
+    if(emailInput.length <= 0) {
+      setEmailError("Email field is empty");
+      return;
+    }
+
     setLoading(true);
     setEmailError(null);
     axiosAuth.put("/user/update", {email: emailInput})
