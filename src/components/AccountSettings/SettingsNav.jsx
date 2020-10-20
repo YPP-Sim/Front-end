@@ -55,6 +55,8 @@ const NavLink = styled(Link)`
 
     display: block;
 
+    margin-bottom: 3px;
+
     &:hover {
         background-color: ${(props) => props.selected ? "" : "#33333344"};
     }

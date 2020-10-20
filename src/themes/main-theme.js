@@ -3,6 +3,7 @@ const theme = {
   titleFont: "'Saira', sans-serif;",
   textFont: "'Heebo', sans-serif;",
   accentColor: "#2DB1BE",
+  accentHover: "#237d86",
   color1: "#ffe259",
   color2: "#ffa751",
   color3: "#252525;",
