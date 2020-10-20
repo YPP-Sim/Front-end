@@ -10,20 +10,17 @@ import ErrorMessage from "../Forms/ErrorMessage";
 import Title from "../Forms/Title";
 import Form from "../Forms/Form";
 import SubmitButton from "../Forms/SubmitButton";
-
-import popup from "../../styled-animations/popup";
 import FormText from "../Forms/FormText";
 
 const Root = styled.div`
-width: 100%;
-min-width: 300px;
-max-width: 420px;
-height: 500px;
-box-sizing: border-box;
-background: #fff;
-border-radius: 5px;
-box-shadow: 0 17px 40px 0 rgba(75, 128, 182, 0.15);
-animation: ${popup} 0.4s ease-out;
+    width: 100%;
+    min-width: 300px;
+    max-width: 420px;
+    height: 500px;
+    box-sizing: border-box;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 17px 40px 0 rgba(75, 128, 182, 0.15);
 `;
 
 const RegisterLink = styled(Link)`

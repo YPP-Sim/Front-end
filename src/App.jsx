@@ -64,9 +64,6 @@ const App = () => {
   const logout = () => {
     // Clear out the token storage
     clear();
-    // Clear state
-    setUserData({username: "", loggedIn: false});
-
     // Todo send request to 'logout' on server (invalidating any of the tokens)
     axiosAuth.post("/auth/logout", {refreshToken: getRefreshToken()}).then((res) => {
       console.log("Logged out from server");
@@ -75,7 +72,9 @@ const App = () => {
       console.log("err logging out: ", err);
     })
     .finally(() => {
+      // Clear state
       window.location.replace("/login");
+      setUserData({username: "", loggedIn: false});
     });
   }
 

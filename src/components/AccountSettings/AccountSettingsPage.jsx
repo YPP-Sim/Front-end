@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import SettingsNav from "./SettingsNav";
-import { Route, useLocation} from "react-router-dom";
+import { Route, useLocation, useHistory} from "react-router-dom";
 import AccountDetailsView from "./Views/AccountDetailsView";
 import SecurityView from "./Views/SecurityView";
 
@@ -16,7 +16,7 @@ export const links = [
     route: "security",
     title: "Security",
     viewComponent: <SecurityView />
-}
+  }
 ]
 
 //Styled components
@@ -47,13 +47,17 @@ const SettingsView = styled.div`
 const AccountSettingsPage = () => {
   const [selected, setSelected] = useState(null);
   const location = useLocation();
+  const history = useHistory();
+
+  useEffect(() => {
+    history.push(`/account-settings/${links[0].route}`)
+  }, []); 
 
   useEffect(() => {
     const pathArray = location.pathname.split("/");
     const selectedPath = pathArray[pathArray.length - 1];
     setSelected(selectedPath);
   }, [location]);
-
 
   return <Root>
     <SettingsNav selected={selected} />
