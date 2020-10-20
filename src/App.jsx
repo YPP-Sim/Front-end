@@ -65,7 +65,7 @@ const App = () => {
     // Clear out the token storage
     clear();
     // Todo send request to 'logout' on server (invalidating any of the tokens)
-    axiosAuth.post("/auth/logout", {refreshToken: getRefreshToken()}).then((res) => {
+    axiosAuth.post("/auth/logout", {refreshToken: getRefreshToken()}).then(() => {
       console.log("Logged out from server");
     })
     .catch(err => {

@@ -50,7 +50,8 @@ const AccountSettingsPage = () => {
   const history = useHistory();
 
   useEffect(() => {
-    history.push(`/account-settings/${links[0].route}`)
+    if(location.pathname === "/account-settings")
+      history.push(`/account-settings/${links[0].route}`)
   }, []); 
 
   useEffect(() => {
