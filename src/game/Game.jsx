@@ -191,7 +191,15 @@ class Game extends Component {
     // Load resources from resources.js
     if (!loaderLoaded) {
       let res;
-      for (res of resourcePairs) loader.add(res.name, res.image);
+      for (res of resourcePairs) {
+        try{
+          loader.add(res.name, res.image);
+        } catch (err) {
+          if(!err.message.startsWith("Resource named")) {
+            console.log("Error loading resource: ", err);
+          }
+        }
+      } 
 
       loaderLoaded = true;
     }

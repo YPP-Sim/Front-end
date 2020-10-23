@@ -8,6 +8,8 @@ import GlobalLoader from "../loaders/GlobalLoader";
 import { useHistory } from "react-router-dom";
 import ErrorMessage from "../ErrorMessage";
 import origAxios from "axios";
+import Maps from "../Maps/Maps";
+import ThemedButton from "../ThemedButton";
 
 const slideIn = keyframes`
   from {
@@ -110,6 +112,19 @@ const InputContainer = styled.div`
   margin-bottom: 18px;
 `;
 
+const Popup = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const ChooseMapButton = styled(ThemedButton)`
+  width: 250px;
+  height: 38px;
+  margin: 0;
+`
+
 const CreateGameForm = (props) => {
   const history = useHistory();
   const { playerName, setPlayerName } = useContext(PlayerContext);
@@ -126,19 +141,19 @@ const CreateGameForm = (props) => {
   const [availableMaps, setAvailableMaps] = useState([]);
   const [roomNameError, setRoomNameError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [mapPopup, setMapPopup] = useState(false);
 
   useEffect(() => {
     axios
-      .get("/maps", {
+      .get("/maps/dbmaps", {
         cancelToken: cancelToken.token,
       })
       .then((res) => {
-        setFormData({ ...formData, mapName: res.data[0] });
+        setFormData({ ...formData, mapName: res.data[0].title });
         setAvailableMaps(res.data);
       })
       .catch((err) => {
         if (origAxios.isCancel(err)) {
-          console.log("Request canceled", err.message);
         } else console.error(err.response);
       });
 
@@ -205,8 +220,18 @@ const CreateGameForm = (props) => {
     );
   }
 
+  const handleMapSelect = (mapTitle) => {
+    setFormData({...formData, mapName: mapTitle});
+    setMapPopup(false);
+  }
+
   return (
     <Root>
+      {mapPopup && (
+      <Popup>
+        <Maps onSelect={handleMapSelect} onClose={() => setMapPopup(false)}/>
+      </Popup>
+      )}
       <Title>Create New Game</Title>
       <FormContainer>
         <InputContainer>
@@ -241,16 +266,17 @@ const CreateGameForm = (props) => {
         </InputContainer>
         <InputContainer>
           <InputLabel htmlFor="mapName">Map: </InputLabel>
-          <SelectField
+          {/* <SelectField
             name="mapName"
             id="mapName"
             value={formData.mapName}
             onChange={handleFormChange}
           >
             {availableMaps.map((map, key) => (
-              <option key={key}>{map}</option>
+              <option key={key}>{map.title}</option>
             ))}
-          </SelectField>
+          </SelectField> */}
+          <ChooseMapButton onClick={() => setMapPopup(true)}>{formData.mapName ? formData.mapName : "Choose Map"}</ChooseMapButton>
         </InputContainer>
 
         <InputContainer>

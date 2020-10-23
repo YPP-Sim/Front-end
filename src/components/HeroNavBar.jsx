@@ -77,8 +77,10 @@ const NavBar = () => {
           <NavTitle>YPP-SIM</NavTitle>
         </Link>
         <LinksContainer>
-        <Link to="/">Home</Link>
+          <Link to="/">Home</Link>
           <Link to="/patchnotes">News</Link>
+          <Link to="/maps">Maps</Link>
+
           {/* <a href="">About</a> */}
           <a href="https://github.com/YPP-Sim">Github</a>
           {loggedIn ? (

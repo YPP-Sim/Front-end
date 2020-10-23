@@ -16,6 +16,8 @@ import {getAccessToken, getRefreshToken, clear} from "./util/TokenStorage";
 import RegisterPage from "./components/Register/RegisterPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AccountSettingsPage from "./components/AccountSettings/AccountSettingsPage";
+import MapsPage from "./components/Maps/MapsPage";
+import MapCreatorPage from "./components/MapCreator/MapCreatorPage";
 axiosIntercept();
 
 const Root = styled.div`
@@ -110,6 +112,16 @@ const App = () => {
           <Route exact path="/games/:gameId">
             <NavBar />
             <GameLobby />
+          </Route>
+
+          <Route exact path="/maps">
+            <NavBar />
+            <MapsPage />
+          </Route>
+
+          <Route exact path="/map-creator">
+            <NavBar />
+            <MapCreatorPage />
           </Route>
 
           <ProtectedRoute path="/account-settings">
