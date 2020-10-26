@@ -82,7 +82,7 @@ function getRotateById(cell_id) {
 const TileItem = ({ cellId, onClick }) => {
   const { onSelect } = useContext(TileContext);
 
-  const handleSelect = (event) => {
+  const handleSelect = () => {
     onSelect(cellId);
   };
 
