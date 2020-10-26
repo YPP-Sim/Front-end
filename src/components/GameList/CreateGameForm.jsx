@@ -85,26 +85,6 @@ const InputLabel = styled.label`
   color: ${({ theme }) => theme.textColor};
 `;
 
-const SelectField = styled.select`
-  border: none;
-
-  border-radius: 3px;
-  height: 35px;
-
-  font-size: 16px;
-  font-family: ${({ theme }) => theme.textFont};
-
-  padding: 5px 10px;
-  color: ${(props) => props.color || "#535353"};
-  background-color: ${(props) => props.backgroundColor || "#eee"};
-  outline: none;
-
-  min-width: 188px;
-  width: 250px;
-  padding: 0px 10px;
-  box-sizing: border-box;
-`;
-
 const InputContainer = styled.div`
   display: flex;
   align-items: center;
@@ -123,7 +103,7 @@ const ChooseMapButton = styled(ThemedButton)`
   width: 250px;
   height: 38px;
   margin: 0;
-`
+`;
 
 const CreateGameForm = (props) => {
   const history = useHistory();
@@ -135,10 +115,7 @@ const CreateGameForm = (props) => {
     password: "",
     userName: "",
   });
-  const [cancelToken, setCancelToken] = useState(
-    origAxios.CancelToken.source()
-  );
-  const [availableMaps, setAvailableMaps] = useState([]);
+  const [cancelToken] = useState(origAxios.CancelToken.source());
   const [roomNameError, setRoomNameError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mapPopup, setMapPopup] = useState(false);
@@ -150,7 +127,6 @@ const CreateGameForm = (props) => {
       })
       .then((res) => {
         setFormData({ ...formData, mapName: res.data[0].title });
-        setAvailableMaps(res.data);
       })
       .catch((err) => {
         if (origAxios.isCancel(err)) {
@@ -221,16 +197,16 @@ const CreateGameForm = (props) => {
   }
 
   const handleMapSelect = (mapTitle) => {
-    setFormData({...formData, mapName: mapTitle});
+    setFormData({ ...formData, mapName: mapTitle });
     setMapPopup(false);
-  }
+  };
 
   return (
     <Root>
       {mapPopup && (
-      <Popup>
-        <Maps onSelect={handleMapSelect} onClose={() => setMapPopup(false)}/>
-      </Popup>
+        <Popup>
+          <Maps onSelect={handleMapSelect} onClose={() => setMapPopup(false)} />
+        </Popup>
       )}
       <Title>Create New Game</Title>
       <FormContainer>
@@ -266,17 +242,9 @@ const CreateGameForm = (props) => {
         </InputContainer>
         <InputContainer>
           <InputLabel htmlFor="mapName">Map: </InputLabel>
-          {/* <SelectField
-            name="mapName"
-            id="mapName"
-            value={formData.mapName}
-            onChange={handleFormChange}
-          >
-            {availableMaps.map((map, key) => (
-              <option key={key}>{map.title}</option>
-            ))}
-          </SelectField> */}
-          <ChooseMapButton onClick={() => setMapPopup(true)}>{formData.mapName ? formData.mapName : "Choose Map"}</ChooseMapButton>
+          <ChooseMapButton onClick={() => setMapPopup(true)}>
+            {formData.mapName ? formData.mapName : "Choose Map"}
+          </ChooseMapButton>
         </InputContainer>
 
         <InputContainer>
@@ -298,8 +266,7 @@ const CreateGameForm = (props) => {
           fontSize="18px"
           width="180px"
           onClick={handleCreate}
-          noShadow
-        >
+          noShadow>
           Create Game
         </Button>
         <Button
@@ -309,8 +276,7 @@ const CreateGameForm = (props) => {
           color="#FFFFFF"
           backgroundColor="#C4C4C43F"
           noShadow
-          onClick={props.onClose}
-        >
+          onClick={props.onClose}>
           Cancel
         </Button>
       </ButtonsContainer>
