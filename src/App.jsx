@@ -12,7 +12,7 @@ import { UserProvider } from "./contexts/UserContext";
 
 import axiosAuth from "./axios-config";
 import axiosIntercept from "./util/init_interceptors";
-import {getAccessToken, getRefreshToken, clear} from "./util/TokenStorage";
+import { getAccessToken, getRefreshToken, clear } from "./util/TokenStorage";
 import RegisterPage from "./components/Register/RegisterPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AccountSettingsPage from "./components/AccountSettings/AccountSettingsPage";
@@ -37,51 +37,52 @@ function setDefaultName(name) {
 const App = () => {
   const [playerName, setPlayerName] = useState(getDefaultName());
   const [userData, setUserData] = useState({
-      username: "",
-      loggedIn: false,
+    username: "",
+    loggedIn: false,
   });
 
   useEffect(() => {
-    if(!getAccessToken()) return;
-    if(!getRefreshToken()) return;
+    if (!getAccessToken()) return;
+    if (!getRefreshToken()) return;
 
-    axiosAuth.post("/auth/validate-refresh-token", {refreshToken: getRefreshToken()})
-    .then(response => {
-      if(!response.data.valid) {
-        clear();
-      } else return axiosAuth.get("/user/whoami");
-    })
-    .then(response => {
-      if(!response) return;
-      
-      setUserData({username: response.data.username, loggedIn: true});
-    }).catch(err => {
-      console.log(err);
-    });
+    axiosAuth
+      .post("/auth/validate-refresh-token", { refreshToken: getRefreshToken() })
+      .then((response) => {
+        if (!response.data.valid) {
+          clear();
+        } else return axiosAuth.get("/user/whoami");
+      })
+      .then((response) => {
+        if (!response) return;
 
-    
-    
+        setUserData({ username: response.data.username, loggedIn: true });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   const logout = () => {
     // Clear out the token storage
     clear();
     // Todo send request to 'logout' on server (invalidating any of the tokens)
-    axiosAuth.post("/auth/logout", {refreshToken: getRefreshToken()}).then(() => {
-      console.log("Logged out from server");
-    })
-    .catch(err => {
-      console.log("err logging out: ", err);
-    })
-    .finally(() => {
-      // Clear state
-      window.location.replace("/login");
-      setUserData({username: "", loggedIn: false});
-    });
-  }
+    axiosAuth
+      .post("/auth/logout", { refreshToken: getRefreshToken() })
+      .then(() => {
+        console.log("Logged out from server");
+      })
+      .catch((err) => {
+        console.log("err logging out: ", err);
+      })
+      .finally(() => {
+        // Clear state
+        window.location.replace("/login");
+        setUserData({ username: "", loggedIn: false });
+      });
+  };
 
   return (
-    <UserProvider value={{...userData, setUserData, logout}}>
+    <UserProvider value={{ ...userData, setUserData, logout }}>
       <PlayerProvider value={{ playerName, setPlayerName, setDefaultName }}>
         <Root>
           <Route exact path="/">
@@ -119,16 +120,15 @@ const App = () => {
             <MapsPage />
           </Route>
 
-          <Route exact path="/map-creator">
+          <ProtectedRoute exact path="/map-creator">
             <NavBar />
             <MapCreatorPage />
-          </Route>
+          </ProtectedRoute>
 
           <ProtectedRoute path="/account-settings">
             <NavBar />
             <AccountSettingsPage />
           </ProtectedRoute>
-
         </Root>
       </PlayerProvider>
     </UserProvider>
