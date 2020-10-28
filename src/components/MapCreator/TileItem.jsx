@@ -4,10 +4,27 @@ import northArrow from "../../SVGs/arrow-tile.svg";
 import arrow90Deg from "../../SVGs/90deg_arrow.png";
 import TileContext from "../../contexts/TileContext";
 
+// Big Rocks
+import bigRocks1 from "../../images/tiles/rocks_big_1.png";
+import bigRocks2 from "../../images/tiles/rocks_big_2.png";
+import bigRocks3 from "../../images/tiles/rocks_big_3.png";
+import bigRocks4 from "../../images/tiles/rocks_big_4.png";
+
+// Small Rocks
+import smallRocks1 from "../../images/tiles/rocks_small_1.png";
+import smallRocks2 from "../../images/tiles/rocks_small_2.png";
+import smallRocks3 from "../../images/tiles/rocks_small_3.png";
+import smallRocks4 from "../../images/tiles/rocks_small_4.png";
+
+// Buoys
+import buoy1 from "../../images/tiles/buoy_1.png";
+import buoy2 from "../../images/tiles/buoy_2.png";
+import buoy3 from "../../images/tiles/buoy_3.png";
+
 const Root = styled.div`
   width: 30px;
   height: 30px;
-  background-color: ${(props) => props.backgroundColor || "#9CD4FF"};
+  background-color: ${(props) => props.backgroundColor || "#2d8bbe"};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -39,6 +56,28 @@ function getIconById(cell_id) {
     case 11:
     case 12:
       return arrow90Deg;
+    case 13:
+      return bigRocks1;
+    case 14:
+      return bigRocks2;
+    case 15:
+      return bigRocks3;
+    case 16:
+      return bigRocks4;
+    case 17:
+      return buoy1;
+    case 18:
+      return buoy2;
+    case 19:
+      return buoy3;
+    case 20:
+      return smallRocks1;
+    case 21:
+      return smallRocks2;
+    case 22:
+      return smallRocks3;
+    case 23:
+      return smallRocks4;
     default:
       return;
   }

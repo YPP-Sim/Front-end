@@ -55,20 +55,35 @@ const TileSelector = ({ onSelect, onClose }) => {
         <ArrowPointer />
         <CloseIcon onClick={onClose} src={closeImg} />
         <TileItem cellId={0} />
-        <TileItem cellId={0} />
+        {/* Points */}
+        <TileItem cellId={17} />
+        <TileItem cellId={18} />
+        <TileItem cellId={19} />
+        {/* Winds */}
         <TileItem cellId={1} />
         <TileItem cellId={2} />
         <TileItem cellId={4} />
         <TileItem cellId={3} />
+        {/* Clockwise Whirlpool */}
         <TileItem cellId={7} />
         <TileItem cellId={8} />
         <TileItem cellId={6} />
         <TileItem cellId={5} />
-
+        {/* Counter Clockwise whirlpool */}
         <TileItem cellId={11} />
         <TileItem cellId={12} />
         <TileItem cellId={10} />
         <TileItem cellId={9} />
+        {/* Big Rocks */}
+        <TileItem cellId={13} />
+        <TileItem cellId={14} />
+        <TileItem cellId={15} />
+        <TileItem cellId={16} />
+        {/* Small Rocks */}
+        <TileItem cellId={20} />
+        <TileItem cellId={21} />
+        <TileItem cellId={22} />
+        <TileItem cellId={23} />
       </Root>
     </TileProvider>
   );

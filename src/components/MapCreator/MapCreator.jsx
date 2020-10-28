@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import MapCell from "./MapCell";
-import ThemedButton from "../ThemedButton";
+import MapCreatorSettings from "./MapCreatorSettings";
 
 const Root = styled.div``;
 
@@ -56,10 +56,6 @@ const defaultLayout = getDefaultLayout(20, 30);
 const MapCreator = () => {
   const [layout, setLayout] = useState(defaultLayout);
 
-  useEffect(() => {
-    console.log("Layout changed: ", layout);
-  }, [layout]);
-
   const handleChangeLayoutDimensions = (toWidth, toHeight) => {
     const mapHeight = layout.length;
     const mapWidth = layout[0].length;
@@ -108,9 +104,9 @@ const MapCreator = () => {
 
   return (
     <Root>
-      <ThemedButton onClick={() => handleChangeLayoutDimensions(20, 35)}>
-        Test
-      </ThemedButton>
+      <MapCreatorSettings
+        handleChangeDimensions={handleChangeLayoutDimensions}
+      />
       <Grid>{generateCells(layout, handleChangeLayout)}</Grid>
     </Root>
   );
