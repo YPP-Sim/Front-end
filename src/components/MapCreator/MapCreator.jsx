@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MapCell from "./MapCell";
 import MapCreatorSettings from "./MapCreatorSettings";
@@ -10,13 +10,18 @@ import Title from "../Forms/Title";
 import popup from "../../styled-animations/popup";
 import ErrorMessage from "../Forms/ErrorMessage";
 
-const Root = styled.div``;
+const Root = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(20, 30px);
-  grid-template-rows: repeat(30, 30px);
+  grid-template-columns: repeat(${(props) => props.gridWidth || 20}, 30px);
+  grid-template-rows: repeat(${(props) => props.gridHeight || 30}, 30px);
   gap: 6px;
+
+  margin: 0 auto;
 `;
 
 const MapViewPopup = styled.div`
@@ -66,6 +71,7 @@ const SuccessContainer = styled.div`
 
   animation: ${popup} 0.2s linear;
 `;
+
 function getDefaultLayout(width, height) {
   const newArray = [];
 
@@ -116,6 +122,10 @@ const MapCreator = () => {
     error: "",
   }); // Null at first to say that a request hasn't been made yet
 
+  useEffect(() => {
+    console.log(layout);
+  }, [layout]);
+
   const handleChangeLayoutDimensions = (toWidth, toHeight) => {
     const mapHeight = layout.length;
     const mapWidth = layout[0].length;
@@ -125,8 +135,28 @@ const MapCreator = () => {
 
     if (dW > 0) {
       // Add columns
+      setLayout((prevLayout) => {
+        const newArray = getLayoutCopy(prevLayout);
+        for (let row of newArray) {
+          // For every row, add dW amount of columns
+          for (let i = 0; i < dW; i++) {
+            row.push(0);
+          }
+        }
+        return newArray;
+      });
     } else if (dW < 0) {
       // Remove columns;
+      setLayout((prevLayout) => {
+        const newArray = getLayoutCopy(prevLayout);
+        for (let row of newArray) {
+          // For every row, remove dW amount of columns
+          for (let i = 0; i > dW; i--) {
+            row.pop();
+          }
+        }
+        return newArray;
+      });
     }
 
     if (dH > 0) {
@@ -217,7 +247,9 @@ const MapCreator = () => {
         handleCreate={handleCreate}
       />
       {response.error && <ErrorMessage>Error: {response.error}</ErrorMessage>}
-      <Grid>{generateCells(layout, handleChangeLayout)}</Grid>
+      <Grid gridWidth={layout[0].length} gridHeight={layout.length}>
+        {generateCells(layout, handleChangeLayout)}
+      </Grid>
     </Root>
   );
 };
