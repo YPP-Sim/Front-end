@@ -6,8 +6,6 @@ const Root = styled.div`
   padding: 25px;
   border: 1px solid #eeeeee99;
   border-radius: 4px;
-  //   display: flex;
-  //   justify-content: space-between;
   margin-bottom: 25px;
 `;
 
@@ -49,17 +47,20 @@ const InputContainer = styled.div`
   margin-right: 9px;
 `;
 
-const MapCreatorSettings = ({ handleChangeDimensions }) => {
+const MapCreatorSettings = ({
+  handleChangeDimensions,
+  handlePreview,
+  handleCreate,
+}) => {
   const [formData, setFormData] = useState({
-    mapWidth: "",
-    mapHeight: "",
+    mapWidth: 20,
+    mapHeight: 30,
     mapName: "",
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  console.log(formData);
   return (
     <Root>
       <FlexContainer>
@@ -106,8 +107,12 @@ const MapCreatorSettings = ({ handleChangeDimensions }) => {
           }>
           Change size
         </ThemedButton>
-        <ThemedButton backgroundColor="#F8b195">Preview</ThemedButton>
-        <ThemedButton>Create</ThemedButton>
+        <ThemedButton backgroundColor="#F8b195" onClick={handlePreview}>
+          Preview
+        </ThemedButton>
+        <ThemedButton onClick={() => handleCreate(formData.mapName)}>
+          Create
+        </ThemedButton>
       </FlexContainer>
     </Root>
   );

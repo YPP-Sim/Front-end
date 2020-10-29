@@ -10,12 +10,12 @@ const Root = styled.div`
   margin-top: 100px;
 `;
 
-
 const MapsPage = () => {
-
-  return <Root>
-    <Maps />
-  </Root>;
+  return (
+    <Root>
+      <Maps />
+    </Root>
+  );
 };
 
 export default MapsPage;
