@@ -22,12 +22,14 @@ import buoy2 from "../../images/tiles/buoy_2.png";
 import buoy3 from "../../images/tiles/buoy_3.png";
 
 const Root = styled.div`
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   background-color: ${(props) => props.backgroundColor || "#2d8bbe"};
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  border: 1px solid black;
 
   transform: rotate(${(props) => props.cssRotation || 0}deg)
     scaleX(${(props) => props.flip || 1});

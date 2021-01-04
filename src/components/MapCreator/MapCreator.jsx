@@ -17,9 +17,9 @@ const Root = styled.div`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(${(props) => props.gridWidth || 20}, 30px);
-  grid-template-rows: repeat(${(props) => props.gridHeight || 30}, 30px);
-  gap: 6px;
+  grid-template-columns: repeat(${(props) => props.gridWidth || 20}, 40px);
+  grid-template-rows: repeat(${(props) => props.gridHeight || 30}, 40px);
+  // gap: 1px;
 
   margin: 0 auto;
 `;
